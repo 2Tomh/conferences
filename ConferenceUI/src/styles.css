@@ -1,0 +1,22 @@
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+/* src/styles.css */
+@font-face {
+    font-family: 'Open Sans';
+    /* נקודה אחת בלבד! כי styles.css ו-assets נמצאים שניהם בתוך src */
+    src: url('./assets/Open_Sans/static/OpenSans-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    /* אם יש לך קובץ Bold, וודא שזה השם שלו */
+    src: url('./assets/Open_Sans/static/OpenSans-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif !important;
+}
