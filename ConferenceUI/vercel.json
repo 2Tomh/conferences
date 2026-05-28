@@ -1,6 +1,6 @@
 {
-  "version": 2,
-  "public": true,
+  "buildCommand": "npm install && npm run build",
+  "outputDirectory": "dist/ConferenceUI",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
