@@ -1,0 +1,77 @@
+<div class="manage-container" dir="rtl">
+  <div class="form-card">
+
+    <div class="form-header">
+      <div class="icon">{{ isEditMode ? '✏️' : '🎯' }}</div>
+      <h1>{{ isEditMode ? 'עריכת כנס' : 'יצירת כנס חדש' }}</h1>
+      <p>{{ isEditMode ? 'עדכן את פרטי הכנס' : 'מלא את הפרטים ליצירת כנס חדש' }}</p>
+    </div>
+
+    <form [formGroup]="conferenceForm" (ngSubmit)="onSubmit()">
+
+      <div class="form-group">
+        <label>שם הכנס</label>
+        <input type="text" formControlName="title" class="form-control" placeholder="הזן שם לכנס">
+        <small *ngIf="conferenceForm.get('title')?.invalid && conferenceForm.get('title')?.touched" class="text-danger">
+          שם הכנס חייב להכיל לפחות 3 תווים.
+        </small>
+      </div>
+      <div class="form-group">
+        <label>פקולטה</label>
+        <select formControlName="facultyName" class="form-control" (change)="onFacultyChange()">
+          <option value="">-- בחר פקולטה --</option>
+          <option *ngFor="let faculty of faculties" [value]="faculty">{{ faculty }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>בית ספר</label>
+        <select formControlName="schoolName" class="form-control" [disabled]="schools.length === 0">
+          <option value="">-- בחר בית ספר --</option>
+          <option *ngFor="let school of schools" [value]="school">{{ school }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>תיאור</label>
+        <textarea formControlName="description" class="form-control" rows="4"
+          placeholder="תאר את הכנס בקצרה"></textarea>
+        <small *ngIf="conferenceForm.get('description')?.invalid && conferenceForm.get('description')?.touched"
+          class="text-danger">
+          שדה תיאור הוא חובה.
+        </small>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>תאריך</label>
+          <input type="date" formControlName="dateOnly" class="form-control" [min]="minDate">
+          <small *ngIf="conferenceForm.get('dateOnly')?.hasError('pastDate')" class="text-danger">
+            לא ניתן לבחור תאריך מהעבר.
+          </small>
+        </div>
+        <div class="form-group">
+          <label>שעה</label>
+          <input type="time" formControlName="timeOnly" class="form-control" step="60">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>מיקום</label>
+        <input type="text" formControlName="location" class="form-control" placeholder="עיר / אולם / כתובת">
+      </div>
+
+      <div class="form-group">
+        <label>מספר משתתפים מקסימלי</label>
+        <input type="number" formControlName="maxParticipants" class="form-control" min="1">
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn-save" [disabled]="conferenceForm.invalid">
+          {{ isEditMode ? 'עדכן כנס' : 'צור כנס' }}
+        </button>
+        <button type="button" class="btn-cancel" routerLink="/admin/dashboard">ביטול</button>
+      </div>
+
+    </form>
+  </div>
+</div>

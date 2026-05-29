@@ -1,0 +1,87 @@
+/* מכל עוטף - רקע כהה עמוק */
+.dashboard-container {
+  padding: 40px 20px;
+  background-color: #0b1120;
+  min-height: 100vh;
+  color: #e2e8f0;
+  margin-top: 50px;
+}
+
+/* כותרת ופעולות */
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1000px;
+  margin: 0 auto 30px;
+}
+
+.header-actions h1 { font-size: 1.75rem; margin: 0; color: white; }
+
+.btn-add {
+  background: #4f46e5;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+/* טבלה מעוצבת */
+.admin-table {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  border-collapse: collapse;
+  background: #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #334155;
+}
+
+.admin-table thead {
+  background: #0f172a;
+  color: #94a3b8;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+}
+
+.admin-table th, .admin-table td {
+  padding: 18px;
+  text-align: right;
+  border-bottom: 1px solid #334155;
+}
+
+.admin-table tr:hover { background: #2d3748; }
+
+/* כפתורי פעולה בטבלה */
+.btn-edit {
+  background: #334155;
+  color: #818cf8;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+.btn-delete {
+  background: #7f1d1d;
+  color: #fca5a5;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+/* מצבי טעינה וריק */
+.loader, .no-data {
+  text-align: center;
+  color: #94a3b8;
+  margin-top: 50px;
+  font-size: 1.1rem;
+}

@@ -1,0 +1,381 @@
+/* HERO SECTION */
+.hero-header {
+    color: #000;
+    padding: 60px 20px;
+    width: 98%;
+    margin: auto;
+    margin-top: 35px;
+}
+
+.content-wrapper {
+    display: flex;
+    justify-content: center;
+    /* ממקם את הקוביות במרכז המסך */
+    align-items: center;
+    /* יישור אנכי */
+    gap: 40px;
+    /* מרווח גדול יותר בין הקוביות */
+    /* padding: 40px; */
+    flex-wrap: wrap;
+}
+
+.flex-item {
+    /* הסר את ה-flex: 1 כדי שלא ימתח את האלמנטים */
+    flex: 0 0 auto;
+}
+
+/* טיפול בלוגו החדש */
+.logo-wrapper {
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: center;
+}
+
+.hero-logo {
+    max-width: 20%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    transition: transform 0.4s ease;
+}
+
+.hero-logo:hover {
+    transform: scale(1.05);
+}
+
+.hero-header h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin: auto;
+    justify-content: center;
+    display: flex;
+}
+
+.hero-header .lead {
+    font-size: 1.2rem;
+    opacity: 0.7;
+    letter-spacing: -1px;
+    margin: auto;
+    justify-content: center;
+    display: flex;
+    direction: rtl
+}
+
+.badge-status {
+    background: rgba(0, 242, 255, 0.1);
+    color: #000;
+    border: 1px solid #000;
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    justify-content: center;
+    display: flex;
+    width: 20%;
+    margin: auto;
+}
+
+/* כרטיסי כנסים */
+.conference-wrapper {
+    margin-bottom: 40px;
+}
+
+.main-card {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    transition: 0.3s ease;
+    border: none;
+}
+
+.main-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* Card Container */
+.main-card {
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: row-reverse;
+    /* הופך את הסדר בשביל עברית: מידע בימין, לו"ז בשמאל */
+}
+
+/* Right Section: Info */
+.info-section {
+    padding: 40px;
+    background: #fff;
+    border-left: 1px solid #f0f0f0;
+}
+
+.meta-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #00f2ff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.conference-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #0b0e14;
+    margin: 15px 0;
+}
+
+.conference-description {
+    color: #666;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.info-grid {
+    margin-top: 30px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    color: #333;
+}
+
+.info-icon {
+    font-size: 1.2rem;
+    margin-left: 12px;
+}
+
+.info-text {
+    font-weight: 500;
+}
+
+/* Left Section: Sessions */
+.sessions-section {
+    padding: 40px;
+    background: #f8f9fa;
+    /* אפור בהיר מאוד להפרדה */
+}
+
+.sessions-header {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #999;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+}
+
+.session-card {
+    background: #ffffff;
+    border: 1px solid #edf2f7;
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.session-card:hover {
+    transform: translateX(-5px);
+    border-color: #00f2ff;
+    box-shadow: 0 5px 15px rgba(0, 242, 255, 0.1);
+}
+
+.time-badge {
+    background: #0b0e14;
+    color: #00f2ff;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-left: 15px;
+}
+
+.session-title {
+    font-weight: 600;
+    color: #0b0e14;
+}
+
+/* Buttons */
+.btn-register {
+    background: #0b0e14;
+    color: #00f2ff;
+    border: 1px solid #00f2ff;
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    transition: 0.3s;
+}
+
+.btn-register:hover {
+    background: #00f2ff;
+    color: #0b0e14;
+}
+
+/* Admin Controls */
+.admin-btn {
+    border: none;
+    background: transparent;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.admin-btn.edit {
+    color: #ffc107;
+}
+
+.admin-btn.delete {
+    color: #ff4d4d;
+}
+
+/* Loader */
+.loader-container {
+    text-align: center;
+    color: #0b0e14;
+}
+
+.custom-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(0, 242, 255, 0.1);
+    border-top-color: #00f2ff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .main-card {
+        flex-direction: column;
+    }
+
+    .info-section {
+        border-left: none;
+        border-bottom: 1px solid #f0f0f0;
+    }
+}
+
+/*  */
+/* UPDATE BANNER - TECH STYLE */
+.update-banner {
+    display: flex;
+    align-items: center;
+    color: #ffffff;
+    padding: 30px;
+    /* הגדלתי פדינג כדי ליצור נפח */
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+    gap: 20px;
+    flex-direction: column;
+    /* שומר על סידור אנכי של התוכן */
+
+    /* כאן השינוי העיקרי */
+    flex: 0 0 300px;
+    /* אל תגדל, אל תקטן, תישאר על רוחב קבוע של 300px */
+    height: 300px;
+    /* גובה קבוע כדי ליצור צורה של ריבוע/קובייה */
+    justify-content: center;
+    /* ממקם את הטקסט במרכז הקובייה */
+    text-align: center;
+}
+
+/* .update-date {
+    color: #000;
+    color: #ffffff;
+    padding: 15px 30px;
+    border-radius: 14px;
+    border: 1px solid rgba(0, 242, 255, 0.2);
+    box-shadow: 0 8px 25px rgba(0, 242, 255, 0.05);
+    gap: 20px;
+    flex-direction: column;
+    width: 50%;
+    margin: auto;
+} */
+
+.update-date {
+    font-size: 0.8rem;
+    color: black;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin: 0;
+    white-space: nowrap;
+    opacity: 0.9;
+    font-size: larger;
+}
+
+.update-text {
+    flex-grow: 1;
+    font-size: 1.05rem;
+    font-weight: 600;
+    align-content: center;
+    color: #000000;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+.surveys-btn {
+    background: #0b0e14;
+    color: #fff;
+    border: 1px solid #0b0e14;
+    padding: 8px 22px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+.surveys-btn:hover {
+    background: #000;
+    color: #0b0e14;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 10px rgba(0, 242, 255, 0.1);
+}
+
+.surveys-btn:hover {
+    background: #00f2ff;
+    color: #0b0e14;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 242, 255, 0.3);
+}
+
+/* התאמה למובייל */
+@media (max-width: 768px) {
+    .update-banner {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px;
+        gap: 12px;
+    }
+
+    .update-text {
+        font-size: 0.95rem;
+    }
+
+    .surveys-btn {
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center;
+    }
+}

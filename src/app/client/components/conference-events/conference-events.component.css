@@ -1,0 +1,127 @@
+.events-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: sans-serif;
+}
+
+.section-title {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 10px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.events-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  text-align: right;
+}
+
+.events-table th {
+  background-color: #3498db;
+  color: white;
+  padding: 14px;
+  font-weight: bold;
+}
+
+.events-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #e0e0e0;
+  vertical-align: top;
+}
+
+.events-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.conf-name-cell {
+  max-width: 250px;
+}
+
+.discipline-text {
+  display: block;
+  font-size: 0.85rem;
+  color: #7f8c8d;
+  margin-top: 4px;
+}
+
+.organizers-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  direction: ltr; /* מציג את השמות באנגלית משמאל לימין בצורה נכונה */
+  text-align: right; /* משאיר את ההצמדה לימין בשל ה-RTL הכללי */
+}
+
+.organizers-list li {
+  margin-bottom: 4px;
+}
+
+.affiliation {
+  color: #e67e22;
+  font-weight: 500;
+}
+
+.survey-btn {
+  display: inline-block;
+  background-color: #2ecc71;
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.survey-btn:hover {
+  background-color: #27ae60;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.comments-cell {
+  max-width: 250px;
+  font-size: 0.9rem;
+  color: #555;
+}
+/*  */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.page-btn {
+  min-width: 36px;
+  height: 36px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: transparent;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.page-btn:hover:not(:disabled) { background: #f5f5f5; }
+.page-btn.active { background: #111; color: #fff; border-color: #111; }
+.page-btn:disabled { opacity: 0.3; cursor: default; }
+
+.page-info {
+  font-size: 13px;
+  color: #999;
+  margin-right: 8px;
+}

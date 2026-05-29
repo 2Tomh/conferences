@@ -1,0 +1,77 @@
+<div class="conference-page" dir="rtl">
+
+  <!-- לואדר -->
+  <div *ngIf="loading" class="loader-wrapper">
+    <div class="spinner"></div>
+    <p>טוען פרטי כנס...</p>
+  </div>
+
+  <!-- לא נמצא -->
+  <div *ngIf="notFound" class="not-found">
+    <h2>😕 הכנס לא נמצא</h2>
+    <button (click)="goBack()">חזרה לרשימת הכנסים</button>
+  </div>
+
+  <!-- תוכן -->
+  <div *ngIf="!loading && !notFound && conference">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <span class="faculty-tag">{{ conference.facultyName }}</span>
+        <h1>{{ conference.name }}</h1>
+        <div class="hero-meta">
+          <span>📅 {{ formatDate(conference.date) }}</span>
+          <span>🕐 {{ formatTime(conference.date) }}</span>
+          <span>📍 {{ conference.location }}</span>
+          <span>👥 עד {{ conference.maxParticipants }} משתתפים</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- תוכן ראשי -->
+    <div class="main-content">
+
+      <!-- אודות הכנס -->
+      <section class="section about-section">
+        <h2>אודות הכנס</h2>
+        <p>{{ conference.description }}</p>
+      </section>
+
+      <!-- סשנים -->
+      <section class="section sessions-section" *ngIf="conference.sessions?.length > 0">
+        <h2>סשנים</h2>
+        <div class="sessions-grid">
+          <div class="session-card" *ngFor="let session of conference.sessions; let i = index">
+            <div class="session-number">{{ i + 1 }}</div>
+            <div class="session-info">
+              <h3>{{ session.title || session.name }}</h3>
+              <p *ngIf="session.speaker">🎤 {{ session.speaker }}</p>
+              <p *ngIf="session.time">🕐 {{ session.time }}</p>
+              <p *ngIf="session.description">{{ session.description }}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="cta-section">
+        <div class="cta-card">
+          <h2>מעוניין להשתתף?</h2>
+          <p>הצטרף אלינו לכנס מרתק עם מיטב המומחים בתחום</p>
+          <button class="btn-register" [routerLink]="['/register', conference.id]">
+            הרשמה לכנס
+          </button>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- כפתור חזרה -->
+    <div class="back-btn-wrapper">
+      <button class="btn-back" (click)="goBack()">← חזרה לכל הכנסים</button>
+    </div>
+
+  </div>
+</div>

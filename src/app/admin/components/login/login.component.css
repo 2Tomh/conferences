@@ -1,0 +1,90 @@
+/* רקע העמוד - צבע כהה עמוק */
+body, html {
+  height: 100%;
+  margin: 0;
+  background-color: #0b1120; /* הצבע הכהה מהתמונה */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.login-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* הכרטיס המרכזי */
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 40px;
+  background: #0b1120; /* זהה לרקע */
+  color: white;
+}
+
+/* כותרת */
+.uni-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+/* שדות קלט */
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.field label {
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+  color: #a0aec0; /* אפור בהיר */
+}
+
+.custom-input {
+  background: #1e293b; /* צבע שדה כהה מעט מהרקע */
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 12px;
+  color: white;
+  transition: border-color 0.2s;
+}
+
+.custom-input:focus {
+  outline: none;
+  border-color: #6366f1; /* סגול/כחול במצב פוקוס */
+}
+
+/* כפתור התחברות */
+button {
+  width: 100%;
+  padding: 12px;
+  background: #4f46e5; /* כחול בולט */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  margin-top: 10px;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+/* הודעות שגיאה */
+.error-msg {
+  color: #f87171;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+}

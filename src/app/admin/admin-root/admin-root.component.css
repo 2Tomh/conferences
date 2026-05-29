@@ -1,0 +1,47 @@
+.admin-app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  direction: rtl;
+}
+
+.main-content {
+  margin-top: 70px; /* גובה הנאבבר */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.status-bar {
+  background: white;
+  padding: 12px 0;
+  border-bottom: 1px solid #e1e4e8;
+  margin-bottom: 25px;
+}
+
+.welcome-text {
+  color: #4a5568;
+  font-size: 0.95rem;
+}
+
+.welcome-text strong {
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+}
+
+.container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 30px;
+}
+
+.page-container {
+  flex: 1;
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}

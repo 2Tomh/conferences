@@ -1,0 +1,7 @@
+/* בתוך app.component.css */
+main {
+  margin-top: 65px; /* בדיוק הגובה של ה-Navbar */
+  padding: 20px;
+  min-height: calc(100vh - 65px);
+  background-color: #f8f9fa;
+}

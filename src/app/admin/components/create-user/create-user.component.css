@@ -1,0 +1,69 @@
+/* מכל עוטף - מותאם לשאר המערכת */
+.create-user-container {
+  padding: 20px;
+  background-color: #1e293b; /* מתאים לרקע של ה-Modal/Card */
+  border-radius: 12px;
+  color: white;
+}
+
+.create-user-container h2 {
+  font-size: 1.5rem;
+  margin-bottom: 25px;
+  text-align: center;
+  color: #f8fafc;
+}
+
+/* מבנה הטופס */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+  color: #94a3b8;
+}
+
+.create-user-container input, 
+.create-user-container select {
+  padding: 12px;
+  background: #0f172a; /* שדה קלט כהה */
+  border: 1px solid #334155;
+  border-radius: 8px;
+  color: white;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.create-user-container input:focus, 
+.create-user-container select:focus {
+  outline: none;
+  border-color: #6366f1;
+}
+
+/* כפתור יצירה */
+button[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: opacity 0.2s;
+}
+
+button[type="submit"]:disabled {
+  background: #334155;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+  opacity: 0.9;
+}

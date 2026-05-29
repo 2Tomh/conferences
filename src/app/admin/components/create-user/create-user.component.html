@@ -1,0 +1,41 @@
+<div class="create-user-container">
+  <h2>יצירת משתמש חדש</h2>
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    
+    <div class="form-group">
+      <label>שם מלא</label>
+      <input formControlName="fullName" placeholder="שם מלא">
+    </div>
+
+    <div class="form-group">
+      <label>מייל</label>
+      <input formControlName="email" placeholder="מייל">
+    </div>
+
+    <div class="form-group">
+      <label>סיסמה</label>
+      <input type="password" formControlName="password" placeholder="סיסמה">
+    </div>
+
+    <div class="form-group">
+      <label>תפקיד</label>
+      <select formControlName="role">
+        <option value="Admin">Admin</option>
+        <option value="FacultyManager">FacultyManager</option>
+        <option value="Lecturer">Lecturer</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>שם פקולטה</label>
+      <select formControlName="facultyName">
+        <option value="">-- בחר פקולטה --</option>
+        <option *ngFor="let faculty of faculties" [value]="faculty">
+          {{ faculty }}
+        </option>
+      </select>
+    </div>
+
+    <button type="submit" [disabled]="userForm.invalid">צור משתמש</button>
+  </form>
+</div>

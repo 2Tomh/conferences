@@ -1,0 +1,56 @@
+<div class="events-container" dir="rtl">
+  <h2 class="section-title">סקרי כנסים מדעיים לקראת 2026</h2>
+  <p class="intro-text">לנוחותכם, ריכזנו את ברשימה הבאה את הסקרים המקדמים לכנסים המתוכננים להיערך בסמוך לבחירות ברשימה הבאה. בואו לחגוג איתנו את המדע הישראלי!</p>
+  <div class="table-wrapper">
+    <table class="events-table">
+      <thead>
+        <tr>
+          <th>שם הכנס / תחום</th>
+          <th>מארגנים ומוסד אקדמי</th>
+          <th>קישור לסקר</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let conf of pagedConferences">
+          <td class="conf-name-cell">
+            <strong>{{ conf.name }}</strong>
+            <span *ngIf="conf.discipline" class="discipline-text">
+              ({{ conf.discipline }})
+            </span>
+          </td>
+          <td>
+            <ul class="organizers-list">
+              <li *ngFor="let org of conf.organizers">
+                {{ org.name }}
+                <span *ngIf="org.affiliation" class="affiliation">({{ org.affiliation }})</span>
+              </li>
+            </ul>
+          </td>
+          <td class="text-center">
+            <ng-container *ngIf="conf.surveyLinks">
+              <a *ngFor="let l of conf.surveyLinks"
+                 [href]="l.url"
+                 target="_blank"
+                 class="survey-btn d-block mb-1">
+                {{ l.label }}
+              </a>
+            </ng-container>
+            <a *ngIf="conf.surveyLink"
+               [href]="conf.surveyLink"
+               target="_blank"
+               class="survey-btn">
+              מעבר לסקר
+            </a>
+            <span *ngIf="!conf.surveyLink && !conf.surveyLinks" class="no-link">-</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="pagination">
+    <button class="page-btn" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">&#8250;</button>
+    <button *ngFor="let p of pages" class="page-btn" [class.active]="p === currentPage" (click)="goToPage(p)">{{ p }}</button>
+    <button class="page-btn" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">&#8249;</button>
+    <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
+  </div>
+</div>

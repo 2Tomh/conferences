@@ -1,0 +1,86 @@
+.science-navbar {
+    background-color: #0b0e14; /* הרקע הכהה של הלוגו */
+    border-bottom: 2px solid #00f2ff; /* פס הטורקיז */
+    height: 80px;
+    width: 100%;
+    position: fixed; /* שייצמד למעלה */
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+}
+
+.nav-container {
+    width: 100%;
+    max-width: 1200px; /* כדי שלא יתפרס יותר מדי במסכים רחבים */
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between; /* דוחף לצדדים */
+    align-items: center;
+}
+
+/* עיצוב הלוגו והטקסט בשורה */
+.brand-section {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.nav-logo {
+    height: 50px;
+    margin-left: 15px; /* רווח בין הלוגו לטקסט */
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column; /* טקסט אנגלי מעל עברי */
+    justify-content: center;
+}
+
+.eng-title {
+    color: #00f2ff;
+    font-weight: 800;
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+.heb-title {
+    color: #ffffff;
+    font-size: 0.8rem;
+    margin-top: 2px;
+}
+
+/* עיצוב הקישורים בצד שמאל */
+.links-section {
+    display: flex;
+    gap: 30px; /* רווח קבוע בין הקישורים */
+}
+
+.nav-link {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #00f2ff;
+}
+
+/*  */
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    text-align: right; /* יישור לימין כי הכל עכשיו בעברית */
+}
+
+.uni-title {
+    color: #ffffff; /* לבן בוהק */
+    font-weight: 800;
+    font-size: 1.3rem;
+    line-height: 1.1;
+    letter-spacing: 0.5px;
+}

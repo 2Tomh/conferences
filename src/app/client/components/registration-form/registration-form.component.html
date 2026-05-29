@@ -1,0 +1,118 @@
+<!-- <div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-7">
+      <div class="card shadow-lg border-0 rounded-4 p-4">
+        <h2 class="text-center mb-4 uni-title" style="color: #003d7a;">הרשמה מהירה לכנסים</h2>
+
+        <form [formGroup]="regForm" (ngSubmit)="onSubmit()">
+          
+          <div class="mb-3">
+            <label class="form-label fw-bold">1. בחר פקולטה / מחלקה:</label>
+            <select formControlName="department" class="form-select border-0 bg-light" (change)="onDepartmentChange()">
+              <option value="" disabled>בחר מהרשימה...</option>
+              <option *ngFor="let dept of departments" [value]="dept">{{dept}}</option>
+            </select>
+          </div>
+
+          <div class="mb-3" *ngIf="regForm.get('department')?.value">
+            <label class="form-label fw-bold">2. בחר כנס:</label>
+            <select formControlName="conferenceId" class="form-select border-0 bg-light" (change)="onConferenceChange()">
+              <option value="" disabled>איזה כנס מעניין אותך?</option>
+              <option *ngFor="let conf of filteredConferences" [value]="conf.id">{{conf.name}}</option>
+            </select>
+          </div>
+
+          <div class="mb-4" *ngIf="regForm.get('conferenceId')?.value">
+            <label class="form-label fw-bold">3. בחר הרצאה ספציפית:</label>
+            <select formControlName="sessionId" class="form-select border-0 bg-light">
+              <option value="" disabled>בחר מתוך התוכנייה...</option>
+              <option *ngFor="let s of availableSessions" [value]="s.id">
+                {{s.title}} ({{s.startTime | date:'shortTime'}})
+              </option>
+            </select>
+          </div>
+
+          <hr class="my-4">
+
+          <div class="row" *ngIf="regForm.get('sessionId')?.value">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">שם מלא:</label>
+              <input type="text" formControlName="fullName" class="form-control border-0 bg-light" placeholder="ישראל ישראלי">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">אימייל:</label>
+              <input type="email" formControlName="email" class="form-control border-0 bg-light" placeholder="name@uni.ac.il">
+            </div>
+            
+            <div class="col-12 mt-3">
+              <button type="submit" [disabled]="regForm.invalid" class="btn btn-primary w-100 btn-lg shadow" style="background-color: #003d7a;">
+                אשר הרשמה סופית
+              </button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-7">
+      <div class="card shadow-lg border-0 rounded-4 p-4">
+        <h2 class="text-center mb-4 uni-title" style="color: #003d7a;">הרשמה מהירה לכנסים</h2>
+
+        <div *ngIf="isLoading" class="text-center p-3">טוען נתונים...</div>
+
+        <form [formGroup]="regForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
+          
+          <div class="mb-3">
+            <label class="form-label fw-bold">1. בחר פקולטה / מחלקה:</label>
+            <select formControlName="department" class="form-select border-0 bg-light" (change)="onDepartmentChange()">
+              <option value="" disabled selected>בחר מהרשימה...</option>
+              <option *ngFor="let dept of departments" [value]="dept">{{dept}}</option>
+            </select>
+          </div>
+
+          <div class="mb-3" *ngIf="regForm.get('department')?.value">
+            <label class="form-label fw-bold">2. בחר כנס:</label>
+            <select formControlName="conferenceId" class="form-select border-0 bg-light" (change)="onConferenceChange()">
+              <option value="" disabled selected>איזה כנס מעניין אותך?</option>
+              <option *ngFor="let conf of filteredConferences" [value]="conf.id || conf._id">{{conf.name}}</option>
+            </select>
+          </div>
+
+          <div class="mb-4" *ngIf="regForm.get('conferenceId')?.value">
+            <label class="form-label fw-bold">3. בחר הרצאה ספציפית:</label>
+            <select formControlName="sessionId" class="form-select border-0 bg-light">
+              <option value="" disabled selected>בחר מתוך התוכנייה...</option>
+              <option *ngFor="let s of availableSessions" [value]="s.id">
+                {{s.title}} ({{s.startTime | date:'shortTime'}})
+              </option>
+            </select>
+          </div>
+
+          <hr class="my-4" *ngIf="regForm.get('sessionId')?.value">
+
+          <div class="row" *ngIf="regForm.get('sessionId')?.value">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">שם מלא:</label>
+              <input type="text" formControlName="fullName" class="form-control border-0 bg-light">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">אימייל:</label>
+              <input type="email" formControlName="email" class="form-control border-0 bg-light">
+            </div>
+            
+            <div class="col-12 mt-3">
+              <button type="submit" [disabled]="regForm.invalid" class="btn btn-primary w-100 btn-lg shadow" style="background-color: #003d7a;">
+                אשר הרשמה סופית
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

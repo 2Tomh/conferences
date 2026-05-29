@@ -1,0 +1,90 @@
+.about-section {
+    padding: 60px 20px;
+    /* background: #f5f6fa; */
+}
+
+.about-section .container {
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+.about-card {
+    border-radius: 18px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    box-shadow: 0 10px 40px rgba(0, 242, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+    direction: rtl;
+    padding: 0px 20px 0px 0px;
+    height: 350px;
+}
+
+.about-card::before {
+    content: '';
+    position: absolute;
+    top: -80px;
+    left: -80px;
+    width: 250px;
+    height: 250px;
+    pointer-events: none;
+}
+
+.accent-line {
+    width: 60px;
+    height: 4px;
+    background: #000000;
+    border-radius: 2px;
+    margin-bottom: 28px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+}
+
+.about-lead {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: black;
+    margin-bottom: 28px;
+    line-height: 1.6;
+    letter-spacing: -0.3px;
+}
+
+.about-content p {
+    color: #000000;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin-bottom: 16px;
+}
+
+.about-content strong {
+    color: #000000;
+    font-weight: 700;
+}
+
+.about-footer {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(0, 242, 255, 0.1);
+}
+
+.about-footer p {
+    color: rgba(0, 0, 0, 0.4);
+    font-size: 0.85rem;
+    margin: 0;
+    font-style: italic;
+}
+
+.internal-banner {
+    background: #0f1218;
+    /* רקע כהה מעט שונה מהכרטיס */
+    padding: 20px;
+    border-radius: 12px;
+    border-right: 4px solid #000000;
+    /* פס צבעוני מצד ימין */
+    margin: 20px 0;
+    text-align: right;
+}
+
+/* התאמת הכפתור בתוך הכרטיס */
+.internal-banner .surveys-btn {
+    display: inline-block;
+    margin-top: 10px;
+}
