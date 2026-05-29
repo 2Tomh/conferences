@@ -1,8 +1,3 @@
-.about-section {
-    padding: 60px 20px;
-    /* background: #f5f6fa; */
-}
-
 .about-section .container {
     max-width: 860px;
     margin: 0 auto;
@@ -16,7 +11,7 @@
     overflow: hidden;
     direction: rtl;
     padding: 0px 20px 0px 0px;
-    height: 350px;
+    /* height: 350px; */
 }
 
 .about-card::before {
@@ -87,4 +82,22 @@
 .internal-banner .surveys-btn {
     display: inline-block;
     margin-top: 10px;
+}
+
+.about-committee {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e0e0e0;
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.8;
+}
+
+.about-committee a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.about-committee a:hover {
+    text-decoration: underline;
 }

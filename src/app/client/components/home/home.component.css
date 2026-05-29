@@ -11,12 +11,13 @@
     display: flex;
     justify-content: center;
     /* ממקם את הקוביות במרכז המסך */
-    align-items: center;
+    /* align-items: center; */
     /* יישור אנכי */
     gap: 40px;
     /* מרווח גדול יותר בין הקוביות */
     /* padding: 40px; */
     flex-wrap: wrap;
+    /* flex-direction: column; */
 }
 
 .flex-item {

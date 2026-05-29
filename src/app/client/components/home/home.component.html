@@ -3,17 +3,16 @@
         <div class="logo-wrapper">
             <img src="../../../assets/logo.jpeg" alt="Logo" class="hero-logo">
         </div>
-
-        <span class="badge-status mb-3 d-inline-block">Academic Events 2026</span>
         <h1>מרכז הכנסים האקדמי</h1>
+        <span class="badge-status mb-3 d-inline-block">Academic Events 2026</span>
         <p class="lead">מחברים חוקרים למצוינות מדעית</p>
     </div>
 </header>
 <div class="content-wrapper">
-    <app-about-conference class="flex-item"></app-about-conference>
     <div class="update-banner flex-item" dir="rtl">
         <p class="update-date">עודכן לאחרונה: {{ lastUpdated | date:'dd/MM/yyyy' }}</p>
         <p class="update-text">הסקרים פתוחים! השתתפו בעיצוב הכנסים המדעיים של 2026</p>
         <a routerLink="/ConferenceEvents" class="surveys-btn">לסקרים ←</a>
     </div>
+    <app-about-conference class="flex-item"></app-about-conference>
 </div>
