@@ -144,7 +144,6 @@
     flex-grow: 1;
     margin-bottom: 14px;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }

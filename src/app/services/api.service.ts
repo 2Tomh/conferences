@@ -6,8 +6,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ApiService {
-  // private apiUrl = 'https://conference-backend-8339.onrender.com/api';
-  private apiUrl = 'https://localhost:7222/api';
+  private apiUrl = 'https://conference-backend-8339.onrender.com/api';
+  // private apiUrl = 'https://localhost:7222/api';
 
   constructor(private http: HttpClient) { }
 
