@@ -218,3 +218,141 @@
   /* font-family: 'IBM Plex Mono', monospace; */
   margin-right: 8px;
 }
+
+/* ========== RESPONSIVE ========== */
+
+/* טאבלט — עד 900px */
+@media (max-width: 900px) {
+  .events-container {
+    max-width: 95%;
+    padding: 32px 16px 60px;
+    margin: 60px auto 0;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+  }
+}
+
+/* מובייל — עד 600px */
+@media (max-width: 600px) {
+  .events-container {
+    max-width: 100%;
+    padding: 24px 12px 48px;
+    margin: 50px auto 0;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+    margin-top: 50px;
+  }
+
+  .section-title::after {
+    width: 60%;
+  }
+
+  /* מסתירים את ה-thead */
+  .events-table thead {
+    display: none;
+  }
+
+  /* כל שורה הופכת לכרטיס */
+  .events-table tbody tr {
+    display: block;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    padding: 16px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+
+  .events-table tbody tr:hover {
+    background: #f8fbff;
+  }
+
+  /* כל תא הופך לבלוק עם תווית */
+  .events-table td {
+    display: block;
+    padding: 8px 0;
+    border: none;
+    font-size: 0.85rem;
+  }
+
+  /* תוויות לפני כל תא */
+  .events-table td.conf-name-cell::before {
+    content: 'כנס';
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #0284c7;
+    margin-bottom: 4px;
+  }
+
+  .events-table td:nth-child(2)::before {
+    content: 'מארגנים';
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #0284c7;
+    margin-bottom: 4px;
+    margin-top: 8px;
+  }
+
+  .events-table td.text-center {
+    text-align: right;
+    margin-top: 8px;
+  }
+
+  .events-table td.text-center::before {
+    content: 'סקר';
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #0284c7;
+    margin-bottom: 8px;
+  }
+
+  .survey-btn {
+    display: block;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .survey-links-wrapper {
+    width: 100%;
+  }
+
+  /* Pagination במובייל */
+  .pagination {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .page-btn {
+    min-width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+}
+
+/* מסכים גדולים — 1400px+ */
+@media (min-width: 1400px) {
+  .events-container {
+    max-width: 1200px;
+  }
+}
+
+/* מסכים ענקיים — 1800px+ */
+@media (min-width: 1800px) {
+  .events-container {
+    max-width: 1400px;
+  }
+}

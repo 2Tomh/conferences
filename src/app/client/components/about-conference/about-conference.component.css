@@ -1,6 +1,15 @@
+/* ========== ABOUT SECTION ========== */
+.about-section {
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
 .about-section .container {
     max-width: 860px;
     margin: 0 auto;
+    padding: 0 16px;
+    box-sizing: border-box;
 }
 
 .about-card {
@@ -10,8 +19,8 @@
     position: relative;
     overflow: hidden;
     direction: rtl;
-    padding: 0px 20px 0px 0px;
-    /* height: 350px; */
+    padding: 24px 24px 24px 20px;
+    box-sizing: border-box;
 }
 
 .about-card::before {
@@ -34,7 +43,7 @@
 }
 
 .about-lead {
-    font-size: 1.2rem;
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
     font-weight: 700;
     color: black;
     margin-bottom: 28px;
@@ -44,7 +53,7 @@
 
 .about-content p {
     color: #000000;
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 2vw, 0.95rem);
     line-height: 1.8;
     margin-bottom: 16px;
 }
@@ -57,7 +66,7 @@
 .about-footer {
     margin-top: 32px;
     padding-top: 24px;
-    border-top: 1px solid rgba(0, 242, 255, 0.1);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .about-footer p {
@@ -67,28 +76,11 @@
     font-style: italic;
 }
 
-.internal-banner {
-    background: #0f1218;
-    /* רקע כהה מעט שונה מהכרטיס */
-    padding: 20px;
-    border-radius: 12px;
-    border-right: 4px solid #000000;
-    /* פס צבעוני מצד ימין */
-    margin: 20px 0;
-    text-align: right;
-}
-
-/* התאמת הכפתור בתוך הכרטיס */
-.internal-banner .surveys-btn {
-    display: inline-block;
-    margin-top: 10px;
-}
-
 .about-committee {
     margin-top: 1.5rem;
     padding-top: 1rem;
     border-top: 1px solid #e0e0e0;
-    font-size: 0.95rem;
+    font-size: clamp(0.82rem, 2vw, 0.95rem);
     color: #555;
     line-height: 1.8;
 }
@@ -100,4 +92,56 @@
 
 .about-committee a:hover {
     text-decoration: underline;
+}
+
+/* ========== RESPONSIVE ========== */
+
+/* מובייל קטן — עד 480px */
+@media (max-width: 480px) {
+    .about-section .container {
+        padding: 0 8px;
+    }
+
+    .about-card {
+        border-radius: 12px;
+        padding: 16px 16px 16px 12px;
+    }
+
+    .accent-line {
+        margin-bottom: 18px;
+    }
+
+    .about-footer {
+        margin-top: 20px;
+        padding-top: 16px;
+    }
+
+    .about-committee {
+        margin-top: 1rem;
+    }
+}
+
+/* טאבלט — 481px עד 768px */
+@media (min-width: 481px) and (max-width: 768px) {
+    .about-section .container {
+        padding: 0 12px;
+    }
+
+    .about-card {
+        padding: 20px 20px 20px 16px;
+    }
+}
+
+/* דסקטופ — 1025px+ */
+@media (min-width: 1025px) {
+    .about-section .container {
+        max-width: 860px;
+    }
+}
+
+/* מסכים ענקיים — 1600px+ */
+@media (min-width: 1600px) {
+    .about-section .container {
+        max-width: 1000px;
+    }
 }

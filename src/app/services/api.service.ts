@@ -11,12 +11,10 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  // דף הבית הציבורי
   getAllConferences(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/Conferences`);
   }
 
-  // פונקציית עזר למניעת שגיאות קומפילציה בקומפוננטות אחרות
   getConferences(): Observable<any[]> {
     return this.getAllConferences();
   }
@@ -61,5 +59,8 @@ export class ApiService {
   }
   getFaculties(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/Admin/faculties`);
+  }
+  getSurveys(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/Surveys`);
   }
 }

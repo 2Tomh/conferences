@@ -12,7 +12,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let conf of pagedConferences">
+        <!-- <tr *ngFor="let conf of pagedConferences">
           <td class="conf-name-cell">
             <strong>{{ conf.name }}</strong>
             <span *ngIf="conf.discipline" class="discipline-text">
@@ -39,6 +39,36 @@
               מעבר לסקר
             </a>
             <span *ngIf="!conf.surveyLink && !conf.surveyLinks" class="no-link">-</span>
+          </td>
+        </tr> -->
+
+        <tr *ngFor="let conf of pagedConferences">
+          <td class="conf-name-cell">
+            <strong>{{ conf.Name }}</strong>
+            <span *ngIf="conf.Discipline" class="discipline-text">
+              ({{ conf.Discipline }})
+            </span>
+          </td>
+          <td>
+            <ul class="organizers-list">
+              <li *ngFor="let org of conf.Organizers">
+                {{ org.Name }}
+                <span *ngIf="org.Affiliation" class="affiliation">({{ org.Affiliation }})</span>
+              </li>
+            </ul>
+          </td>
+          <td class="text-center">
+            <ng-container *ngIf="conf.SurveyLinks">
+              <div class="survey-links-wrapper">
+                <a *ngFor="let l of conf.SurveyLinks" [href]="l.Url" target="_blank" class="survey-btn">
+                  {{ l.Label }}
+                </a>
+              </div>
+            </ng-container>
+            <a *ngIf="conf.SurveyLink" [href]="conf.SurveyLink" target="_blank" class="survey-btn">
+              מעבר לסקר
+            </a>
+            <span *ngIf="!conf.SurveyLink && !conf.SurveyLinks" class="no-link">-</span>
           </td>
         </tr>
       </tbody>
