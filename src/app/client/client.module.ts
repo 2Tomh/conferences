@@ -22,7 +22,6 @@ import {SharedModule} from '../shared/shared.module';
     ConferenceEventsComponent,
     ConferenceDetailsComponent,
     ConferenceListComponent,
-    FooterComponent,
     HomeComponent,
     NavbarComponent,
     PageNotFoundComponent,
