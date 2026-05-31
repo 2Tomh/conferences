@@ -13,7 +13,7 @@ export class CreateUserComponent implements OnInit {
   faculties: string[] = []; // מערך פקולטות דינמי
 
   constructor(
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     private authService: AuthService,
     private apiService: ApiService // הזרקת ה-API
   ) {
@@ -39,7 +39,7 @@ export class CreateUserComponent implements OnInit {
     });
   }
 
-  onSubmit() {
+  onSubmit():void {
     if (this.userForm.valid) {
       this.authService.createUser(this.userForm.value).subscribe({
         next: () => alert('משתמש נוצר בהצלחה'),

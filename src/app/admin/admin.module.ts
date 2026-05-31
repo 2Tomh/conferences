@@ -17,7 +17,7 @@ import { CreateUserComponent } from './components/create-user/create-user.compon
 import { UserManagementComponent } from './components/user-management/user-management.component';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { SharedModule } from '../shared/shared.module'
+import { SharedModule } from '../shared/shared.module';
 @NgModule({
   declarations: [
     AdminRootComponent,

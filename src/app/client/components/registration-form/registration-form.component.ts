@@ -15,7 +15,7 @@
 //   filteredConferences: any[] = [];
 //   availableSessions: any[] = [];
 //   isLoading: boolean = false;
-  
+
 //   constructor(
 //     private fb: FormBuilder,
 //     private apiService: ApiService,
@@ -88,7 +88,7 @@ export class RegistrationFormComponent implements OnInit {
   departments: string[] = [];
   filteredConferences: any[] = [];
   availableSessions: any[] = [];
-  isLoading: boolean = false;
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -143,7 +143,7 @@ export class RegistrationFormComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.regForm.invalid) return;
+    if (this.regForm.invalid) { return; }
 
     // שליחת אובייקט נקי לשרת
     const payload = {

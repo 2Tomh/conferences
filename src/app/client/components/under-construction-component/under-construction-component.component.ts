@@ -8,7 +8,7 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./under-construction-component.component.css']
 })
 export class UnderConstructionComponent {
-  constructor(private router: Router,public translate: TranslateService) {}
+  constructor(private router: Router, public translate: TranslateService) {}
 
   goHome(): void {
     this.router.navigate(['/']);

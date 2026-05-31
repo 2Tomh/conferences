@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ConferenceEventsService } from '../../../services/conference-events.service'
+import { ConferenceEventsService } from '../../../services/conference-events.service';
 @Component({
   selector: 'app-conference-events',
   templateUrl: './conference-events.component.html',
@@ -9,7 +9,7 @@ export class ConferenceEventsComponent implements OnInit {
   pageSize = 12;
   currentPage = 1;
   conferences: any[] = [];
-  searchText: string = '';
+  searchText = '';
 
   constructor(private conferenceEventsService: ConferenceEventsService) { }
 
@@ -19,7 +19,7 @@ export class ConferenceEventsComponent implements OnInit {
       next: (data) => {
         this.conferences = data;
       },
-      error: (err) => console.error("Error fetching surveys", err)
+      error: (err) => console.error('Error fetching surveys', err)
     });
   }
 
@@ -37,7 +37,7 @@ export class ConferenceEventsComponent implements OnInit {
   // }
 
   goToPage(page: number): void {
-    if (page < 1 || page > this.totalPages) return;
+    if (page < 1 || page > this.totalPages) { return; }
     this.currentPage = page;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -49,7 +49,7 @@ export class ConferenceEventsComponent implements OnInit {
       .reduce((max, d) => d > max ? d : max, new Date(0));
   }
   get filteredConferences(): any[] {
-    if (!this.searchText) return this.conferences;
+    if (!this.searchText) { return this.conferences; }
 
     const term = this.searchText.toLowerCase();
 

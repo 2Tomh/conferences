@@ -3,8 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './client/components/home/home.component';
 import { ConferenceListComponent } from './client/components/conference-list/conference-list.component';
 import { PageNotFoundComponent } from './client/components/page-not-found/page-not-found.component';
-import { RegistrationFormComponent } from './client/components/registration-form/registration-form.component'
-import { ConferenceEventsComponent } from './client/components/conference-events/conference-events.component'
+import { RegistrationFormComponent } from './client/components/registration-form/registration-form.component';
+import { ConferenceEventsComponent } from './client/components/conference-events/conference-events.component';
 import { UnderConstructionComponent } from './client/components/under-construction-component/under-construction-component.component';
 import { ConferenceDetailsComponent } from './client/components/conference-details/conference-details.component';
 // const routes: Routes = [

@@ -15,7 +15,7 @@ export class ConferenceDetailsComponent implements OnInit {
   constructor(private route: ActivatedRoute, private apiService: ApiService, private router: Router) {}
 
   ngOnInit(): void {
-    const id = this.route.snapshot.params['id'];
+    const id = this.route.snapshot.params.id;
     this.apiService.getConferenceById(id).subscribe({
       next: (data) => {
         this.conference = data;

@@ -50,7 +50,7 @@ export class UserManagementComponent implements OnInit {
   }
   saveEdit(): void {
     if (!this.editingUser) {
-      console.error("אין משתמש בעריכה!");
+      console.error('אין משתמש בעריכה!');
       return;
     }
     const userId = this.editingUser.Id || this.editingUser.id || this.editingUser.ID;
@@ -72,12 +72,12 @@ export class UserManagementComponent implements OnInit {
         this.loadUsers();
       },
       error: (err) => {
-        console.error("שגיאת עדכון:", err);
+        console.error('שגיאת עדכון:', err);
       }
     });
   }
   deleteUser(id: string): void {
-    if (!confirm('האם אתה בטוח שברצונך למחוק משתמש זה?')) return;
+    if (!confirm('האם אתה בטוח שברצונך למחוק משתמש זה?')) { return; }
     this.authService.deleteUser(id).subscribe({
       next: () => this.loadUsers(),
       error: (err) => alert('שגיאה במחיקה: ' + err.error)

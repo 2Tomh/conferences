@@ -8,11 +8,12 @@ import { jwtDecode } from 'jwt-decode';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+
+  constructor(private apiService: ApiService) { }
   conferences: any[] = [];
   loading = true;
   isAdmin = false;
-
-  constructor(private apiService: ApiService) { }
+  lastUpdated: Date = new Date('2026-05-26');
 
   ngOnInit(): void {
     this.checkIfAdmin();
@@ -24,7 +25,7 @@ export class HomeComponent implements OnInit {
     if (token) {
       try {
         const decoded: any = jwtDecode(token);
-        const role = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || decoded['role'];
+        const role = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || decoded.role;
         this.isAdmin = role === 'Admin';
       } catch { this.isAdmin = false; }
     }
@@ -51,5 +52,4 @@ export class HomeComponent implements OnInit {
       });
     }
   }
-  lastUpdated: Date = new Date('2026-05-26');
 }

@@ -46,7 +46,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class AdminNavBarComponent implements OnInit {
   isLoggedIn$!: Observable<boolean>;
-  isLoginPage: boolean = false;
+  isLoginPage = false;
 
   // constructor(
   //   private authService: AuthService,
@@ -75,7 +75,7 @@ export class AdminNavBarComponent implements OnInit {
     this.isLoggedIn$ = this.authService.isLoggedIn();
   }
 
-  onLogout() {
+  onLogout():void {
     this.authService.logOut();
     this.router.navigate(['/admin/login']);
   }

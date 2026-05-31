@@ -8,7 +8,7 @@ import { ApiService } from '../../../services/api.service';
 })
 export class DashboardComponent implements OnInit {
   conferences: any[] = [];
-  loading: boolean = true;
+  loading = true;
 
   constructor(private apiService: ApiService) { }
 

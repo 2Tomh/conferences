@@ -29,7 +29,7 @@ export class ManageConferenceComponent implements OnInit {
     this.initForm();
     this.loadFaculties();
 
-    this.conferenceId = this.route.snapshot.params['id'];
+    this.conferenceId = this.route.snapshot.params.id;
     if (this.conferenceId) {
       this.isEditMode = true;
       this.apiService.getConferenceById(this.conferenceId).subscribe(data => {
@@ -88,7 +88,7 @@ export class ManageConferenceComponent implements OnInit {
   }
 
   futureDateValidator(control: any) {
-    if (!control.value) return null;
+    if (!control.value) { return null; }
     const selected = new Date(control.value);
     const today = new Date();
     today.setHours(0, 0, 0, 0);

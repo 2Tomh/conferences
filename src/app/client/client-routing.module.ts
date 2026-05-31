@@ -18,7 +18,7 @@ import { RegistrationFormComponent } from './components/registration-form/regist
 import { ConferenceEventsComponent } from './components/conference-events/conference-events.component';
 import { UnderConstructionComponent } from './components/under-construction-component/under-construction-component.component';
 import { ClientRootComponent } from './client-root.component';
-import {AboutConferenceComponent} from '../client/components/about-conference/about-conference.component'
+import {AboutConferenceComponent} from '../client/components/about-conference/about-conference.component';
 import { ConferenceDetailsComponent } from './components/conference-details/conference-details.component';
 const routes: Routes = [
   {

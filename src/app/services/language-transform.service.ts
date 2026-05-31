@@ -18,7 +18,7 @@
 //   this.translate.addLangs(['he', 'en']);
 //   this.translate.setDefaultLang('he');
 //   this.translate.use('he');
-  
+
 //   this.renderer.addClass(document.body, 'rtl');
 // }
 

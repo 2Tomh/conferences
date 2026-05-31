@@ -16,7 +16,7 @@ import { UnderConstructionComponent } from './components/under-construction-comp
 import { ClientRootComponent } from './client-root.component';
 import { AboutConferenceComponent } from './components/about-conference/about-conference.component';
 import { TranslateModule } from '@ngx-translate/core';
-import {SharedModule} from '../shared/shared.module'
+import {SharedModule} from '../shared/shared.module';
 @NgModule({
   declarations: [
     ClientRootComponent,

@@ -9,8 +9,8 @@ import { AuthService } from '../services/auth.service';
 })
 export class AdminRootComponent implements OnInit {
 
-constructor() {}
-  
+  constructor() { }
+
   ngOnInit(): void {
   }
 

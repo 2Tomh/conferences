@@ -32,7 +32,7 @@ export class ConferenceListComponent implements OnInit {
     const map = new Map<string, any[]>();
     conferences.forEach(c => {
       const faculty = c.facultyName || 'כללי';
-      if (!map.has(faculty)) map.set(faculty, []);
+      if (!map.has(faculty)) { map.set(faculty, []); }
       map.get(faculty)!.push(c);
     });
     this.facultyGroups = Array.from(map.entries()).map(([name, conferences]) => ({ name, conferences }));

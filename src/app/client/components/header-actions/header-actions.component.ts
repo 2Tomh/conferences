@@ -14,7 +14,7 @@ export class HeaderActionsComponent implements OnInit {
   ngOnInit(): void { }
 
   onToggleLanguage(): void {
-    this.langService.toggleLanguage(); 
+    this.langService.toggleLanguage();
   }
 
   onToggleDarkMode(): void {

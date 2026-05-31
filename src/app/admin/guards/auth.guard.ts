@@ -15,7 +15,7 @@ export class AuthGuard implements CanActivate {
     }
 
     // כאן הטעות בדרך כלל! וודא שאתה מפנה לנתיב הזה:
-    this.router.navigate(['/admin/login']); 
+    this.router.navigate(['/admin/login']);
     return false;
   }
 }
