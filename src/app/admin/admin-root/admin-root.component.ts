@@ -5,11 +5,6 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './admin-root.component.html',
   styleUrls: ['./admin-root.component.css']
 })
-export class AdminRootComponent implements OnInit {
-
-constructor() {}
-
-  ngOnInit(): void {
-  }
+export class AdminRootComponent {
 
 }

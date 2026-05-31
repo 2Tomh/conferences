@@ -137,7 +137,7 @@ export class RegistrationFormComponent implements OnInit {
 
   onConferenceChange() {
     const confId = this.regForm.get('conferenceId')?.value;
-    const selectedConf = this.allConferences.find(c => (c.id || c._id) == confId);
+    const selectedConf = this.allConferences.find(c => (c.id || c._id) === confId);
     this.availableSessions = selectedConf?.sessions || [];
     this.regForm.patchValue({ sessionId: '' });
   }

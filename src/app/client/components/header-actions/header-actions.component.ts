@@ -6,12 +6,10 @@ import { LanguageTransformService } from '../../../services/language-transform.s
   templateUrl: './header-actions.component.html',
   styleUrls: ['./header-actions.component.css']
 })
-export class HeaderActionsComponent implements OnInit {
+export class HeaderActionsComponent {
 @Output() toggleDarkMode = new EventEmitter<void>();
 
   constructor(public langService: LanguageTransformService) { }
-
-  ngOnInit(): void { }
 
   onToggleLanguage(): void {
     this.langService.toggleLanguage();

@@ -12,7 +12,7 @@ export class ConferenceListComponent implements OnInit {
   facultyGroups: { name: string, conferences: any[] }[] = [];
   loading = true;
 
-  constructor(private apiService: ApiService, private router: Router) {}
+  constructor(private apiService: ApiService, private router: Router) { }
 
   ngOnInit(): void {
     this.apiService.getAllConferences().subscribe({
@@ -33,9 +33,10 @@ export class ConferenceListComponent implements OnInit {
     conferences.forEach(c => {
       const faculty = c.facultyName || 'כללי';
       if (!map.has(faculty)) { map.set(faculty, []); }
-      map.get(faculty)!.push(c);
+      const group = map.get(faculty);
+      if (group) { group.push(c); }
     });
-    this.facultyGroups = Array.from(map.entries()).map(([name, conferences]) => ({ name, conferences }));
+    this.facultyGroups = Array.from(map.entries()).map(([name, items]) => ({ name, conferences: items }));
   }
 
   goToConference(id: string): void {

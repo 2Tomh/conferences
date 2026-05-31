@@ -6,10 +6,8 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent {
   constructor(private translate: TranslateService) {}
-
-  ngOnInit(): void {}
 
   onToggleLanguage(): void {
     const nextLang = this.translate.currentLang === 'en' ? 'he' : 'en';
