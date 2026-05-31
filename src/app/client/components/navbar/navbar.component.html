@@ -3,14 +3,14 @@
 
     <div class="brand-text-only" routerLink="/"></div>
     <div class="links-section">
+      <a routerLink="/" class="nav-link" routerLinkActive="active">
+        {{ 'Client_NAV.HOME' | translate }}
+      </a>
       <a routerLink="/coming-soon" class="nav-link" routerLinkActive="active">
         {{ 'Client_NAV.ALL_CONFERENCES' | translate }}
       </a>
       <a routerLink="/ConferenceEvents" class="nav-link" routerLinkActive="active">
         {{ 'Client_NAV.SURVEYS' | translate }}
-      </a>
-      <a routerLink="/" class="nav-link" routerLinkActive="active">
-        {{ 'Client_NAV.HOME' | translate }}
       </a>
     </div>
     <app-header-actions></app-header-actions>
