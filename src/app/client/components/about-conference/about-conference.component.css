@@ -145,3 +145,16 @@
         max-width: 1000px;
     }
 }
+
+:host-context([lang="en"]) .about-card {
+  direction: ltr;
+  text-align: left;
+}
+
+:host-context([lang="en"]) .about-committee {
+  text-align: left;
+}
+
+:host-context([lang="en"]) .about-footer {
+  text-align: left;
+}

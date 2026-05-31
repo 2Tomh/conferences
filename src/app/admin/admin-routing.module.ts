@@ -7,6 +7,7 @@ import { AuthGuard } from './guards/auth.guard'; // וודא שהנתיב נכו
 import { ManageConferenceComponent } from './components/manage-conference/manage-conference.component';
 import { CreateUserComponent } from './components/create-user/create-user.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
+import {AttendeeListComponent} from '../admin/components/attendee-list/attendee-list.component'
 const routes: Routes = [
   {
     path: '',
@@ -18,6 +19,7 @@ const routes: Routes = [
       { path: 'manage-conference/:id', component: ManageConferenceComponent, canActivate: [AuthGuard] },
       { path: 'create-user', component: CreateUserComponent, canActivate: [AuthGuard] },
       { path: 'users', component: UserManagementComponent, canActivate: [AuthGuard] },
+      { path: 'attendees', component: AttendeeListComponent, canActivate: [AuthGuard] },
       { path: '', redirectTo: 'login', pathMatch: 'full' }
     ]
   }

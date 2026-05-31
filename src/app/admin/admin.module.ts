@@ -15,11 +15,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CreateUserComponent } from './components/create-user/create-user.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
+import { TranslateModule } from '@ngx-translate/core';
 
-// שאר הקומפוננטות שלך...
-
-// Material Imports
-
+import { SharedModule } from '../shared/shared.module'
 @NgModule({
   declarations: [
     AdminRootComponent,
@@ -29,14 +27,16 @@ import { UserManagementComponent } from './components/user-management/user-manag
     LoginComponent,
     AdminNavBarComponent,
     CreateUserComponent,
-    UserManagementComponent
+    UserManagementComponent,
   ],
   imports: [
     CommonModule,
     AdminRoutingModule,
-    ReactiveFormsModule, // פותר את שגיאת formGroup
-    MatFormFieldModule,  // פותר את שגיאת mat-form-field
-    MatInputModule
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    TranslateModule.forChild(),
+    SharedModule
   ]
 })
 export class AdminModule { }

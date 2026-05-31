@@ -1,49 +1,21 @@
-<!-- <nav class="top-navbar">
-  <div class="nav-container">
-    <div class="nav-brand" routerLink="/admin/dashboard">
-      <img src="../../../../assets/logo.jpeg" alt="Logo" class="nav-logo">
-      <span class="brand-text">ניהול כנסים</span>
-    </div>
-
-    <div class="nav-links" dir="rtl">
-      <a routerLink="/admin/dashboard" routerLinkActive="active">
-        <i class="icon-dashboard"></i> דאשבורד
-      </a>
-      <a routerLink="/admin/attendees" routerLinkActive="active">
-        <i class="icon-users"></i> רשימת נרשמים
-      </a>
-    </div>
-
-    <div class="nav-actions">
-      <button class="btn-logout" (click)="onLogout()">
-        <span>התנתק</span>
-        <i class="icon-exit"></i>
-      </button>
-    </div>
-  </div>
-</nav> -->
 <nav class="top-navbar">
   <div class="nav-container">
-    <div class="nav-brand" routerLink="/admin/dashboard">
-      <img src="../../../../assets/logo.jpeg" alt="Logo" class="nav-logo">
-      <span class="brand-text">ניהול כנסים</span>
-    </div>
-
     <div class="nav-links" dir="rtl">
+      <app-header-actions></app-header-actions>
       <a routerLink="/admin/dashboard" routerLinkActive="active">
-        <i class="icon-dashboard"></i> דאשבורד
+        <i class="icon-dashboard"></i> {{ 'Admin_NAV.DASHBOARD' | translate }}
       </a>
-      <!-- <a routerLink="/admin/attendees" routerLinkActive="active">
-        <i class="icon-users"></i> רשימת נרשמים
-      </a> -->
-      <a routerLink="/admin/users" routerLinkActive="active"> <i class="icon-plus"></i> ניהול משתמשים</a>
-    </div>
 
-    <div class="nav-actions">
-      <button class="btn-logout" (click)="onLogout()">
-        <span>התנתק</span>
-        <i class="icon-exit"></i>
-      </button>
+      <a routerLink="/admin/users" routerLinkActive="active">
+        <i class="icon-users"></i> {{ 'Admin_NAV.USERS' | translate }}
+      </a>
+
+      <div class="nav-actions" *ngIf="(isLoggedIn$ | async) && !isLoginPage">
+        <button class="btn-logout" (click)="onLogout()">
+          <span>{{ 'Admin_NAV.LOGOUT' | translate }}</span>
+          <i class="icon-exit"></i>
+        </button>
+      </div>
     </div>
   </div>
 </nav>

@@ -1,7 +1,11 @@
-<div class="events-container" dir="rtl">
+<!-- <div class="events-container" dir="rtl">
   <h2 class="section-title">סקרי כנסים מדעיים לקראת 2026</h2>
   <p class="intro-text">לנוחותכם, ריכזנו את ברשימה הבאה את הסקרים המקדמים לכנסים המתוכננים להיערך בסמוך לבחירות ברשימה
     הבאה. בואו לחגוג איתנו את המדע הישראלי!</p>
+  <div class="search-container" style="margin-bottom: 20px; text-align: right; margin-top: 135px;">
+    <input type="text" placeholder="חפש כנסים..." [(ngModel)]="searchText" (input)="onSearchChange()"
+      style="padding: 10px; width: 300px; border-radius: 5px; border: 1px solid #ccc;">
+  </div>
   <div class="table-wrapper">
     <table class="events-table">
       <thead>
@@ -12,36 +16,6 @@
         </tr>
       </thead>
       <tbody>
-        <!-- <tr *ngFor="let conf of pagedConferences">
-          <td class="conf-name-cell">
-            <strong>{{ conf.name }}</strong>
-            <span *ngIf="conf.discipline" class="discipline-text">
-              ({{ conf.discipline }})
-            </span>
-          </td>
-          <td>
-            <ul class="organizers-list">
-              <li *ngFor="let org of conf.organizers">
-                {{ org.name }}
-                <span *ngIf="org.affiliation" class="affiliation">({{ org.affiliation }})</span>
-              </li>
-            </ul>
-          </td>
-          <td class="text-center">
-            <ng-container *ngIf="conf.surveyLinks">
-              <div class="survey-links-wrapper">
-                <a *ngFor="let l of conf.surveyLinks" [href]="l.url" target="_blank" class="survey-btn">
-                  {{ l.label }}
-                </a>
-              </div>
-            </ng-container>
-            <a *ngIf="conf.surveyLink" [href]="conf.surveyLink" target="_blank" class="survey-btn">
-              מעבר לסקר
-            </a>
-            <span *ngIf="!conf.surveyLink && !conf.surveyLinks" class="no-link">-</span>
-          </td>
-        </tr> -->
-
         <tr *ngFor="let conf of pagedConferences">
           <td class="conf-name-cell">
             <strong>{{ conf.Name }}</strong>
@@ -71,15 +45,87 @@
             <span *ngIf="!conf.SurveyLink && !conf.SurveyLinks" class="no-link">-</span>
           </td>
         </tr>
+
+        <tr *ngIf="pagedConferences.length === 0">
+          <td colspan="3" style="text-align: center; padding: 20px;">לא נמצאו כנסים התואמים את החיפוש.</td>
+        </tr>
       </tbody>
     </table>
   </div>
+
   <div class="pagination">
     <button class="page-btn" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">&#8250;</button>
     <button *ngFor="let p of pages" class="page-btn" [class.active]="p === currentPage" (click)="goToPage(p)">{{ p
       }}</button>
     <button class="page-btn" (click)="goToPage(currentPage + 1)"
       [disabled]="currentPage === totalPages">&#8249;</button>
+    <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
+  </div>
+</div> -->
+
+<div class="events-container">
+  <h2 class="section-title">{{ 'EVENTS.TITLE' | translate }}</h2>
+  <p class="intro-text">{{ 'EVENTS.INTRO' | translate }}</p>
+  
+  <div class="search-container" style="margin-bottom: 20px; text-align: right; margin-top: 135px;">
+    <input type="text" [placeholder]="'EVENTS.SEARCH_PLACEHOLDER' | translate" 
+           [(ngModel)]="searchText" (input)="onSearchChange()"
+           style="padding: 10px; width: 300px; border-radius: 5px; border: 1px solid #ccc;">
+  </div>
+
+  <div class="table-wrapper">
+    <table class="events-table">
+      <thead>
+        <tr>
+          <th>{{ 'EVENTS.TABLE.NAME_FIELD' | translate }}</th>
+          <th>{{ 'EVENTS.TABLE.ORGANIZERS' | translate }}</th>
+          <th>{{ 'EVENTS.TABLE.SURVEY_LINK' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let conf of pagedConferences">
+          <td class="conf-name-cell">
+            <strong>{{ conf.Name }}</strong>
+            <span *ngIf="conf.Discipline" class="discipline-text">
+              ({{ conf.Discipline }})
+            </span>
+          </td>
+          <td>
+            <ul class="organizers-list">
+              <li *ngFor="let org of conf.Organizers">
+                {{ org.Name }}
+                <span *ngIf="org.Affiliation" class="affiliation">({{ org.Affiliation }})</span>
+              </li>
+            </ul>
+          </td>
+          <td class="text-center">
+            <ng-container *ngIf="conf.SurveyLinks">
+              <div class="survey-links-wrapper">
+                <a *ngFor="let l of conf.SurveyLinks" [href]="l.Url" target="_blank" class="survey-btn">
+                  {{ l.Label }}
+                </a>
+              </div>
+            </ng-container>
+            <a *ngIf="conf.SurveyLink" [href]="conf.SurveyLink" target="_blank" class="survey-btn">
+              {{ 'EVENTS.TABLE.GO_TO_SURVEY' | translate }}
+            </a>
+            <span *ngIf="!conf.SurveyLink && !conf.SurveyLinks" class="no-link">-</span>
+          </td>
+        </tr>
+
+        <tr *ngIf="pagedConferences.length === 0">
+          <td colspan="3" style="text-align: center; padding: 20px;">
+            {{ 'EVENTS.NO_DATA' | translate }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination">
+    <button class="page-btn" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">&#8250;</button>
+    <button *ngFor="let p of pages" class="page-btn" [class.active]="p === currentPage" (click)="goToPage(p)">{{ p }}</button>
+    <button class="page-btn" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">&#8249;</button>
     <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
   </div>
 </div>

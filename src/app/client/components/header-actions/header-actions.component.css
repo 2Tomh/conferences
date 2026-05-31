@@ -1,0 +1,43 @@
+.language-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.language-container button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.rect-back {
+  fill: white;
+  stroke: #374F60;
+  stroke-width: 1.15;
+}
+
+.rect-front {
+  fill: #374F60;
+}
+
+@media (max-width: 480px) {
+  .language-container button {
+    padding: 3px;
+  }
+}
+
+@media (max-width: 350px) {
+  .language-container button {
+    padding: 2px;
+  }
+
+  .language-container button svg {
+    width: 18px;
+    height: 18px;
+  }
+}

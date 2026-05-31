@@ -1,4 +1,4 @@
-<div class="manage-container" dir="rtl">
+<!-- <div class="manage-container" dir="rtl">
   <div class="form-card">
 
     <div class="form-header">
@@ -72,6 +72,43 @@
         <button type="button" class="btn-cancel" routerLink="/admin/dashboard">ביטול</button>
       </div>
 
+    </form>
+  </div>
+</div> -->
+
+<div class="manage-container">
+  <div class="form-card">
+    <div class="form-header">
+      <div class="icon">{{ isEditMode ? '✏️' : '🎯' }}</div>
+      <h1>{{ (isEditMode ? 'MANAGE.EDIT_TITLE' : 'MANAGE.CREATE_TITLE') | translate }}</h1>
+      <p>{{ (isEditMode ? 'MANAGE.EDIT_SUB' : 'MANAGE.CREATE_SUB') | translate }}</p>
+    </div>
+
+    <form [formGroup]="conferenceForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label>{{ 'MANAGE.FIELDS.TITLE' | translate }}</label>
+        <input type="text" formControlName="title" [placeholder]="'MANAGE.PLACEHOLDERS.TITLE' | translate">
+        <small *ngIf="conferenceForm.get('title')?.invalid && conferenceForm.get('title')?.touched" class="text-danger">
+          {{ 'MANAGE.ERRORS.TITLE_MIN' | translate }}
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>{{ 'MANAGE.FIELDS.FACULTY' | translate }}</label>
+        <select formControlName="facultyName" (change)="onFacultyChange()">
+          <option value="">{{ 'MANAGE.PLACEHOLDERS.SELECT_FACULTY' | translate }}</option>
+          <option *ngFor="let faculty of faculties" [value]="faculty">{{ faculty }}</option>
+        </select>
+      </div>
+
+      <div class="actions">
+        <button type="submit" [disabled]="conferenceForm.invalid">
+          {{ (isEditMode ? 'ACTIONS.UPDATE' : 'ACTIONS.CREATE') | translate }}
+        </button>
+        <button type="button" routerLink="/admin/dashboard">
+          {{ 'ACTIONS.CANCEL' | translate }}
+        </button>
+      </div>
     </form>
   </div>
 </div>

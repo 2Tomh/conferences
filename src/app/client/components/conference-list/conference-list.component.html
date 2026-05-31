@@ -1,4 +1,4 @@
-<div class="list-page" dir="rtl">
+<!-- <div class="list-page" dir="rtl">
 
   <div class="page-header">
     <h1>כל הכנסים</h1>
@@ -14,13 +14,11 @@
 
     <div class="faculty-section" *ngFor="let group of facultyGroups">
 
-      <!-- כותרת פקולטה -->
       <div class="faculty-header">
         <h2>{{ group.name }}</h2>
         <span class="count-badge">{{ group.conferences.length }} כנסים</span>
       </div>
 
-      <!-- שורה אופקית -->
       <div class="scroll-row">
         <div class="conference-card" *ngFor="let conf of group.conferences" (click)="goToConference(conf.id)">
           <div class="card-inner">
@@ -33,6 +31,50 @@
               <span>👥 {{ conf.maxParticipants }}</span>
             </div>
             <div class="btn-details">לפרטים ←</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div> -->
+
+<div class="list-page">
+
+  <div class="page-header">
+    <h1>{{ 'LIST_PAGE.TITLE' | translate }}</h1>
+    <p>{{ 'LIST_PAGE.SUBTITLE' | translate }}</p>
+  </div>
+
+  <div *ngIf="loading" class="loader-wrapper">
+    <div class="spinner"></div>
+    <p>{{ 'COMMON.LOADING' | translate }}</p>
+  </div>
+
+  <div *ngIf="!loading" class="content-wrapper">
+
+    <div class="faculty-section" *ngFor="let group of facultyGroups">
+
+      <div class="faculty-header">
+        <h2>{{ group.name }}</h2>
+        <span class="count-badge">
+          {{ group.conferences.length }} {{ 'LIST_PAGE.CONFERENCES_COUNT' | translate }}
+        </span>
+      </div>
+
+      <div class="scroll-row">
+        <div class="conference-card" *ngFor="let conf of group.conferences" (click)="goToConference(conf.id)">
+          <div class="card-inner">
+            <div class="card-icon">🎓</div>
+            <h3>{{ conf.name }}</h3>
+            <p class="description">{{ conf.description }}</p>
+            <div class="card-meta">
+              <span>📅 {{ conf.date | date:'dd/MM/yyyy' }}</span>
+              <span>📍 {{ conf.location }}</span>
+              <span>👥 {{ conf.maxParticipants }}</span>
+            </div>
+            <div class="btn-details">{{ 'LIST_PAGE.DETAILS' | translate }}</div>
           </div>
         </div>
       </div>

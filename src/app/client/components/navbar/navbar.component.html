@@ -1,16 +1,21 @@
 <nav class="science-navbar">
   <div class="nav-container">
-    <div class="brand-text-only" routerLink="/"></div>
 
+    <div class="brand-text-only" routerLink="/"></div>
     <div class="links-section">
-      <!-- <a routerLink="/all-conferences" class="nav-link" routerLinkActive="active">כל הכנסים</a> -->
-      <a routerLink="/coming-soon" class="nav-link" routerLinkActive="active">כל הכנסים</a>
-      <a routerLink="/ConferenceEvents" class="nav-link" routerLinkActive="active">סקרים</a>
-      <a routerLink="/" class="nav-link" routerLinkActive="active">ראשי</a>
+      <a routerLink="/coming-soon" class="nav-link" routerLinkActive="active">
+        {{ 'Client_NAV.ALL_CONFERENCES' | translate }}
+      </a>
+      <a routerLink="/ConferenceEvents" class="nav-link" routerLinkActive="active">
+        {{ 'Client_NAV.SURVEYS' | translate }}
+      </a>
+      <a routerLink="/" class="nav-link" routerLinkActive="active">
+        {{ 'Client_NAV.HOME' | translate }}
+      </a>
     </div>
+    <app-header-actions></app-header-actions>
   </div>
 </nav>
-
 <main class="content-area">
   <router-outlet></router-outlet>
 </main>

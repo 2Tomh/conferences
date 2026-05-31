@@ -356,3 +356,22 @@
     max-width: 1400px;
   }
 }
+
+/* LTR - אנגלית */
+:host-context([lang="en"]) .events-table {
+  text-align: left;
+}
+
+:host-context([lang="en"]) .events-container {
+  direction: ltr;
+}
+
+:host-context([lang="en"]) .search-container {
+  text-align: left !important;
+}
+
+:host-context([lang="en"]) .affiliation {
+  margin-right: 0;
+  margin-left: 4px;
+}
+

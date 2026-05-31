@@ -1,4 +1,4 @@
-<section class="about-section" dir="rtl">
+<!-- <section class="about-section" dir="rtl">
     <div class="container">
         <div class="about-card">
             <div class="accent-line"></div>
@@ -30,6 +30,36 @@
                 <p>רן י. סניטקובסקי, אוניברסיטת תל אביב</p>
                 <p>עדי שטרן, אוניברסיטת תל אביב, האקדמיה הצעירה הישראלית</p>
                 <p>לפניות: <a href="mailto:askmindil@gmail.com">askmindil@gmail.com</a></p>
+            </div>
+        </div>
+    </div>
+</section> -->
+
+<section class="about-section">
+    <div class="container">
+        <div class="about-card">
+            <div class="accent-line"></div>
+            <p class="about-lead">
+                {{ 'ABOUT.LEAD' | translate }}
+            </p>
+            <div class="about-content">
+                <p [innerHTML]="'ABOUT.CONTENT_1' | translate"></p>
+                <p>{{ 'ABOUT.CONTENT_2' | translate }}</p>
+                <p>{{ 'ABOUT.CONTENT_3' | translate }}</p>
+            </div>
+            <div class="about-footer">
+                <p><strong>Mind-IL</strong> – {{ 'ABOUT.FOOTER' | translate }}</p>
+            </div>
+            <div class="about-committee">
+                <p><strong>{{ 'ABOUT.COMMITTEE.TITLE' | translate }}:</strong></p>
+                
+                <p *ngFor="let member of ('ABOUT.COMMITTEE.MEMBERS' | translate)">
+                    {{ member }}
+                </p>
+                
+                <p>{{ 'ABOUT.COMMITTEE.CONTACT' | translate }}: 
+                    <a href="mailto:askmindil@gmail.com">askmindil@gmail.com</a>
+                </p>
             </div>
         </div>
     </div>

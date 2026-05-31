@@ -9,6 +9,7 @@ export class ConferenceEventsComponent implements OnInit {
   pageSize = 12;
   currentPage = 1;
   conferences: any[] = [];
+  searchText: string = '';
 
   constructor(private conferenceEventsService: ConferenceEventsService) { }
 
@@ -22,18 +23,18 @@ export class ConferenceEventsComponent implements OnInit {
     });
   }
 
-  get totalPages(): number {
-    return Math.ceil(this.conferences.length / this.pageSize);
-  }
+  // get totalPages(): number {
+  //   return Math.ceil(this.conferences.length / this.pageSize);
+  // }
 
   get pages(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
-  get pagedConferences(): any[] {
-    const start = (this.currentPage - 1) * this.pageSize;
-    return this.conferences.slice(start, start + this.pageSize);
-  }
+  // get pagedConferences(): any[] {
+  //   const start = (this.currentPage - 1) * this.pageSize;
+  //   return this.conferences.slice(start, start + this.pageSize);
+  // }
 
   goToPage(page: number): void {
     if (page < 1 || page > this.totalPages) return;
@@ -46,5 +47,39 @@ export class ConferenceEventsComponent implements OnInit {
       .filter(c => c.AddedAt)
       .map(c => new Date(c.AddedAt))
       .reduce((max, d) => d > max ? d : max, new Date(0));
+  }
+  get filteredConferences(): any[] {
+    if (!this.searchText) return this.conferences;
+
+    const term = this.searchText.toLowerCase();
+
+    return this.conferences.filter(c => {
+      // 1. חיפוש בשם הכנס
+      const matchName = c.Name?.toLowerCase().includes(term);
+
+      // 2. חיפוש בשם המנחה או בשיוך המוסדי שלו
+      const matchOrganizer = c.Organizers?.some((org: any) =>
+        org.Name?.toLowerCase().includes(term) ||
+        org.Affiliation?.toLowerCase().includes(term)
+      );
+
+      return matchName || matchOrganizer;
+    });
+  }
+
+  get pagedConferences(): any[] {
+    const list = this.filteredConferences; // שימוש ברשימה המסוננת
+    const start = (this.currentPage - 1) * this.pageSize;
+    return list.slice(start, start + this.pageSize);
+  }
+
+  // נעדכן גם את החישובים האחרים שיתבססו על הרשימה המסוננת
+  get totalPages(): number {
+    return Math.ceil(this.filteredConferences.length / this.pageSize);
+  }
+
+  // בונוס: איפוס עמוד בעת חיפוש
+  onSearchChange() {
+    this.currentPage = 1;
   }
 }

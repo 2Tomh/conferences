@@ -1,46 +1,42 @@
 <div class="dashboard-container">
   <div class="header-actions">
-    <h1>ניהול הכנסים שלי</h1>
-    <button class="btn-add" routerLink="../manage-conference">➕ יצירת כנס חדש</button>
+    <h1>{{ 'DASHBOARD_PAGE.TITLE' | translate }}</h1>
+    <button class="btn-add" routerLink="../manage-conference">
+      ➕ {{ 'DASHBOARD_PAGE.CREATE_NEW' | translate }}
+    </button>
   </div>
 
-  <div *ngIf="loading" class="loader">טוען נתונים...</div>
+  <div *ngIf="loading" class="loader">{{ 'COMMON.LOADING' | translate }}</div>
 
   <table *ngIf="!loading && conferences.length > 0" class="admin-table">
     <thead>
       <tr>
-        <th>שם הכנס</th>
-        <th>תאריך</th>
-        <th>מיקום</th>
-        <th>נרשמים</th>
-        <th>פעולות</th>
+        <th>{{ 'TABLE.NAME' | translate }}</th>
+        <th>{{ 'TABLE.DATE' | translate }}</th>
+        <th>{{ 'TABLE.LOCATION' | translate }}</th>
+        <th>{{ 'TABLE.ATTENDEES' | translate }}</th>
+        <th>{{ 'TABLE.ACTIONS' | translate }}</th>
       </tr>
     </thead>
     <tbody>
-      <!-- <tr *ngFor="let conf of conferences">
-         <td>{{ conf.Name }}</td>
-        <td>{{ conf.date | date:'dd/MM/yyyy' }}</td>
-        <td>{{ conf.location }}</td>
-        <td>{{ conf.attendeesCount }}</td>
-        <td>
-          <button class="btn-edit" [routerLink]="['../manage-conference', conf.id]">ערוך</button>
-          <button class="btn-delete" (click)="onDelete(conf.id)">מחק</button>
-        </td>
-      </tr> -->
       <tr *ngFor="let conf of conferences">
         <td>{{ conf.name }}</td>
         <td>{{ conf.date | date:'dd/MM/yyyy' }}</td>
         <td>{{ conf.location }}</td>
         <td>{{ conf.sessions?.length || 0 }}</td>
         <td>
-          <button class="btn-edit" [routerLink]="['../manage-conference', conf.id]">ערוך</button>
-          <button class="btn-delete" (click)="onDelete(conf.id)">מחק</button>
+          <button class="btn-edit" [routerLink]="['../manage-conference', conf.id]">
+            {{ 'COMMON_ACTIONS.EDIT' | translate }}
+          </button>
+          <button class="btn-delete" (click)="onDelete(conf.id)">
+            {{ 'COMMON_ACTIONS.DELETE' | translate }}
+          </button>
         </td>
       </tr>
     </tbody>
   </table>
 
   <div *ngIf="!loading && conferences.length === 0" class="no-data">
-    טרם יצרת כנסים. לחץ על "יצירת כנס חדש" כדי להתחיל.
+    {{ 'DASHBOARD_PAGE.NO_DATA' | translate }}
   </div>
 </div>
