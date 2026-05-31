@@ -6,6 +6,7 @@
 .container {
   padding: 3rem 2rem;
   text-align: center;
+  margin-top: 10%;
 }
 
 .badge {
@@ -83,4 +84,7 @@ button {
 
 button:hover {
   background: #f5f5f5;
+}
+:host-context([lang="en"]) :host {
+  direction: ltr;
 }
