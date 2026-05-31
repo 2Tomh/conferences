@@ -28,17 +28,39 @@ export class ConferenceListComponent implements OnInit {
     });
   }
 
+  // groupByFaculty(conferences: any[]): void {
+  //   const map = new Map<string, any[]>();
+  //   conferences.forEach(c => {
+  //     const faculty = c.facultyName || 'כללי';
+  //     if (!map.has(faculty)) { map.set(faculty, []); }
+  //     const group = map.get(faculty);
+  //     if (group) { group.push(c); }
+  //   });
+  //   this.facultyGroups = Array.from(map.entries()).map(([name, items]) => ({ name, conferences: items }));
+  // }
   groupByFaculty(conferences: any[]): void {
     const map = new Map<string, any[]>();
+
     conferences.forEach(c => {
       const faculty = c.facultyName || 'כללי';
-      if (!map.has(faculty)) { map.set(faculty, []); }
-      const group = map.get(faculty);
-      if (group) { group.push(c); }
-    });
-    this.facultyGroups = Array.from(map.entries()).map(([name, items]) => ({ name, conferences: items }));
-  }
 
+      // אם לא קיים מפתח, ניצור אותו
+      if (!map.has(faculty)) {
+        map.set(faculty, []);
+      }
+
+      // ניקח את המערך ונשתמש בסימן שאלה או בבדיקה פשוטה
+      const group = map.get(faculty);
+      if (group !== undefined) {
+        group.push(c);
+      }
+    });
+
+    this.facultyGroups = Array.from(map.entries()).map(([name, items]) => ({
+      name,
+      conferences: items
+    }));
+  }
   goToConference(id: string): void {
     this.router.navigate(['/conference', id]);
   }

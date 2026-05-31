@@ -5,6 +5,4 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './attendee-list.component.html',
   styleUrls: ['./attendee-list.component.css']
 })
-export class AttendeeListComponent {
-
-}
+export class AttendeeListComponent {}
