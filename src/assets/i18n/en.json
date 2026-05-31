@@ -1,0 +1,159 @@
+{
+  "Admin_NAV": {
+    "DASHBOARD": "Dashboard",
+    "USERS": "User Management",
+    "LOGOUT": "Logout"
+  },
+  "CREATE_USER": {
+    "TITLE": "Create New User",
+    "FULL_NAME": "Full Name",
+    "EMAIL": "Email",
+    "PASSWORD": "Password",
+    "ROLE": "Role",
+    "SUBMIT": "Create User"
+  },
+  "ROLES": {
+    "ADMIN": "Admin",
+    "FACULTY_MANAGER": "Faculty Manager",
+    "LECTURER": "Lecturer"
+  },
+  "DASHBOARD_PAGE": {
+    "TITLE": "My Conferences",
+    "CREATE_NEW": "Create New Conference",
+    "NO_DATA": "No conferences created yet. Click 'Create New Conference' to start."
+  },
+  "TABLE": {
+    "NAME": "Conference Name",
+    "DATE": "Date",
+    "LOCATION": "Location",
+    "ATTENDEES": "Attendees",
+    "ACTIONS": "Actions"
+  },
+  "COMMON_ACTIONS": {
+    "EDIT": "Edit",
+    "DELETE": "Delete",
+    "CREATE": "Create Conference",
+    "UPDATE": "Update Conference",
+    "CANCEL": "Cancel"
+  },
+  "COMMON": {
+    "LOADING": "Loading data..."
+  },
+  "LOGIN": {
+    "TITLE": "Conference System Login",
+    "EMAIL": "Email",
+    "EMAIL_PLACEHOLDER": "example@univ.ac.il",
+    "PASSWORD": "Password",
+    "SUBMIT": "Login"
+  },
+  "MANAGE": {
+    "EDIT_TITLE": "Edit Conference",
+    "CREATE_TITLE": "Create New Conference",
+    "EDIT_SUB": "Update conference details",
+    "CREATE_SUB": "Fill in the details to create a new conference",
+    "FIELDS": {
+      "TITLE": "Conference Name",
+      "FACULTY": "Faculty",
+      "DESCRIPTION": "Description"
+    },
+    "PLACEHOLDERS": {
+      "TITLE": "Enter conference name",
+      "SELECT_FACULTY": "-- Select Faculty --"
+    },
+    "ERRORS": {
+      "TITLE_MIN": "Conference name must be at least 3 characters long."
+    }
+  },
+  "USER_MGMT": {
+    "TITLE": "User Management",
+    "ADD_USER": "Add User",
+    "TABLE": {
+      "NAME": "Full Name",
+      "EMAIL": "Email",
+      "ROLE": "Role",
+      "FACULTY": "Faculty"
+    },
+    "EDIT": {
+      "TITLE": "Edit User: {{name}}"
+    }
+  },
+  "ABOUT": {
+    "LEAD": "At the end of October, dozens of academic conferences will be held across the country in a wide range of research fields, as part of an initiative to strengthen ties between Israeli researchers and research institutions, both in Israel and abroad.",
+    "CONTENT_1": "The initiative, in collaboration with <strong>the Israel Young Academy</strong>, seeks to leverage the arrival of thousands of Israeli researchers from abroad to Israel during the Knesset election period to create professional meetings, encourage research collaborations, reveal new academic opportunities, and strengthen the international status of Israeli academia.",
+    "CONTENT_2": "Mind-IL invites researchers and industry partners to take part in a celebration of scientific excellence, creativity, and international cooperation.",
+    "CONTENT_3": "If you care about the future of science and research in Israel, join us.",
+    "FOOTER": "Connecting researchers to scientific excellence.",
+    "COMMITTEE": {
+      "TITLE": "Steering Committee Members",
+      "MEMBERS": [
+        "Noam Gidron, The Hebrew University",
+        "Nadav Davidovitch, Bar-Ilan University",
+        "Niraon Hashai, Reichman University",
+        "Ran J. Snitkovsky, Tel Aviv University",
+        "Adi Stern, Tel Aviv University, The Israel Young Academy",
+        "Kinneret Teodorescu, The Technion"
+      ],
+      "CONTACT": "Contact us"
+    }
+  },
+  "CONF_PAGE": {
+    "NOT_FOUND": "Conference not found",
+    "BACK_TO_LIST": "Back to conferences list",
+    "MAX_PARTICIPANTS": "Up to {{count}} participants",
+    "ABOUT_TITLE": "About the Conference",
+    "SESSIONS_TITLE": "Sessions",
+    "CTA_TITLE": "Interested in attending?",
+    "CTA_SUB": "Join us for a fascinating conference with the best experts in the field",
+    "REGISTER": "Register for the conference"
+  },
+  "EVENTS": {
+    "TITLE": "Scientific Conference Surveys for 2026",
+    "INTRO": "For your convenience, we have compiled the preliminary surveys for conferences scheduled to take place around the elections. Join us in celebrating Israeli science!",
+    "SEARCH_PLACEHOLDER": "Search conferences...",
+    "TABLE": {
+      "NAME_FIELD": "Conference Name / Field",
+      "ORGANIZERS": "Organizers and Academic Institution",
+      "SURVEY_LINK": "Survey Link",
+      "GO_TO_SURVEY": "Go to Survey"
+    },
+    "NO_DATA": "No conferences found matching your search."
+  },
+  "LIST_PAGE": {
+    "TITLE": "All Conferences",
+    "SUBTITLE": "Discover upcoming conferences and register for those that interest you",
+    "CONFERENCES_COUNT": "conferences",
+    "DETAILS": "Details →"
+  },
+  "BANNER": {
+    "UPDATED": "Last updated",
+    "MESSAGE": "Surveys are open! Participate in shaping the 2026 scientific conferences.",
+    "BUTTON": "To Surveys →"
+  },
+  "Client_NAV": {
+    "ALL_CONFERENCES": "All Conferences",
+    "SURVEYS": "Surveys",
+    "HOME": "Home"
+  },
+  "ERRORS": {
+    "NOT_FOUND_TITLE": "Oops! Page not found",
+    "NOT_FOUND_SUBTITLE": "It seems the page you are looking for does not exist or has been moved.",
+    "BACK_TO_HOME": "Back to Home Page"
+  },
+  "REGISTRATION": {
+    "TITLE": "Quick Conference Registration",
+    "SELECT_DEPT": "1. Select Department:",
+    "SELECT_CONF": "2. Select Conference:",
+    "SELECT_SESSION": "3. Select Specific Session:",
+    "CHOOSE_LIST": "Select from the list...",
+    "CHOOSE_CONF": "Which conference interests you?",
+    "CHOOSE_SESSION": "Choose from the agenda...",
+    "FULL_NAME": "Full Name",
+    "EMAIL": "Email",
+    "SUBMIT": "Confirm Registration"
+  },
+  "COMING_SOON": {
+    "BADGE": "Under Construction",
+    "TITLE": "This page is not ready yet",
+    "MESSAGE": "We are working on it and will be back soon."
+  }
+}
