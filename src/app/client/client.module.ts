@@ -7,7 +7,6 @@ import { ClientRoutingModule } from './client-routing.module';
 import { ConferenceEventsComponent } from '../client/components/conference-events/conference-events.component';
 import { ConferenceDetailsComponent } from './components/conference-details/conference-details.component';
 import { ConferenceListComponent } from './components/conference-list/conference-list.component';
-import { FooterComponent } from './components/footer/footer.component';
 import { HomeComponent } from './components/home/home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
