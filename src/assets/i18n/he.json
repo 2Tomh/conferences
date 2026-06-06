@@ -130,9 +130,8 @@
     "BUTTON": "לסקרים ←"
   },
   "Client_NAV": {
-    "ALL_CONFERENCES": "כל הכנסים",
-    "SURVEYS": "סקרים",
-    "HOME": "ראשי"
+    "SURVEYS": "כל הכנסים",
+    "HOME": "דף הבית"
   },
   "ERRORS": {
     "NOT_FOUND_TITLE": "אופס! הדף לא נמצא",

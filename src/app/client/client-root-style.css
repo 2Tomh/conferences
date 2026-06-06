@@ -1,0 +1,11 @@
+.page-content {
+  padding-top: 60px;
+}
+
+.main-nav{
+    background-color: white;
+}
+app-navbar {
+    display: block;
+    height: 70px;  /* אותו גובה כמו ה-NAV */
+}

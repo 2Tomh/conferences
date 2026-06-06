@@ -1,8 +1,11 @@
 /* ========== ABOUT SECTION ========== */
 .about-section {
-    padding: 0;
-    width: 100%;
+    width: 85%;
     box-sizing: border-box;
+    background: white;
+    margin: auto;
+    border-radius: 50px;
+    position: relative;
 }
 
 .about-section .container {
@@ -13,14 +16,14 @@
 }
 
 .about-card {
-    border-radius: 18px;
+    /* border-radius: 18px;
     border: 1px solid rgba(0, 0, 0, 0.15);
     box-shadow: 0 10px 40px rgba(0, 242, 255, 0.05);
     position: relative;
     overflow: hidden;
-    direction: rtl;
+    direction: rtl; */
     padding: 24px 24px 24px 20px;
-    box-sizing: border-box;
+    /* box-sizing: border-box; */
 }
 
 .about-card::before {
@@ -33,14 +36,7 @@
     pointer-events: none;
 }
 
-.accent-line {
-    width: 60px;
-    height: 4px;
-    background: #000000;
-    border-radius: 2px;
-    margin-bottom: 28px;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
-}
+
 
 .about-lead {
     font-size: clamp(1rem, 2.5vw, 1.2rem);
@@ -147,14 +143,14 @@
 }
 
 :host-context([lang="en"]) .about-card {
-  direction: ltr;
-  text-align: left;
+    direction: ltr;
+    text-align: left;
 }
 
 :host-context([lang="en"]) .about-committee {
-  text-align: left;
+    text-align: left;
 }
 
 :host-context([lang="en"]) .about-footer {
-  text-align: left;
+    text-align: left;
 }

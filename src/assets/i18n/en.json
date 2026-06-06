@@ -130,8 +130,7 @@
     "BUTTON": "To Surveys →"
   },
   "Client_NAV": {
-    "ALL_CONFERENCES": "All Conferences",
-    "SURVEYS": "Surveys",
+    "SURVEYS": "All Conferences",
     "HOME": "Home"
   },
   "ERRORS": {

@@ -16,6 +16,9 @@ import { ClientRootComponent } from './client-root.component';
 import { AboutConferenceComponent } from './components/about-conference/about-conference.component';
 import { TranslateModule } from '@ngx-translate/core';
 import {SharedModule} from '../shared/shared.module';
+import { TranzilaPaymentComponent } from './components/tranzila-payment/tranzila-payment.component';
+import { PaymentSuccessComponent } from './components/payment-success/payment-success.component';
+import { PaymentFailedComponent } from './components/payment-failed/payment-failed.component';
 @NgModule({
   declarations: [
     ClientRootComponent,
@@ -28,6 +31,9 @@ import {SharedModule} from '../shared/shared.module';
     RegistrationFormComponent,
     UnderConstructionComponent,
     AboutConferenceComponent,
+    TranzilaPaymentComponent,
+    PaymentSuccessComponent,
+    PaymentFailedComponent,
   ],
   imports: [
     CommonModule,

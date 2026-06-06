@@ -19,4 +19,30 @@
 
 body {
     font-family: 'Open Sans', sans-serif !important;
+    overflow-x: hidden;
+    margin: 0 auto;
 }
+
+html {
+  height: 100%;
+}
+/* מצב בהיר (ברירת מחדל) */
+:root {
+  --bg-color: #ffffff;
+  --text-color: #000000;
+  --card-bg: #f4f4f4;
+}
+
+/* מצב כהה */
+.dark-mode {
+  --bg-color: #121212;
+  --text-color: #ffffff;
+  --card-bg: #1e1e1e;
+}
+
+/* החלת המשתנים על כל האפליקציה */
+/* body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+} */

@@ -1,25 +1,24 @@
-// import { NgModule } from '@angular/core';
-// import { Routes, RouterModule } from '@angular/router';
-
-// const routes: Routes = [];
-
-// @NgModule({
-//   imports: [RouterModule.forChild(routes)],
-//   exports: [RouterModule]
-// })
-// export class ClientRoutingModule { }
-
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
-import { ConferenceListComponent } from './components/conference-list/conference-list.component';
-import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
-import { RegistrationFormComponent } from './components/registration-form/registration-form.component';
-import { ConferenceEventsComponent } from './components/conference-events/conference-events.component';
-import { UnderConstructionComponent } from './components/under-construction-component/under-construction-component.component';
+
+// קומפוננטות ראשיות ותשתית
 import { ClientRootComponent } from './client-root.component';
-import {AboutConferenceComponent} from '../client/components/about-conference/about-conference.component';
+import { HomeComponent } from './components/home/home.component';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { UnderConstructionComponent } from './components/under-construction-component/under-construction-component.component';
+
+// קומפוננטות כנסים
+import { ConferenceListComponent } from './components/conference-list/conference-list.component';
 import { ConferenceDetailsComponent } from './components/conference-details/conference-details.component';
+import { ConferenceEventsComponent } from './components/conference-events/conference-events.component';
+import { AboutConferenceComponent } from '../client/components/about-conference/about-conference.component';
+import { RegistrationFormComponent } from './components/registration-form/registration-form.component';
+
+// קומפוננטות תשלום
+import { TranzilaPaymentComponent } from '../client/components/tranzila-payment/tranzila-payment.component';
+import { PaymentSuccessComponent } from './components/payment-success/payment-success.component';
+import { PaymentFailedComponent } from './components/payment-failed/payment-failed.component';
+
 const routes: Routes = [
   {
     path: '',
@@ -32,6 +31,12 @@ const routes: Routes = [
       { path: 'register/:sessionId', component: RegistrationFormComponent },
       { path: 'about', component: AboutConferenceComponent },
       { path: 'conference/:id', component: ConferenceDetailsComponent },
+      
+      // נתיבי תשלום
+      { path: 'payment', component: TranzilaPaymentComponent },
+      { path: 'payment/success', component: PaymentSuccessComponent },
+      { path: 'payment/failed', component: PaymentFailedComponent },
+      
       { path: '**', component: PageNotFoundComponent }
     ]
   }

@@ -1,0 +1,125 @@
+/* --- דף הרקע --- */
+.registration-page {
+    min-height: 100vh;
+    padding: 40px 20px;
+    background: radial-gradient(circle at top left, #4a77d4 0%, transparent 40%),
+                radial-gradient(circle at bottom right, #3b82f6 0%, transparent 40%),
+                linear-gradient(135deg, #1e293b, #334155);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* --- כרטיס ראשי (קומפקטי) --- */
+.registration-card {
+    width: 100%;
+    max-width: 500px;
+    background: rgba(255, 255, 255, 0.1); 
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* --- כותרת הכרטיס --- */
+.card-header-custom {
+    text-align: center;
+    padding: 25px 20px 10px;
+}
+
+.card-header-custom h2 {
+    color: #ffffff;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.card-header-custom p {
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+
+/* --- הטופס (קומפקטי) --- */
+.registration-form {
+    padding: 20px 30px 30px;
+}
+
+.form-row {
+    margin-bottom: 12px;
+}
+
+.form-row label {
+    display: block;
+    margin-bottom: 4px;
+    color: #e2e8f0;
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+
+/* --- שדות קלט --- */
+.form-control,
+.form-select {
+    width: 100%;
+    height: 44px;
+    background: rgba(0, 0, 0, 0.2);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 0 12px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    background: rgba(0, 0, 0, 0.3);
+    border-color: #3b82f6;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+}
+
+.form-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left 0.8rem center;
+    background-size: 1rem;
+}
+
+/* --- כפתור שליחה --- */
+.btn-submit {
+    width: 100%;
+    height: 48px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-submit:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4);
+}
+
+.btn-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: grayscale(1);
+}
+
+/* --- שגיאות --- */
+.error-text {
+    color: #f87171;
+    margin-top: 4px;
+    font-size: 0.75rem;
+}
+
+.ng-invalid.ng-touched {
+    border-color: #ef4444 !important;
+}
