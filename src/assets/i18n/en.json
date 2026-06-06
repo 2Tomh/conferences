@@ -113,7 +113,6 @@
     "TABLE": {
       "NAME_FIELD": "Conference Name / Field",
       "ORGANIZERS": "Organizers and Academic Institution",
-      "SURVEY_LINK": "Survey Link",
       "GO_TO_SURVEY": "Go to Survey"
     },
     "NO_DATA": "No conferences found matching your search."
