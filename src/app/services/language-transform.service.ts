@@ -63,10 +63,10 @@ export class LanguageTransformService {
 
 constructor(private translate: TranslateService) {
   this.translate.addLangs(['en', 'he']);
-  this.translate.setDefaultLang('he');  // ← he במקום en
-  this.translate.use('he');             // ← he במקום en
-  document.documentElement.dir = 'rtl'; // ← rtl במקום ltr
-  document.documentElement.lang = 'he'; // ← he במקום en
+  this.translate.setDefaultLang('en');  // ← he במקום en
+  this.translate.use('en');             // ← he במקום en
+  document.documentElement.dir = 'ltr'; // ← rtl במקום ltr
+  document.documentElement.lang = 'en'; // ← he במקום en
 }
 
   toggleLanguage() {

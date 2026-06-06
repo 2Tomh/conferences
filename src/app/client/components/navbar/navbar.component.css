@@ -37,7 +37,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    direction: rtl;
+    /* direction: rtl; */
 }
 
 /* עיצוב הלוגו והטקסט בשורה */
@@ -81,14 +81,21 @@
 }
 
 .nav-link {
-    color: white;
+    /* color: white;
     text-decoration: none;
     font-weight: 600;
     font-size: 0.95rem;
     transition: color 0.3s ease;
     border-left: 1px solid white;
     width: 100px;
-    height: 25px;
+    height: 25px; */
+    color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+  width: fit-content;
+  height: 25px;
 }
 
 .nav-link:last-child {
@@ -124,9 +131,6 @@
     font-weight: bold;
 }
 
-.btn-register:hover {
-    background-color: #0056b3;
-}
 
 .divider {
     border-left: 2px solid #fff;

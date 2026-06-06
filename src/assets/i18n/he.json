@@ -130,8 +130,9 @@
     "BUTTON": "לסקרים ←"
   },
   "Client_NAV": {
+    "HOME": "דף הבית",
     "SURVEYS": "כל הכנסים",
-    "HOME": "דף הבית"
+    "REGISTER_CONFERENCE": "הרשמה לכנס"
   },
   "ERRORS": {
     "NOT_FOUND_TITLE": "אופס! הדף לא נמצא",

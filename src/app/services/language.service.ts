@@ -9,7 +9,7 @@ export class LanguageService {
 
 init(): void {
   // נסה לקבל את השפה השמורה מהדפדפן, אם אין - ברירת מחדל 'he'
-  const savedLang = localStorage.getItem('lang') || 'he';
+  const savedLang = localStorage.getItem('lang') || 'en';
   this.translate.use(savedLang);
 
   this.translate.onLangChange.subscribe(({ lang }) => {

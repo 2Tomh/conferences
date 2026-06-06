@@ -130,8 +130,9 @@
     "BUTTON": "To Surveys →"
   },
   "Client_NAV": {
+    "HOME": "Home",
     "SURVEYS": "All Conferences",
-    "HOME": "Home"
+    "REGISTER_CONFERENCE": "Conference Registration"
   },
   "ERRORS": {
     "NOT_FOUND_TITLE": "Oops! Page not found",

@@ -1,9 +1,9 @@
 <div class="main-nav">
   <nav class="science-navbar">
     <div class="nav-container">
-  
+
       <div class="brand-text-only" routerLink="/"></div>
-  
+
       <div class="links-section">
         <a routerLink="/" class="nav-link" routerLinkActive="active">
           {{ 'Client_NAV.HOME' | translate }}
@@ -12,10 +12,10 @@
           {{ 'Client_NAV.SURVEYS' | translate }}
         </a>
         <a routerLink="/register/1" class="nav-link btn-register" routerLinkActive="active">
-          הרשמה לכנס
+          {{ 'Client_NAV.REGISTER_CONFERENCE' | translate }}
         </a>
       </div>
-  
+
       <app-header-actions></app-header-actions>
     </div>
   </nav>
