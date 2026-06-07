@@ -7,8 +7,11 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
-  constructor(private translate: TranslateService) {}
-
+  menuOpen = false;
+  constructor(private translate: TranslateService) { }
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
   onToggleLanguage(): void {
     const nextLang = this.translate.currentLang === 'en' ? 'he' : 'en';
     this.translate.use(nextLang);

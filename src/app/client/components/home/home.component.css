@@ -1,24 +1,19 @@
-/* ========== HERO HEADER ========== */
-/* .home-header {
-    padding: 40px 16px 20px;
-    width: 95%;
-    box-sizing: border-box;
-    background: #d7f6ff;
-    margin-top: 92px;
-    margin-right: auto;
-    margin-left: auto;
-    border-radius: 50px;
+/* =========================================
+   HOME COMPONENT — הכל שמור ומסודר
+   ========================================= */
+
+:host {
+    display: block;
+    position: relative;
 }
-.secoend-header {
-    padding: 40px 16px 20px;
-    width: 95%;
+
+*,
+*::before,
+*::after {
     box-sizing: border-box;
-    background: #d7f6ff;
-    margin-top: 35px;
-    margin-right: auto;
-    margin-left: auto;
-    border-radius: 50px;
-} */
+}
+
+/* === SHARED BLOCKS === */
 .home-header,
 .secoend-header,
 .about-committee {
@@ -63,8 +58,6 @@
     margin-top: 50px;
 }
 
-
-/* ========== CONTENT WRAPPER ========== */
 .content-wrapper {
     display: flex;
     justify-content: center;
@@ -83,7 +76,6 @@
     min-width: 0;
 }
 
-/* ========== UPDATE BANNER ========== */
 .update-banner {
     display: flex;
     flex-direction: column;
@@ -150,7 +142,6 @@
     border-radius: 35px;
 }
 
-
 .about-committee p {
     margin: 0.25rem 0;
     font-size: 15px;
@@ -161,166 +152,8 @@
     text-decoration: none;
 }
 
-/* מובייל קטן — 350px עד 480px */
-@media (max-width: 480px) {
-    .update-banner {
-        min-height: unset;
-        padding: 20px 16px;
-        gap: 12px;
-        border-radius: 14px;
-    }
-
-    .update-date {
-        font-size: 0.85rem;
-    }
-
-    .update-text {
-        font-size: 0.9rem;
-    }
-
-    .hero-header {
-        padding: 16px 8px 8px;
-        margin-top: 20px;
-    }
-
-    .hero-logo {
-        min-width: unset;
-        width: 85vw;
-        max-width: 320px;
-        margin-top: 20px;
-    }
-
-    .content-wrapper {
-        flex-direction: column;
-        padding: 0 12px 32px;
-        gap: 16px;
-    }
-
-    .flex-item {
-        flex: 1 1 100%;
-    }
-
-    .update-banner {
-        min-height: unset;
-        padding: 20px 16px;
-        gap: 12px;
-    }
-
-    .surveys-btn {
-        width: 100%;
-        text-align: center;
-        box-sizing: border-box;
-        padding: 10px 16px;
-    }
-}
-
-/* טאבלט — 481px עד 768px */
-@media (min-width: 481px) and (max-width: 768px) {
-    .hero-logo {
-        min-width: unset;
-        width: 60vw;
-        max-width: 380px;
-        margin-top: 30px;
-    }
-
-    .content-wrapper {
-        flex-direction: column;
-        padding: 0 20px 36px;
-    }
-
-    .flex-item {
-        flex: 1 1 100%;
-    }
-
-    .update-banner {
-        min-height: unset;
-        padding: 24px 20px;
-        /* flex-direction: row; */
-        justify-content: space-between;
-        align-items: center;
-        text-align: right;
-        gap: 12px;
-    }
-
-    .update-date {
-        white-space: nowrap;
-    }
-
-    .surveys-btn {
-        white-space: nowrap;
-        flex-shrink: 0;
-    }
-}
-
-/* טאבלט גדול — 769px עד 1024px */
-@media (min-width: 769px) and (max-width: 1024px) {
-    .hero-logo {
-        max-width: 380px;
-    }
-
-    .update-banner {
-        min-height: 180px;
-        padding: 24px 20px;
-    }
-
-    .content-wrapper {
-        gap: 20px;
-        padding: 0 24px 40px;
-    }
-
-    .flex-item {
-        max-height: 79px;
-        max-width: 320px;
-        flex-shrink: 0;
-
-    }
-}
-
-/* דסקטופ — 1025px ומעלה */
-@media (min-width: 1025px) {
-    .content-wrapper {
-        gap: 40px;
-        padding: 0 40px 60px;
-    }
-
-    .flex-item {
-        flex: 1 1 400px;
-        max-width: 700px;
-    }
-
-    .update-banner {
-        max-height: 79px;
-        max-width: 320px;
-        flex-shrink: 0;
-    }
-}
-
-/* מסכים ענקיים — 1600px+ */
-@media (min-width: 1600px) {
-    .content-wrapper {
-        max-width: 1600px;
-        gap: 60px;
-    }
-
-    .update-banner {
-        max-height: 79px;
-        max-width: 320px;
-        flex-shrink: 0;
-    }
-
-    .home-logo {
-        max-width: 30%;
-        margin: auto;
-    }
-}
-
-:host {
-    display: block;
-    position: relative;
-}
-
+/* === DECORATIONS === */
 .bg-decoration {
-    /* position: fixed; */
     top: 0;
     left: 0;
     width: 100%;
@@ -352,6 +185,18 @@
     width: 10%;
 }
 
+.star-3 {
+    top: 5%;
+    left: 0%;
+    width: 8%;
+}
+
+.star-4 {
+    bottom: 10%;
+    left: 95px;
+    width: 3%;
+}
+
 .network {
     position: absolute;
     left: -110px;
@@ -370,14 +215,190 @@
     transform: rotate(185deg);
 }
 
-.star-3 {
-    top: 5%;
-    left: 0%;
-    width: 8%;
+/* === BREAKPOINTS === */
+@media (max-width: 480px) {
+    .update-banner {
+        min-height: unset;
+        padding: 20px 16px;
+        gap: 12px;
+        border-radius: 14px;
+    }
+
+    /*  */
+    .logo-wrapper {
+        background: none;
+    }
+
+    .network,
+    .sec-network {
+        display: none;
+    }
+
+    .star-1 {
+        top: 2%;
+    }
+
+    .home-logo {
+        margin-top: 0;
+        z-index: 5;
+    }
+    .star-2{
+        right: 5px;
+    }
+    /*  */
+    .update-date {
+        font-size: 0.85rem;
+    }
+
+    .update-text {
+        font-size: 0.9rem;
+    }
+
+    .hero-header {
+        padding: 16px 8px 8px;
+        margin-top: 20px;
+    }
+
+    .hero-logo {
+        min-width: unset;
+        width: 85vw;
+        max-width: 320px;
+        margin-top: 20px;
+    }
+
+    .content-wrapper {
+        flex-direction: column;
+        padding: 0 12px 32px;
+        gap: 16px;
+    }
+
+    .flex-item {
+        flex: 1 1 100%;
+    }
+
+    .surveys-btn {
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+        padding: 10px 16px;
+    }
 }
 
-.star-4 {
-    bottom: 10%;
-    left: 95px;
-    width: 3%;
+@media (min-width: 481px) and (max-width: 768px) {
+
+    /*  */
+    .home-logo {
+        background: none;
+    }
+    .home-header{
+        margin-top: 0;
+    }
+    .network,
+    .sec-network {
+        display: none;
+    }
+
+    .star-1 {
+        top: 2%;
+    }
+    .star-2{
+        right: 5px;
+    }
+    .logo-wrapper {
+        margin-top: 0;
+        z-index: 5;
+    }
+
+    /*  */
+    .hero-logo {
+        min-width: unset;
+        width: 60vw;
+        max-width: 380px;
+        margin-top: 30px;
+    }
+
+    .content-wrapper {
+        flex-direction: column;
+        padding: 0 20px 36px;
+    }
+
+    .flex-item {
+        flex: 1 1 100%;
+    }
+
+    .update-banner {
+        min-height: unset;
+        padding: 24px 20px;
+        justify-content: space-between;
+        align-items: center;
+        text-align: right;
+        gap: 12px;
+    }
+
+    .update-date {
+        white-space: nowrap;
+    }
+
+    .surveys-btn {
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .hero-logo {
+        max-width: 380px;
+    }
+
+    .update-banner {
+        min-height: 180px;
+        padding: 24px 20px;
+    }
+
+    .content-wrapper {
+        gap: 20px;
+        padding: 0 24px 40px;
+    }
+
+    .flex-item {
+        max-height: 79px;
+        max-width: 320px;
+        flex-shrink: 0;
+    }
+}
+
+@media (min-width: 1025px) {
+    .content-wrapper {
+        gap: 40px;
+        padding: 0 40px 60px;
+    }
+
+    .flex-item {
+        flex: 1 1 400px;
+        max-width: 700px;
+    }
+
+    .update-banner {
+        max-height: 79px;
+        max-width: 320px;
+        flex-shrink: 0;
+    }
+}
+
+@media (min-width: 1600px) {
+    .content-wrapper {
+        max-width: 1600px;
+        gap: 60px;
+    }
+
+    .update-banner {
+        max-height: 79px;
+        max-width: 320px;
+        flex-shrink: 0;
+    }
+
+    .home-logo {
+        max-width: 30%;
+        margin: auto;
+    }
 }

@@ -1,17 +1,5 @@
 /* 
 .science-navbar {
-    background-color: #1f1f72;
-    height: 70px;
-    width: 98%;
-    position: sticky;
-    top: 10px;
-    left: 15px;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    border-radius: 35px;
-} */
-.science-navbar {
     position: fixed;
     top: 0;
     left: 0;
@@ -37,10 +25,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* direction: rtl; */
 }
 
-/* עיצוב הלוגו והטקסט בשורה */
 .brand-section {
     display: flex;
     align-items: center;
@@ -50,13 +36,11 @@
 .nav-logo {
     height: 50px;
     margin-left: 15px;
-    /* רווח בין הלוגו לטקסט */
 }
 
 .brand-text {
     display: flex;
     flex-direction: column;
-    /* טקסט אנגלי מעל עברי */
     justify-content: center;
 }
 
@@ -73,11 +57,9 @@
     margin-top: 2px;
 }
 
-/* עיצוב הקישורים בצד שמאל */
 .links-section {
     display: flex;
     gap: 30px;
-    /* רווח קבוע בין הקישורים */
 }
 
 .nav-link {
@@ -88,7 +70,6 @@
     transition: color 0.3s ease;
     border-left: 1px solid white;
     width: 100px;
-    height: 25px; */
     color: white;
   text-decoration: none;
   font-weight: 600;
@@ -106,24 +87,20 @@
     color: #00f2ff;
 }
 
-/*  */
 .brand-text {
     display: flex;
     flex-direction: column;
     text-align: right;
-    /* יישור לימין כי הכל עכשיו בעברית */
 }
 
 .uni-title {
     color: #ffffff;
-    /* לבן בוהק */
     font-weight: 800;
     font-size: 1.3rem;
     line-height: 1.1;
     letter-spacing: 0.5px;
 }
 
-/*  */
 .btn-register {
     color: white !important;
     border-radius: 5px;
@@ -135,4 +112,165 @@
 .divider {
     border-left: 2px solid #fff;
     height: 25px;
+} */
+
+/* === SCIENCE NAVBAR — Responsive (no hamburger) === */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+.main-nav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
+
+.science-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: auto;
+    min-height: 70px;
+    background-color: #1f1f72 !important;
+    z-index: 1000;
+    display: flex;
+    align-items: stretch;   /* מאפשר לילדים להתמתח בגובה */
+    border-radius: 35px;
+    padding: 8px 0;
+}
+
+.nav-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 clamp(10px, 2vw, 20px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;      /* השורה הראשית לא נשברת */
+    gap: 8px;
+}
+
+/* === Brand === */
+
+.brand-section {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    flex: 0 0 auto;         /* לא מתכווץ, לא מתרחב */
+}
+
+.nav-logo {
+    height: clamp(30px, 5vw, 50px);
+    margin-left: clamp(6px, 1vw, 15px);
+    display: block;
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: right;
+}
+
+.eng-title {
+    color: #00f2ff;
+    font-weight: 800;
+    font-size: clamp(0.75rem, 1.5vw, 1.2rem);
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.heb-title {
+    color: #ffffff;
+    font-size: clamp(0.6rem, 1.1vw, 0.8rem);
+    margin-top: 2px;
+    white-space: nowrap;
+}
+
+.uni-title {
+    color: #ffffff;
+    font-weight: 800;
+    font-size: clamp(0.8rem, 1.8vw, 1.3rem);
+    line-height: 1.1;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+/* === Links === */
+
+.links-section {
+    display: flex;
+    flex-wrap: wrap;            
+    justify-content: center;
+    align-items: center;
+    gap: clamp(8px, 1.5vw, 24px);
+    row-gap: 6px;
+    flex: 1 1 auto;             
+    min-width: 0;
+    padding: 4px 0;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: clamp(0.72rem, 1.3vw, 0.95rem);
+    white-space: nowrap;        
+    line-height: 1.4;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link:focus-visible {
+    color: #00f2ff;
+    outline: none;
+}
+
+.nav-link:last-child {
+    border-left: none;
+}
+
+.divider {
+    border-left: 2px solid #fff;
+    height: 20px;
+    flex-shrink: 0;
+    align-self: center;
+}
+
+.btn-register {
+    color: white !important;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+app-header-actions {
+    flex: 0 0 auto;
+}
+
+/* === מסכים קטנים מ-400px === */
+@media (max-width: 400px) {
+    .science-navbar {
+        border-radius: 0;
+        min-height: 56px;
+        border-right: 1px solid white;
+    }
+
+    .nav-container {
+        padding: 0 8px;
+    }
+
+    .divider {
+        display: none;
+    }
+}
+
+/* === Firefox gap fallback === */
+/* @supports not (gap: 1px) {
+    .links-section > * + * { margin-left: clamp(8px, 1.5vw, 24px); }
+    .links-section { gap: 0; }
+} */
