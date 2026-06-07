@@ -18,7 +18,6 @@
 }
 
 .section-title::after {
-  content: '';
   display: block;
   width: 40%;
   height: 3px;
@@ -281,7 +280,6 @@
 
   /* תוויות לפני כל תא */
   .events-table td.conf-name-cell::before {
-    content: 'כנס';
     display: block;
     font-size: 0.65rem;
     font-weight: 700;
@@ -292,7 +290,6 @@
   }
 
   .events-table td:nth-child(2)::before {
-    content: 'מארגנים';
     display: block;
     font-size: 0.65rem;
     font-weight: 700;
@@ -309,7 +306,6 @@
   }
 
   .events-table td.text-center::before {
-    content: 'סקר';
     display: block;
     font-size: 0.65rem;
     font-weight: 700;

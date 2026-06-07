@@ -4,7 +4,7 @@
     box-sizing: border-box;
     background: white;
     margin: auto;
-    border-radius: 50px;
+    border-radius: 25px;
     position: relative;
 }
 
@@ -72,13 +72,18 @@
     font-style: italic;
 }
 
-.about-committee {
+/* .about-committee {
     margin-top: 1.5rem;
     padding-top: 1rem;
     border-top: 1px solid #e0e0e0;
     font-size: clamp(0.82rem, 2vw, 0.95rem);
     color: #555;
     line-height: 1.8;
+    border-bottom: 1px solid lightblue;
+}
+
+.about-committee :last-child {
+    border-bottom: none;
 }
 
 .about-committee a {
@@ -88,7 +93,7 @@
 
 .about-committee a:hover {
     text-decoration: underline;
-}
+} */
 
 /* ========== RESPONSIVE ========== */
 
@@ -119,6 +124,7 @@
 
 /* טאבלט — 481px עד 768px */
 @media (min-width: 481px) and (max-width: 768px) {
+    
     .about-section .container {
         padding: 0 12px;
     }

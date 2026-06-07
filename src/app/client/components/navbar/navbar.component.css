@@ -118,7 +118,9 @@
 
 *,
 *::before,
-*::after { box-sizing: border-box; }
+*::after {
+    box-sizing: border-box;
+}
 
 .main-nav {
     position: sticky;
@@ -137,7 +139,8 @@
     background-color: #1f1f72 !important;
     z-index: 1000;
     display: flex;
-    align-items: stretch;   /* מאפשר לילדים להתמתח בגובה */
+    align-items: stretch;
+    /* מאפשר לילדים להתמתח בגובה */
     border-radius: 35px;
     padding: 8px 0;
 }
@@ -150,7 +153,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: nowrap;      /* השורה הראשית לא נשברת */
+    flex-wrap: nowrap;
+    /* השורה הראשית לא נשברת */
     gap: 8px;
 }
 
@@ -160,7 +164,8 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    flex: 0 0 auto;         /* לא מתכווץ, לא מתרחב */
+    flex: 0 0 auto;
+    /* לא מתכווץ, לא מתרחב */
 }
 
 .nav-logo {
@@ -204,12 +209,12 @@
 
 .links-section {
     display: flex;
-    flex-wrap: wrap;            
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     gap: clamp(8px, 1.5vw, 24px);
     row-gap: 6px;
-    flex: 1 1 auto;             
+    flex: 1 1 auto;
     min-width: 0;
     padding: 4px 0;
 }
@@ -219,7 +224,7 @@
     text-decoration: none;
     font-weight: 600;
     font-size: clamp(0.72rem, 1.3vw, 0.95rem);
-    white-space: nowrap;        
+    white-space: nowrap;
     line-height: 1.4;
     transition: color 0.3s ease;
 }
@@ -242,10 +247,12 @@
 }
 
 .btn-register {
+    display: none;
     color: white !important;
     border-radius: 5px;
     text-decoration: none;
     font-weight: bold;
+    
 }
 
 app-header-actions {
@@ -261,7 +268,14 @@ app-header-actions {
     }
 
     .nav-container {
-        padding: 0 8px;
+        display: flex;
+        justify-content: space-between;
+        width: 92%;
+        margin: 0;
+        align-items: center;
+        flex-wrap: nowrap;
+        gap: 8px;
+        padding: 0;
     }
 
     .divider {
