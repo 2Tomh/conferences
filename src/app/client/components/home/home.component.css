@@ -425,3 +425,7 @@
         margin: auto;
     }
 }
+
+.memberList{
+    list-style: none;
+}

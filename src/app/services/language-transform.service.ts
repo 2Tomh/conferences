@@ -1,55 +1,3 @@
-// import { Injectable, RendererFactory2, Renderer2 } from '@angular/core';
-// import { BehaviorSubject } from 'rxjs';
-// import { TranslateService } from '@ngx-translate/core';
-
-// @Injectable({
-//   providedIn: 'root'
-// })
-// export class LanguageTransformService {
-//   private renderer: Renderer2;
-//   private isEnglishSubject = new BehaviorSubject<boolean>(false);
-//   isEnglish$ = this.isEnglishSubject.asObservable();
-
-// constructor(
-//   rendererFactory: RendererFactory2,
-//   private translate: TranslateService
-// ) {
-//   this.renderer = rendererFactory.createRenderer(null, null);
-//   this.translate.addLangs(['he', 'en']);
-//   this.translate.setDefaultLang('he');
-//   this.translate.use('he');
-
-//   this.renderer.addClass(document.body, 'rtl');
-// }
-
-//   toggleLanguage() {
-//     const nextState = !this.isEnglishSubject.value;
-//     this.isEnglishSubject.next(nextState);
-//     this.updateGlobalStyles(nextState);
-
-//     const lang = nextState ? 'en' : 'he';
-//     this.translate.use(lang);
-//   }
-
-//   private updateGlobalStyles(isEnglish: boolean) {
-//     const dir = isEnglish ? 'ltr' : 'rtl';
-//     const lang = isEnglish ? 'en' : 'he';
-
-//     this.renderer.setAttribute(document.documentElement, 'dir', dir);
-//     this.renderer.setAttribute(document.documentElement, 'lang', lang);
-//     this.renderer.setAttribute(document.body, 'dir', dir);
-//     document.body.style.direction = dir;
-
-//     if (isEnglish) {
-//       this.renderer.removeClass(document.body, 'rtl');
-//       this.renderer.addClass(document.body, 'ltr');
-//     } else {
-//       this.renderer.removeClass(document.body, 'ltr');
-//       this.renderer.addClass(document.body, 'rtl');
-//     }
-//   }
-// }
-
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
@@ -58,23 +6,32 @@ import { TranslateService } from '@ngx-translate/core';
   providedIn: 'root'
 })
 export class LanguageTransformService {
-  private isEnglishSubject = new BehaviorSubject<boolean>(false);
+  private isEnglishSubject = new BehaviorSubject<boolean>(true); // ברירת מחדל אנגלית
   isEnglish$ = this.isEnglishSubject.asObservable();
 
-constructor(private translate: TranslateService) {
-  this.translate.addLangs(['en', 'he']);
-  this.translate.setDefaultLang('en');  // ← he במקום en
-  this.translate.use('en');             // ← he במקום en
-  document.documentElement.dir = 'ltr'; // ← rtl במקום ltr
-  document.documentElement.lang = 'en'; // ← he במקום en
-}
+  constructor(private translate: TranslateService) {
+    this.translate.addLangs(['en', 'he']);
+    this.translate.setDefaultLang('en');
+  }
+
+  // פונקציית אתחול שתיקרא מתוך ה-AppComponent
+  init() {
+    const savedLang = localStorage.getItem('lang') || 'en';
+    this.useLanguage(savedLang);
+  }
 
   toggleLanguage() {
-    const nextState = !this.isEnglishSubject.value;
-    this.isEnglishSubject.next(nextState);
-    const lang = nextState ? 'en' : 'he';
+    const nextLang = this.translate.currentLang === 'en' ? 'he' : 'en';
+    this.useLanguage(nextLang);
+  }
+
+  private useLanguage(lang: string) {
     this.translate.use(lang);
-    document.documentElement.dir = nextState ? 'ltr' : 'rtl';
+    localStorage.setItem('lang', lang);
+    this.isEnglishSubject.next(lang === 'en');
+    
+    // עדכון DOM
+    document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
     document.documentElement.lang = lang;
   }
 }

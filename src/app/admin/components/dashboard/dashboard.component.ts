@@ -20,7 +20,6 @@ export class DashboardComponent implements OnInit {
     this.loading = true;
     this.apiService.getMyConferences().subscribe({
       next: (data) => {
-        console.log('הנתונים שהגיעו מהשרת:', data);
         this.conferences = data;
         this.loading = false;
       },

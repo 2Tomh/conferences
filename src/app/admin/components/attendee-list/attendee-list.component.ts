@@ -98,17 +98,6 @@ export class AttendeeListComponent implements OnInit {
       search: this.searchTerm
     }).subscribe({
       next: (data) => {
-        // --- בדיקת ניפוי שגיאות (Debug) ---
-        console.log('נתונים שהתקבלו מהשרת:', data);
-
-        if (data && data.length > 0) {
-          console.log('השדות הקיימים באובייקט הראשון:', Object.keys(data[0]));
-          console.log('דוגמה לערך השם:', data[0].fullName || data[0].FullName || data[0].fullname);
-        } else {
-          console.log('השרת החזיר רשימה ריקה.');
-        }
-        // ----------------------------------
-
         this.attendees = data;
         this.applyFilters();
         this.isLoading = false;

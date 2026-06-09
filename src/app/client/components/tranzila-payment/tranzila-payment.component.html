@@ -1,4 +1,4 @@
-<div class="payment-container">
+<!-- <div class="payment-container">
     <div *ngIf="loading" class="loader">
         <div class="spinner-border text-primary" role="status"></div>
         <span class="ms-2">טוען דף תשלום מאובטח...</span>
@@ -11,4 +11,30 @@
     <iframe class="iframe-payment" *ngIf="iframeUrl && !loading" [src]="iframeUrl" width="100%" height="600px"
         frameborder="0">
     </iframe>
+</div> -->
+
+<div class="payment-container">
+    <div *ngIf="loading" class="loader">
+        <div class="spinner-border text-primary" role="status"></div>
+        <span class="ms-2">טוען דף תשלום מאובטח...</span>
+    </div>
+
+    <div *ngIf="error" class="error-message">
+        <p>{{ error }}</p>
+        <button (click)="ngOnInit()">נסה שוב</button>
+    </div>
+
+    <form #paymentForm ngNoForm 
+          action="https://direct.tranzila.com/kapaim3/iframenew.php" 
+          target="tranzila-iframe" 
+          method="POST"
+          style="display: none;">
+          
+        <input type="hidden" name="sum" [value]="paymentData.amount">
+        <input type="hidden" name="orderId" [value]="paymentData.orderId">
+        <input type="hidden" name="currency" value="2">
+        <input type="hidden" name="notify_url_address" value="https://conference-backend-8339.onrender.com/api/payment/notify">
+    </form>
+
+    <iframe name="tranzila-iframe" width="100%" height="600px" frameborder="0"></iframe>
 </div>
