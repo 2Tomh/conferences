@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -62,5 +63,15 @@ export class ApiService {
   }
   getSurveys(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/Surveys`);
+  }
+  getAllAttendees(filters?: { conferenceId?: string; paymentStatus?: string; search?: string }) {
+    let params = new HttpParams();
+    if (filters?.conferenceId) params = params.set('conferenceId', filters.conferenceId);
+    if (filters?.paymentStatus) params = params.set('paymentStatus', filters.paymentStatus);
+    if (filters?.search) params = params.set('search', filters.search);
+    return this.http.get<any[]>(`${this.apiUrl}/registration/all`, { params });
+  }
+  registerAttendee(attendee: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/registration/register`, attendee);
   }
 }

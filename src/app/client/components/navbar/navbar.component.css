@@ -247,7 +247,7 @@
 }
 
 .btn-register {
-    display: none;
+    /* display: none; */
     color: white !important;
     border-radius: 5px;
     text-decoration: none;

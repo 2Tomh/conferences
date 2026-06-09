@@ -9,6 +9,9 @@
       <a routerLink="/admin/users" routerLinkActive="active">
         <i class="icon-users"></i> {{ 'Admin_NAV.USERS' | translate }}
       </a>
+      <a routerLink="/admin/attendees" routerLinkActive="active">
+        נרשמים
+      </a>
 
       <div class="nav-actions" *ngIf="(isLoggedIn$ | async) && !isLoginPage">
         <button class="btn-logout" (click)="onLogout()">

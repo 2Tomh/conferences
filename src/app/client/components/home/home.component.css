@@ -37,9 +37,6 @@
     margin: auto;
     border-radius: 50px;
 }
-.about-committee >p {
-    border-bottom: 1px solid lightblue;
-}
 
 .about-committee :last-child {
     border-bottom: none;
@@ -304,6 +301,9 @@
 }
 
 @media (min-width: 481px) and (max-width: 768px) {
+    .about-committee>p {
+        border-bottom: 1px solid lightblue;
+    }
 
     /*  */
     .home-logo {
