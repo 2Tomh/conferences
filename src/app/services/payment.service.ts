@@ -19,7 +19,11 @@ export class PaymentService {
 
     // פונקציה להכנת תשלום (לארכיטקטורת ה-iFrame החדשה)
     preparePayment(data: PaymentInitRequest): Observable<PaymentPreparationResponse> {
-        return this.http.post<PaymentPreparationResponse>(`${this.api}/payment/prepare-payment`, data);
+        // השתמש בנתיב המדויק שמוגדר ב-Controller שלך (prepare-payment)
+        return this.http.post<PaymentPreparationResponse>(
+            `${this.api}/payment/prepare-payment`,
+            data
+        );
     }
 
     // פונקציה לאימות תשלום (נקראת בדף ה-Success)
