@@ -1,11 +1,15 @@
 /* @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Hebrew:wght@300;400;600;700&display=swap'); */
 
 .events-container {
-  padding: 48px 32px 80px;
-  max-width: 60%;
-  margin: auto;
-  /* font-family: 'IBM Plex Sans Hebrew', sans-serif; */
-  color: #0f172a;
+  box-sizing: border-box;
+  margin-top: 35px;
+  background: #d7f6ff;
+  padding: 40px 16px 20px;
+  width: 95%;
+  max-width: 1900px;
+  border-radius: 50px;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 /* Hero */
@@ -370,4 +374,3 @@
   margin-right: 0;
   margin-left: 4px;
 }
-

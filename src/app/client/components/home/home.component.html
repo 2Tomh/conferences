@@ -82,6 +82,14 @@
         <div class="logo-wrapper">
             <img src="../../../assets/logo.jpeg" alt="Logo" class="home-logo">
         </div>
+        <div class="partners-section text-center">
+            <h3>{{ 'PARTNERS.TITLE' | translate }}</h3>
+            <div class="partners-grid" *ngIf="partners.length > 0">
+                <a *ngFor="let partner of partners" [href]="partner.Url" target="_blank" class="partner-item">
+                    <img [src]="partner.Logo" [alt]="partner.Name">
+                </a>
+            </div>
+        </div>
         <div class="about-confrence">
             <app-about-conference class="flex-item"></app-about-conference>
         </div>

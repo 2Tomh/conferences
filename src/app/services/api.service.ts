@@ -7,8 +7,8 @@ import { HttpParams } from '@angular/common/http';
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = 'https://conference-backend-8339.onrender.com/api';
-  // private apiUrl = 'https://localhost:7222/api';
+  // private apiUrl = 'https://conference-backend-8339.onrender.com/api';
+  private apiUrl = 'https://localhost:7222/api';
 
   constructor(private http: HttpClient) { }
 
@@ -73,5 +73,8 @@ export class ApiService {
   }
   registerAttendee(attendee: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/registration/register`, attendee);
+  }
+  getPartners(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/partners`);
   }
 }

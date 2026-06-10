@@ -1,167 +1,219 @@
-/* --- דף הרקע --- */
+/* --- עיצוב כללי לדף ההרשמה --- */
 .registration-page {
-    min-height: 100vh;
-    padding: 40px 20px;
-    background: radial-gradient(circle at top left, #4a77d4 0%, transparent 40%),
-                radial-gradient(circle at bottom right, #3b82f6 0%, transparent 40%),
-                linear-gradient(135deg, #1e293b, #334155);
+    position: relative;
+    padding: 20px;
+    z-index: 2;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
+    min-height: 90vh;
+    font-family: 'Open Sans Hebrew', 'Arial', sans-serif;
 }
 
-/* --- כרטיס ראשי (קומפקטי) --- */
+/* --- כרטיס הרשמה קומפקטי --- */
 .registration-card {
+    background: rgba(255, 255, 255, 0.98);
+    padding: 25px 30px;
+    border-radius: 25px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
     width: 100%;
-    max-width: 500px;
-    background: rgba(255, 255, 255, 0.1); 
-    backdrop-filter: blur(25px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 20px;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+    max-width: 600px;
+    direction: rtl;
 }
 
-/* --- כותרת הכרטיס --- */
+/* --- כותרות --- */
 .card-header-custom {
     text-align: center;
-    padding: 25px 20px 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
 }
 
 .card-header-custom h2 {
-    color: #ffffff;
-    font-size: 1.5rem;
-    font-weight: 700;
+    color: #2c3e50;
+    font-size: 24px;
     margin-bottom: 5px;
 }
 
 .card-header-custom p {
-    color: #94a3b8;
-    font-size: 0.85rem;
+    color: #7f8c8d;
+    font-size: 14px;
+    margin: 0;
 }
 
-/* --- הטופס (קומפקטי) --- */
+/* --- הטופס ב-Grid חכם לחסכון בגובה --- */
 .registration-form {
-    padding: 20px 30px 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* זוגות של שדות */
+    gap: 10px 15px;
+}
+
+/* שדות שחייבים רוחב מלא */
+.form-row:first-child,
+.form-row:nth-child(2),
+.btn-submit {
+    grid-column: span 2;
 }
 
 .form-row {
-    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .form-row label {
-    display: block;
-    margin-bottom: 4px;
-    color: #e2e8f0;
-    font-weight: 500;
-    font-size: 0.8rem;
-}
-
-/* --- שדות קלט --- */
-.form-control,
-.form-select {
-    width: 100%;
-    height: 44px;
-    background: rgba(0, 0, 0, 0.2);
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 0 12px;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-}
-
-.form-control:focus,
-.form-select:focus {
-    background: rgba(0, 0, 0, 0.3);
-    border-color: #3b82f6;
-    outline: none;
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
-}
-
-.form-select {
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: left 0.8rem center;
-    background-size: 1rem;
-}
-
-/* --- כפתור שליחה --- */
-.btn-submit {
-    width: 100%;
-    height: 48px;
-    margin-top: 15px;
-    border: none;
-    border-radius: 10px;
-    background: linear-gradient(135deg, #3b82f6, #6366f1);
-    color: white;
-    font-size: 0.95rem;
+    color: #34495e;
     font-weight: 600;
-    cursor: pointer;
+    font-size: 13px;
+}
+
+.form-control,
+.selected-conf-box {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 14px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    background-color: #fff;
     transition: all 0.3s ease;
+    box-sizing: border-box;
 }
 
-.btn-submit:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4);
+/* פוקוס */
+.form-control:focus,
+.selected-conf-box:hover {
+    border-color: #6aa4ff;
+    outline: none;
 }
 
-.btn-submit:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    filter: grayscale(1);
+/* --- בחירת כנס --- */
+.selected-conf-box {
+    cursor: pointer;
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* --- כפתור תשלום --- */
+.btn-submit {
+    background: linear-gradient(135deg, #6aa4ff 0%, #3ddaf5 100%);
+    color: #fff;
+    border: none;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    border-radius: 30px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+/* --- כפתורי כן/לא --- */
+.radio-group {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-sm {
+    padding: 5px 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: white;
+    cursor: pointer;
 }
 
 /* --- שגיאות --- */
 .error-text {
-    color: #f87171;
-    margin-top: 4px;
-    font-size: 0.75rem;
+    color: #e74c3c;
+    font-size: 11px;
+    margin-top: -5px;
 }
 
-.ng-invalid.ng-touched {
-    border-color: #ef4444 !important;
+.notice-box {
+    grid-column: span 2;
+    background-color: #d4edda;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    text-align: center;
 }
-/*  */
-/* מכלול הפופאפ שמכסה את כל המסך */
+
+/* --- רספונסיביות --- */
+@media (max-width: 500px) {
+    .registration-form {
+        grid-template-columns: 1fr;
+        /* בנייד הכל בטור אחד */
+    }
+
+    .form-row:first-child,
+    .form-row:nth-child(2),
+    .btn-submit,
+    .form-row {
+        grid-column: span 1;
+    }
+}
+
+/* --- עיצוב ה-Popup - וודא זמינות מלאה --- */
 .popup-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.6);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* חשוב מאוד כדי שיופיע מעל הכל */
+    z-index: 9999 !important;
+    /* הכי גבוה שאפשר */
+    opacity: 1;
+    visibility: visible;
 }
 
 .popup-content {
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 20px;
     width: 90%;
     max-width: 500px;
     max-height: 80vh;
+    /* מניעת חריגה מהמסך */
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.conf-list {
+    flex-grow: 1;
     overflow-y: auto;
+    border: 1px solid #eee;
+    margin: 10px 0;
+    min-height: 150px;
+    /* מבטיח שיהיה גובה גם אם הרשימה ריקה */
 }
 
-.conf-item {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
+/* --- עיצוב כפתורי כן/לא --- */
+.btn-sm {
+    padding: 8px 25px;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    background: white;
     cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
 }
 
-.conf-item:hover {
-    background-color: #f0f0f0;
+/* הכפתור כשהוא נבחר (Active) */
+.btn-sm.active {
+    background-color: #6aa4ff;
+    /* צבע הכחול של האתר */
+    color: white;
+    border-color: #6aa4ff;
+    box-shadow: 0 4px 10px rgba(106, 164, 255, 0.3);
 }
 
-.selected-conf-box {
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    background: #fff;
+/* הוספנו אפקט ריחוף גם לכפתורים */
+.btn-sm:hover:not(.active) {
+    border-color: #6aa4ff;
 }

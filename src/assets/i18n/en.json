@@ -97,6 +97,9 @@
       "CONTACT": "Contact us"
     }
   },
+  "PARTNERS": {
+    "TITLE": "Our Partners"
+  },
   "CONF_PAGE": {
     "NOT_FOUND": "Conference not found",
     "BACK_TO_LIST": "Back to conferences list",

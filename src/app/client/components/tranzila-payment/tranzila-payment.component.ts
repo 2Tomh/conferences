@@ -29,6 +29,7 @@ export class TranzilaPaymentComponent implements OnInit {
 
     this.paymentService.preparePayment(payload).subscribe({
       next: (res) => {
+        res.amount = 1;
         this.paymentData = res;
         this.loading = false;
 

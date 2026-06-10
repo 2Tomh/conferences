@@ -66,12 +66,13 @@ import { TranslateService } from '@ngx-translate/core';
 export class HomeComponent implements OnInit {
 
   constructor(private apiService: ApiService, private translate: TranslateService) { }
-  
+
   conferences: any[] = [];
   loading = true;
   isAdmin = false;
   lastUpdated: Date = new Date('2026-05-26');
   committeeMembers: string[] = []; // משתנה למערך חברי הוועדה
+  partners: any[] = [];
 
   ngOnInit(): void {
     this.checkIfAdmin();
@@ -81,6 +82,13 @@ export class HomeComponent implements OnInit {
     // עדכון הרשימה בכל פעם שהשפה משתנה
     this.translate.onLangChange.subscribe(() => {
       this.loadCommittee();
+    });
+    this.apiService.getPartners().subscribe({
+      next: (data) => {
+        console.log("Partners loaded:", data); // בדוק בקונסול אם רואים את הרשימה
+        this.partners = data;
+      },
+      error: (err) => console.error("Error loading partners:", err)
     });
   }
 
@@ -113,6 +121,7 @@ export class HomeComponent implements OnInit {
       }
     });
   }
+
 
   deleteConference(id: string): void {
     if (confirm('מחיקת כנס תמחוק גם את כל ההרצאות שלו. להמשיך?')) {

@@ -19,8 +19,11 @@
       <div *ngIf="selectedConference" class="form-row">
         <label>האם ברצונך להגיש תקציר לכנס?</label>
         <div class="radio-group" style="display: flex; gap: 10px; margin-top: 5px;">
-          <button type="button" class="btn-sm" (click)="onAbstractChoice(true)">כן</button>
-          <button type="button" class="btn-sm" (click)="onAbstractChoice(false)">לא</button>
+          <button type="button" class="btn-sm" [class.active]="wantsAbstract === true"
+            (click)="onAbstractChoice(true)">כן</button>
+
+          <button type="button" class="btn-sm" [class.active]="wantsAbstract === false"
+            (click)="onAbstractChoice(false)">לא</button>
         </div>
       </div>
 
@@ -44,22 +47,25 @@
 
       <div class="form-row">
         <label>כתובת אימייל</label>
-        <input type="email" formControlName="email" class="form-control" placeholder="name@example.com">
+        <input type="email" formControlName="email" class="form-control" placeholder="name@domain.com">
 
-        <div *ngIf="f['email'].touched && f['email'].hasError('required')" class="error-text">
-          שדה חובה
-        </div>
-
-        <div *ngIf="f['email'].touched && f['email'].hasError('email')" class="error-text">
-          כתובת אימייל לא תקינה
+        <div *ngIf="f['email'].touched">
+          <div *ngIf="f['email'].hasError('required')" class="error-text">שדה חובה</div>
+          <div *ngIf="f['email'].hasError('pattern')" class="error-text">
+            נא להזין אימייל תקין (למשל: name@domain.com) - ודאו שיש לפחות שני תווים אחרי ה-@.
+          </div>
         </div>
       </div>
 
       <div class="form-row">
         <label>טלפון</label>
-        <input type="text" formControlName="phone" class="form-control" placeholder="050-0000000">
-        <div *ngIf="f['phone'].touched && f['phone'].hasError('pattern')" class="error-text">מספר טלפון חייב להתחיל ב-0
-          ולהכיל 9-10 ספרות</div>
+        <input type="text" formControlName="phone" class="form-control" placeholder="050-1234567">
+
+        <div *ngIf="f['phone'].touched">
+          <div *ngIf="f['phone'].hasError('required')" class="error-text">שדה חובה</div>
+          <div *ngIf="f['phone'].hasError('pattern')" class="error-text">
+          </div>
+        </div>
       </div>
 
       <div class="form-row">
@@ -96,13 +102,24 @@
         <div *ngIf="af['title'].hasError('required') && af['title'].touched" class="error-text">שדה חובה</div>
         <div *ngIf="af['title'].hasError('maxWords')" class="error-text">מקסימום 25 מילים</div>
       </div>
+
       <div class="form-row">
-        <textarea formControlName="body" placeholder="תוכן התקציר..." class="form-control"></textarea>
+        <textarea formControlName="body" placeholder="תוכן התקציר..." class="form-control" rows="4"></textarea>
         <div *ngIf="af['body'].hasError('required') && af['body'].touched" class="error-text">שדה חובה</div>
         <div *ngIf="af['body'].hasError('maxWords')" class="error-text">מקסימום 250 מילים</div>
       </div>
-      <button type="button" class="btn-submit" (click)="saveAbstract()">שמור תקציר</button>
-      <button type="button" (click)="closeAbstractPopup()">ביטול</button>
+
+      <div class="form-row">
+        <label>הערות נוספות (אופציונלי):</label>
+        <textarea formControlName="notes" placeholder="הערות או בקשות מיוחדות..." class="form-control"
+          rows="2"></textarea>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 15px;">
+        <button type="button" class="btn-submit" (click)="saveAbstract()" style="flex: 2;">שמור תקציר</button>
+        <button type="button" (click)="closeAbstractPopup()"
+          style="flex: 1; border-radius: 50px; border: 1px solid #ccc; cursor: pointer; background: white;">ביטול</button>
+      </div>
     </form>
   </div>
 </div>

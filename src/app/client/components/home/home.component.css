@@ -55,7 +55,6 @@
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
-    margin-top: 40px;
     background: white;
     width: 85%;
     margin-left: auto;
@@ -426,6 +425,50 @@
     }
 }
 
-.memberList{
+.memberList {
     list-style: none;
+}
+
+.partners-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    /* מיישר את הלוגואים למרכז אנכי */
+    gap: 40px;
+    margin-top: 30px;
+}
+
+.partner-item {
+    display: block;
+    height: 80px;
+    /* גובה קבוע לכל הלוגואים */
+}
+
+.partner-item img {
+    height: 100%;
+    /* התאמה לגובה הקבוע */
+    width: auto;
+    object-fit: contain;
+    /* שומר על הפרופורציות של הלוגו */
+    transition: transform 0.3s ease;
+}
+
+.partners-section {
+    padding: 40px 20px;
+    z-index: 10;
+    position: relative;
+    margin-bottom: 20px;
+    background: white;
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 35px;
+}
+
+.partners-section h3 {
+    margin-bottom: 25px;
+    color: #333;
+    font-weight: bold;
+    text-align: center;
 }
