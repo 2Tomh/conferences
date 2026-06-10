@@ -8,8 +8,8 @@ import { tap } from 'rxjs/operators';
 })
 export class AuthService {
   // 1. וודא שהפורט תואם למה שמופיע לך ב-Swagger
-  private apiUrl = 'https://localhost:7222/api';
-  // private apiUrl = 'https://conference-backend-8339.onrender.com/api';
+  // private apiUrl = 'https://localhost:7222/api';
+  private apiUrl = 'https://conference-backend-8339.onrender.com/api';
   // שימוש ב-BehaviorSubject הוא מעולה לעדכון ה-UI (למשל להעלים את כפתור לוגין)
   private loggedin = new BehaviorSubject<boolean>(this.hasToken());
 
