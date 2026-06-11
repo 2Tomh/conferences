@@ -19,17 +19,17 @@
       <app-header-actions></app-header-actions>
     </div>
   </nav>
-</div> -->
 
-<div class="main-nav">
+ </div> -->
+
+ <div class="main-nav">
   <nav class="science-navbar">
     <div class="nav-container">
 
       <div class="brand-text-only" routerLink="/"></div>
 
-      <!-- לינקים — דסקטופ -->
       <div class="links-section">
-        <a routerLink="/" class="nav-link" routerLinkActive="active">
+        <a routerLink="/" class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
           {{ 'Client_NAV.HOME' | translate }}
         </a>
         <a routerLink="/ConferenceEvents" class="nav-link" routerLinkActive="active">
@@ -43,5 +43,4 @@
       <app-header-actions></app-header-actions>
     </div>
   </nav>
-
- </div>
+</div>

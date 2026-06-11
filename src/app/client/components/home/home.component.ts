@@ -85,7 +85,6 @@ export class HomeComponent implements OnInit {
     });
     this.apiService.getPartners().subscribe({
       next: (data) => {
-        console.log("Partners loaded:", data); // בדוק בקונסול אם רואים את הרשימה
         this.partners = data;
       },
       error: (err) => console.error("Error loading partners:", err)

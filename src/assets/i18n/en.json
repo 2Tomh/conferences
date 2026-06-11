@@ -37,7 +37,8 @@
     "CANCEL": "Cancel"
   },
   "COMMON": {
-    "LOADING": "Loading data..."
+    "LOADING": "Loading data...",
+    "TOGGLE_LANG": "Change Language"
   },
   "LOGIN": {
     "TITLE": "Conference System Login",
@@ -63,6 +64,12 @@
     "ERRORS": {
       "TITLE_MIN": "Conference name must be at least 3 characters long."
     }
+  },
+  "PAYMENT_RESULT": {
+    "FAILED_TITLE": "Payment Failed",
+    "NOT_CHARGED": "You have not been charged for this transaction.",
+    "RETRY": "Try Again",
+    "BACK_HOME": "Back to Home Page"
   },
   "USER_MGMT": {
     "TITLE": "User Management",
@@ -93,8 +100,8 @@
         "Adi Stern, Tel Aviv University, The Israel Young Academy",
         "Kinneret Teodorescu, The Technion",
         "Sigal Berman, Ben-Gurion University"
-      ],  
-      "CONTACT": "Contact us"
+      ],
+      "CONTACT_MSG": "Want to organize a conference in your field? Contact us:"
     }
   },
   "PARTNERS": {
@@ -111,15 +118,23 @@
     "REGISTER": "Register for the conference"
   },
   "EVENTS": {
-    "TITLE": "Scientific Conference Surveys for 2026",
-    "INTRO": "For your convenience, we have compiled the preliminary surveys for conferences scheduled to take place around the elections. Join us in celebrating Israeli science!",
+    "TITLE": "Scientific Conferences, October 2026",
+    "MISSING_CONF": "Didn't find a conference in your field? Create one! For more details: ",
     "SEARCH_PLACEHOLDER": "Search conferences...",
     "TABLE": {
       "NAME_FIELD": "Conference Name / Field",
       "ORGANIZERS": "Organizers and Academic Institution",
-      "GO_TO_SURVEY": "Go to Survey"
+      "DESCRIPTION_FIELD": "Conference Description",
+      "VIEW_DESC_BTN": "Click to view description",
+      "POPUP_TITLE": "Conference Description"
     },
     "NO_DATA": "No conferences found matching your search."
+  },
+  "CATEGORIES": {
+    "ALL": "All",
+    "EXACT_SCIENCES": "Exact Sciences",
+    "ENGINEERING": "Engineering",
+    "BIOMED": "BioMed"
   },
   "LIST_PAGE": {
     "TITLE": "All Conferences",

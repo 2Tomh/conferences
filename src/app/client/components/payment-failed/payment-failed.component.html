@@ -1,4 +1,4 @@
-<div class="payment-result-container">
+<!-- <div class="payment-result-container">
   <div class="status-box error">
     <h1 style="color: #d9534f;">התשלום נכשל</h1>
     <p>{{ errorMessage }}</p>
@@ -7,6 +7,25 @@
     <div class="actions">
       <a routerLink="/payment" class="btn btn-retry">נסה שוב</a>
       <a routerLink="/" class="btn btn-home">חזור לדף הבית</a>
+    </div>
+  </div>
+</div> -->
+
+<div class="payment-result-container">
+  <div class="status-box error">
+    <h1>{{ 'PAYMENT_RESULT.FAILED_TITLE' | translate }}</h1>
+    
+    <p class="error-msg">{{ errorMessage }}</p>
+    
+    <p class="charge-info">{{ 'PAYMENT_RESULT.NOT_CHARGED' | translate }}</p>
+    
+    <div class="actions">
+      <a routerLink="/payment" class="btn btn-retry">
+        {{ 'PAYMENT_RESULT.RETRY' | translate }}
+      </a>
+      <a routerLink="/" class="btn btn-home">
+        {{ 'PAYMENT_RESULT.BACK_HOME' | translate }}
+      </a>
     </div>
   </div>
 </div>

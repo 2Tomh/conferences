@@ -12,7 +12,9 @@
   margin-left: auto;
 }
 
-/* Hero */
+/* ==========================================================================
+   Hero & Headers
+   ========================================================================== */
 .section-title {
   font-size: 2.4rem;
   font-weight: 700;
@@ -35,10 +37,48 @@
   font-size: 0.92rem;
   line-height: 1.7;
   margin-bottom: 36px;
-  /* max-width: 640px; */
 }
 
-/* Table Wrapper */
+/* ==========================================================================
+   Category Navbar (טאבים לסינון תחומים)
+   ========================================================================== */
+.category-navbar {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 25px;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.nav-tab {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #555;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 20px;
+}
+
+.nav-tab:hover {
+  color: #1a237e;
+  background-color: #f5f5f5;
+}
+
+.nav-tab.active {
+  color: #ffffff;
+  background-color: #1a237e;
+  font-weight: bold;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ==========================================================================
+   Table & Content Wrapper
+   ========================================================================== */
 .table-wrapper {
   border-radius: 16px;
   overflow: hidden;
@@ -47,7 +87,6 @@
   background: #fff;
 }
 
-/* Table */
 .events-table {
   width: 100%;
   border-collapse: collapse;
@@ -67,7 +106,6 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: #0284c7;
-  /* font-family: 'IBM Plex Mono', monospace; */
 }
 
 .events-table tbody tr {
@@ -85,13 +123,12 @@
 
 .events-table td {
   padding: 18px 20px;
-  /* vertical-align: top; */
   font-size: 0.88rem;
   line-height: 1.6;
   color: #334155;
+  vertical-align: middle;
 }
 
-/* Conference Name */
 .conf-name-cell strong {
   display: block;
   color: #0f172a;
@@ -106,7 +143,6 @@
   font-style: italic;
 }
 
-/* Organizers */
 .organizers-list {
   list-style: none;
   padding: 0;
@@ -125,7 +161,6 @@
   color: #0284c7;
   font-weight: 600;
   font-size: 0.78rem;
-  /* font-family: 'IBM Plex Mono', monospace; */
   background: #f0f9ff;
   border: 1px solid #bae6fd;
   border-radius: 4px;
@@ -133,10 +168,11 @@
   margin-right: 4px;
 }
 
-/* Survey buttons */
+/* ==========================================================================
+   Action Elements (Buttons & Popup)
+   ========================================================================== */
 .text-center {
   text-align: center;
-  vertical-align: middle !important;
 }
 
 .survey-links-wrapper {
@@ -146,7 +182,8 @@
   align-items: center;
 }
 
-.survey-btn {
+/* סטייל כפתור אחיד עבור הקישורים והפופאפים */
+.survey-btn, .view-desc-btn {
   display: inline-block;
   padding: 8px 18px;
   font-size: 0.78rem;
@@ -156,13 +193,14 @@
   border: none;
   border-radius: 8px;
   text-decoration: none;
+  cursor: pointer;
   transition: all 0.2s ease;
   letter-spacing: 0.02em;
   white-space: nowrap;
   box-shadow: 0 2px 8px rgba(14, 165, 233, 0.25);
 }
 
-.survey-btn:hover {
+.survey-btn:hover, .view-desc-btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 6px 18px rgba(14, 165, 233, 0.35);
   filter: brightness(1.05);
@@ -170,11 +208,82 @@
 
 .no-link {
   color: #cbd5e1;
-  /* font-family: 'IBM Plex Mono', monospace; */
   font-size: 0.9rem;
 }
 
-/* Pagination */
+/* רכיבי המודאל / פופאפ */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.popup-content {
+  background-color: #ffffff;
+  width: 90%;
+  max-width: 550px;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  direction: rtl;
+}
+
+.popup-header {
+  background-color: #1a237e;
+  color: #ffffff;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.popup-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.close-popup-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 1.8rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.popup-body {
+  padding: 20px;
+  color: #333333;
+  font-size: 1rem;
+  line-height: 1.6;
+  max-height: 400px;
+  overflow-y: auto;
+  text-align: right;
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ==========================================================================
+   Pagination
+   ========================================================================== */
 .pagination {
   display: flex;
   justify-content: center;
@@ -191,7 +300,6 @@
   background: #fff;
   color: #64748b;
   font-size: 14px;
-  /* font-family: 'IBM Plex Mono', monospace; */
   cursor: pointer;
   transition: all 0.15s ease;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
@@ -218,18 +326,17 @@
 .page-info {
   font-size: 12px;
   color: #94a3b8;
-  /* font-family: 'IBM Plex Mono', monospace; */
   margin-right: 8px;
 }
 
-/* ========== RESPONSIVE ========== */
+/* ==========================================================================
+   Responsive & Screen Breaks
+   ========================================================================== */
 
-/* טאבלט — עד 900px */
 @media (max-width: 900px) {
   .events-container {
     max-width: 95%;
     padding: 32px 16px 60px;
-    /* margin: 60px auto 0; */
   }
 
   .section-title {
@@ -237,29 +344,25 @@
   }
 }
 
-/* מובייל — עד 600px */
 @media (max-width: 600px) {
   .events-container {
     max-width: 100%;
     padding: 24px 12px 48px;
-    /* margin: 50px auto 0; */
+    border-radius: 20px;
   }
 
   .section-title {
     font-size: 1.5rem;
-    /* margin-top: 50px; */
   }
 
   .section-title::after {
     width: 60%;
   }
 
-  /* מסתירים את ה-thead */
   .events-table thead {
     display: none;
   }
 
-  /* כל שורה הופכת לכרטיס */
   .events-table tbody tr {
     display: block;
     border: 1px solid #e2e8f0;
@@ -270,11 +373,6 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   }
 
-  .events-table tbody tr:hover {
-    background: #f8fbff;
-  }
-
-  /* כל תא הופך לבלוק עם תווית */
   .events-table td {
     display: block;
     padding: 8px 0;
@@ -282,8 +380,8 @@
     font-size: 0.85rem;
   }
 
-  /* תוויות לפני כל תא */
   .events-table td.conf-name-cell::before {
+    content: "שם הכנס:";
     display: block;
     font-size: 0.65rem;
     font-weight: 700;
@@ -294,6 +392,7 @@
   }
 
   .events-table td:nth-child(2)::before {
+    content: "מארגנים:";
     display: block;
     font-size: 0.65rem;
     font-weight: 700;
@@ -304,12 +403,25 @@
     margin-top: 8px;
   }
 
+  .events-table td:nth-child(3)::before {
+    content: "תיאור:";
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #0284c7;
+    margin-bottom: 6px;
+    margin-top: 8px;
+  }
+
   .events-table td.text-center {
     text-align: right;
     margin-top: 8px;
   }
 
   .events-table td.text-center::before {
+    content: "קישורים:";
     display: block;
     font-size: 0.65rem;
     font-weight: 700;
@@ -319,7 +431,7 @@
     margin-bottom: 8px;
   }
 
-  .survey-btn {
+  .survey-btn, .view-desc-btn {
     display: block;
     text-align: center;
     width: 100%;
@@ -328,9 +440,9 @@
 
   .survey-links-wrapper {
     width: 100%;
+    align-items: flex-start;
   }
 
-  /* Pagination במובייל */
   .pagination {
     flex-wrap: wrap;
     gap: 4px;
@@ -343,27 +455,35 @@
   }
 }
 
-/* מסכים גדולים — 1400px+ */
 @media (min-width: 1400px) {
   .events-container {
     max-width: 1200px;
   }
 }
 
-/* מסכים ענקיים — 1800px+ */
 @media (min-width: 1800px) {
   .events-container {
     max-width: 1400px;
   }
 }
 
-/* LTR - אנגלית */
+/* ==========================================================================
+   Internationalization & Language Direction (RTL / LTR)
+   ========================================================================== */
 :host-context([lang="en"]) .events-table {
   text-align: left;
 }
 
 :host-context([lang="en"]) .events-container {
   direction: ltr;
+}
+
+:host-context([lang="en"]) .popup-content {
+  direction: ltr;
+}
+
+:host-context([lang="en"]) .popup-body {
+  text-align: left;
 }
 
 :host-context([lang="en"]) .search-container {

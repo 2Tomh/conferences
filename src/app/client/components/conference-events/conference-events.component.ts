@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ConferenceEventsService } from '../../../services/conference-events.service';
+
 @Component({
   selector: 'app-conference-events',
   templateUrl: './conference-events.component.html',
@@ -10,6 +11,12 @@ export class ConferenceEventsComponent implements OnInit {
   currentPage = 1;
   conferences: any[] = [];
   searchText = '';
+  
+  // --- שדות הניווט החדשים לפי תחום ---
+  selectedCategory: string = 'All'; 
+
+  // --- ניהול ה-Popup של התיאור ---
+  activeDescription: string | null = null;
 
   constructor(private conferenceEventsService: ConferenceEventsService) { }
 
@@ -23,18 +30,24 @@ export class ConferenceEventsComponent implements OnInit {
     });
   }
 
-  // get totalPages(): number {
-  //   return Math.ceil(this.conferences.length / this.pageSize);
-  // }
+  // פונקציות לפתיחה וסגירה של ה-Popup
+  openDescription(description: string): void {
+    this.activeDescription = description;
+  }
+
+  closeDescription(): void {
+    this.activeDescription = null;
+  }
+
+  // פונקציה לשינוי התחום בלחיצה מה-Navbar
+  selectCategory(category: string): void {
+    this.selectedCategory = category;
+    this.currentPage = 1; // מאפסים לעמוד הראשון בכל סינון מחדש
+  }
 
   get pages(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
-
-  // get pagedConferences(): any[] {
-  //   const start = (this.currentPage - 1) * this.pageSize;
-  //   return this.conferences.slice(start, start + this.pageSize);
-  // }
 
   goToPage(page: number): void {
     if (page < 1 || page > this.totalPages) { return; }
@@ -44,41 +57,50 @@ export class ConferenceEventsComponent implements OnInit {
 
   get lastUpdated(): Date {
     return this.conferences
-      .filter(c => c.AddedAt)
-      .map(c => new Date(c.AddedAt))
+      .filter(c => c.AddedAt || c.addedAt)
+      .map(c => new Date(c.AddedAt || c.addedAt))
       .reduce((max, d) => d > max ? d : max, new Date(0));
   }
+
+  // ה-Getter של הסינון שתומך גם בטאבים וגם בחיפוש חופשי
   get filteredConferences(): any[] {
-    if (!this.searchText) { return this.conferences; }
+    let list = this.conferences;
+
+    // סינון לפי התחום שנבחר ב-Navbar הפנימי
+    if (this.selectedCategory && this.selectedCategory !== 'All') {
+      list = list.filter(c => c.Category === this.selectedCategory);
+    }
+
+    if (!this.searchText) { return list; }
 
     const term = this.searchText.toLowerCase();
+    return list.filter(c => {
+      const conferenceName = c.Conference || '';
+      const description = c.Description || '';
 
-    return this.conferences.filter(c => {
-      // 1. חיפוש בשם הכנס
-      const matchName = c.Name?.toLowerCase().includes(term);
+      const matchText = conferenceName.toLowerCase().includes(term) || 
+                        description.toLowerCase().includes(term);
 
-      // 2. חיפוש בשם המנחה או בשיוך המוסדי שלו
-      const matchOrganizer = c.Organizers?.some((org: any) =>
-        org.Name?.toLowerCase().includes(term) ||
-        org.Affiliation?.toLowerCase().includes(term)
-      );
+      let matchOrganizer = false;
+      if (c.Organizers && Array.isArray(c.Organizers)) {
+        matchOrganizer = c.Organizers.some((org: string) => org?.toLowerCase().includes(term));
+      }
 
-      return matchName || matchOrganizer;
+      return matchText || matchOrganizer;
     });
   }
 
   get pagedConferences(): any[] {
-    const list = this.filteredConferences; // שימוש ברשימה המסוננת
+    const list = this.filteredConferences;
     const start = (this.currentPage - 1) * this.pageSize;
-    return list.slice(start, start + this.pageSize);
+    const result = list.slice(start, start + this.pageSize);
+    return result;
   }
 
-  // נעדכן גם את החישובים האחרים שיתבססו על הרשימה המסוננת
   get totalPages(): number {
     return Math.ceil(this.filteredConferences.length / this.pageSize);
   }
 
-  // בונוס: איפוס עמוד בעת חיפוש
   onSearchChange() {
     this.currentPage = 1;
   }

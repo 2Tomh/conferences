@@ -29,7 +29,6 @@ export class UserManagementComponent implements OnInit {
   loadUsers(): void {
     this.authService.getAllUsers().subscribe({
       next: (data) => {
-        console.log(data); // ← הוסף את זה
         this.users = data;
       },
       error: (err) => console.error('שגיאה:', err)
