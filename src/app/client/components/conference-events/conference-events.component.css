@@ -1,5 +1,6 @@
-/* @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Hebrew:wght@300;400;600;700&display=swap'); */
-
+/* ==========================================================================
+   Events Container Base Style
+   ========================================================================== */
 .events-container {
   box-sizing: border-box;
   margin-top: 35px;
@@ -77,7 +78,7 @@
 }
 
 /* ==========================================================================
-   Table & Content Wrapper
+   Table & Content Wrapper (Desktop Views)
    ========================================================================== */
 .table-wrapper {
   border-radius: 16px;
@@ -127,6 +128,7 @@
   line-height: 1.6;
   color: #334155;
   vertical-align: middle;
+  width: min-content;
 }
 
 .conf-name-cell strong {
@@ -168,6 +170,11 @@
   margin-right: 4px;
 }
 
+/* הסתרת תוויות המובייל כברירת מחדל בדסקטופ */
+.mobile-label {
+  display: none;
+}
+
 /* ==========================================================================
    Action Elements (Buttons & Popup)
    ========================================================================== */
@@ -182,7 +189,6 @@
   align-items: center;
 }
 
-/* סטייל כפתור אחיד עבור הקישורים והפופאפים */
 .survey-btn, .view-desc-btn {
   display: inline-block;
   padding: 8px 18px;
@@ -330,9 +336,8 @@
 }
 
 /* ==========================================================================
-   Responsive & Screen Breaks
+   Responsive Breakpoints (Tablets)
    ========================================================================== */
-
 @media (max-width: 900px) {
   .events-container {
     max-width: 95%;
@@ -344,117 +349,148 @@
   }
 }
 
+/* ==========================================================================
+   Responsive Breakpoints (Mobile Phones - Pure Layout & Style Changes)
+   ========================================================================== */
 @media (max-width: 600px) {
   .events-container {
     max-width: 100%;
     padding: 24px 12px 48px;
-    border-radius: 20px;
+    border-radius: 24px;
   }
 
   .section-title {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
+    text-align: center;
   }
 
   .section-title::after {
     width: 60%;
+    margin-left: auto;
+    margin-right: auto;
   }
 
+  .intro-text {
+    text-align: center;
+    font-size: 0.88rem;
+    margin-bottom: 24px;
+  }
+
+  /* הסתרת כותרות הטבלה המקוריות במובייל */
   .events-table thead {
     display: none;
   }
 
+  /* הפיכת השורות לכרטיסים מרווחים ונקיים */
   .events-table tbody tr {
     display: block;
     border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    margin-bottom: 16px;
-    padding: 16px;
-    background: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border-radius: 16px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+    transition: transform 0.2s ease;
   }
 
+  .events-table tbody tr:hover {
+    background: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+  }
+
+  /* הפיכת התאים לבלוקים אנכיים מיושרים לפי כיווניות */
   .events-table td {
     display: block;
-    padding: 8px 0;
+    padding: 10px 0 !important;
     border: none;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
+    text-align: right; /* ברירת מחדל לעברית */
+    width: 100% !important;
+    box-sizing: border-box;
   }
 
-  .events-table td.conf-name-cell::before {
-    content: "שם הכנס:";
+  /* חשיפת תוויות המובייל הדינמיות ועיצובן */
+  .mobile-label {
     display: block;
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #0284c7;
-    margin-bottom: 4px;
-  }
-
-  .events-table td:nth-child(2)::before {
-    content: "מארגנים:";
-    display: block;
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #0284c7;
-    margin-bottom: 4px;
-    margin-top: 8px;
-  }
-
-  .events-table td:nth-child(3)::before {
-    content: "תיאור:";
-    display: block;
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.05em;
     color: #0284c7;
     margin-bottom: 6px;
-    margin-top: 8px;
+    opacity: 0.85;
   }
 
+  /* שם הכנס */
+  .conf-name-cell strong {
+    font-size: 1.05rem;
+    color: #0f172a;
+    line-height: 1.4;
+  }
+
+  /* רשימת המארגנים */
+  .organizers-list {
+    padding-right: 0;
+    padding-left: 0;
+    margin-top: 4px;
+    gap: 6px;
+  }
+
+  .organizers-list li {
+    font-size: 0.88rem;
+    color: #475569;
+  }
+
+  /* כפתורי פעולה וקישורים במובייל */
   .events-table td.text-center {
     text-align: right;
-    margin-top: 8px;
+    margin-top: 6px;
   }
 
-  .events-table td.text-center::before {
-    content: "קישורים:";
-    display: block;
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #0284c7;
-    margin-bottom: 8px;
+  .survey-links-wrapper {
+    width: 100%;
+    align-items: stretch;
+    gap: 10px;
+    margin-top: 8px;
   }
 
   .survey-btn, .view-desc-btn {
     display: block;
     text-align: center;
     width: 100%;
+    padding: 12px 16px;
+    font-size: 0.85rem;
     box-sizing: border-box;
   }
 
-  .survey-links-wrapper {
-    width: 100%;
-    align-items: flex-start;
-  }
-
+  /* רכיב הניווט (Pagination) */
   .pagination {
     flex-wrap: wrap;
-    gap: 4px;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 30px;
   }
 
   .page-btn {
-    min-width: 32px;
-    height: 32px;
-    font-size: 12px;
+    min-width: 38px;
+    height: 38px;
+    font-size: 13px;
+    border-radius: 6px;
+  }
+
+  .page-info {
+    width: 100%;
+    text-align: center;
+    margin-right: 0;
+    margin-top: 8px;
+    font-size: 0.8rem;
   }
 }
 
+/* ==========================================================================
+   Desktop Screen Scaling (Large Displays)
+   ========================================================================== */
 @media (min-width: 1400px) {
   .events-container {
     max-width: 1200px;
@@ -468,8 +504,12 @@
 }
 
 /* ==========================================================================
-   Internationalization & Language Direction (RTL / LTR)
+   Internationalization & Language Direction Rules (RTL / LTR)
    ========================================================================== */
+.events-table {
+  direction: inherit;
+}
+
 :host-context([lang="en"]) .events-table {
   text-align: left;
 }
@@ -493,4 +533,15 @@
 :host-context([lang="en"]) .affiliation {
   margin-right: 0;
   margin-left: 4px;
+}
+
+/* היפוך כיווניות של תאי הכרטיס במובייל לאנגלית */
+:host-context([lang="en"]) @media (max-width: 600px) {
+  .events-table td {
+    text-align: left;
+  }
+
+  .events-table td.text-center {
+    text-align: left;
+  }
 }
