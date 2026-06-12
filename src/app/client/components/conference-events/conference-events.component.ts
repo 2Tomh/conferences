@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ConferenceEventsService } from '../../../services/conference-events.service';
+import { TranslateService } from '@ngx-translate/core'; 
 
 @Component({
   selector: 'app-conference-events',
@@ -18,7 +19,10 @@ export class ConferenceEventsComponent implements OnInit {
   // --- ניהול ה-Popup של התיאור ---
   activeDescription: string | null = null;
 
-  constructor(private conferenceEventsService: ConferenceEventsService) { }
+  constructor(
+    private conferenceEventsService: ConferenceEventsService,
+    private translate: TranslateService 
+  ) { }
 
   ngOnInit(): void {
     // טעינת הנתונים מהשרת
@@ -30,9 +34,19 @@ export class ConferenceEventsComponent implements OnInit {
     });
   }
 
-  // פונקציות לפתיחה וסגירה של ה-Popup
-  openDescription(description: string): void {
-    this.activeDescription = description;
+  // הפתרון החכם: מקבלים את כל אובייקט הכנס
+  openDescription(conf: any): void {
+    const translationKey = 'CONFERENCES_DESC.' + conf.Conference;
+    
+    // שימוש ב-get האסינכרוני כדי לוודא שקובץ השפה נטען ב-100%
+    this.translate.get(translationKey).subscribe((translatedText: string) => {
+      // אם התרגום נכשל או לא קיים ב-JSON, ניקח את התיאור המקורי באנגלית מה-DB
+      if (translatedText === translationKey) {
+        this.activeDescription = conf.Description || conf.description || 'No description available.';
+      } else {
+        this.activeDescription = translatedText;
+      }
+    });
   }
 
   closeDescription(): void {

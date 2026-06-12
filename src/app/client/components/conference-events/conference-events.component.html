@@ -1,104 +1,6 @@
-<!-- <div class="events-container">
-  <h2 class="section-title">{{ 'EVENTS.TITLE' | translate }}</h2>
-  
-  <div class="missing-conf-message" style="margin: 15px 0; padding: 10px; border-radius: 4px;">
-    <span>{{ 'EVENTS.MISSING_CONF' | translate }}</span>
-    <a href="mailto:mindil102026@gmail.com" style="color: #1a237e; font-weight: bold;">
-      mindil102026@gmail.com
-    </a>
-  </div>
-
-  <div class="category-navbar">
-    <button class="nav-tab" [class.active]="selectedCategory === 'All'" (click)="selectCategory('All')">
-      {{ 'CATEGORIES.ALL' | translate }}
-    </button>
-    <button class="nav-tab" [class.active]="selectedCategory === 'Exact Sciences'" (click)="selectCategory('Exact Sciences')">
-      {{ 'CATEGORIES.EXACT_SCIENCES' | translate }} 
-    </button>
-    <button class="nav-tab" [class.active]="selectedCategory === 'Engineering'" (click)="selectCategory('Engineering')">
-      {{ 'CATEGORIES.ENGINEERING' | translate }} 
-    </button>
-    <button class="nav-tab" [class.active]="selectedCategory === 'BioMed'" (click)="selectCategory('BioMed')">
-      {{ 'CATEGORIES.BIOMED' | translate }} 
-    </button>
-  </div>
-
-  <div class="search-container" style="margin-bottom: 20px; text-align: right;">
-    <input type="text" [placeholder]="'EVENTS.SEARCH_PLACEHOLDER' | translate" [(ngModel)]="searchText"
-      (input)="onSearchChange()" style="padding: 10px; width: 300px; border-radius: 5px; border: 1px solid #ccc;">
-  </div>
-
-  <div class="table-wrapper">
-    <table class="events-table">
-      <thead>
-        <tr>
-          <th>{{ 'EVENTS.TABLE.NAME_FIELD' | translate }}</th>
-          <th>{{ 'EVENTS.TABLE.ORGANIZERS' | translate }}</th>
-          <th>{{ 'EVENTS.TABLE.DESCRIPTION_FIELD' | translate }}</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let conf of pagedConferences">
-          <td class="conf-name-cell">
-            <strong>{{ conf.Conference }}</strong>
-          </td>
-
-          <td>
-            <ul class="organizers-list" *ngIf="conf.Organizers && conf.Organizers.length > 0">
-              <li *ngFor="let org of conf.Organizers">
-                {{ org }}
-              </li>
-            </ul>
-            <span *ngIf="!conf.Organizers || conf.Organizers.length === 0">-</span>
-          </td>
-
-          <td>
-            <button *ngIf="conf.Description" (click)="openDescription(conf.Description)" class="view-desc-btn">
-              {{ 'EVENTS.TABLE.VIEW_DESC_BTN' | translate }}
-            </button>
-            <span *ngIf="!conf.Description" class="no-link">-</span>
-          </td>
-
-          <td class="text-center">
-            <div class="survey-links-wrapper" style="display: flex; flex-direction: column; gap: 8px;">
-              <a *ngIf="conf.Links?.survey" [href]="'/api/Surveys/take/' + conf.Id" target="_blank" class="survey-btn"
-                style="color: #1a237e; font-weight: 500;">
-                Survey
-              </a>
-              <a *ngIf="conf.Links?.website" [href]="'/conferences/' + conf.Id" target="_blank" class="survey-btn"
-                style="color: #1a237e; font-weight: 500;">
-                Website
-              </a>
-              <span *ngIf="!conf.Links?.survey && !conf.Links?.website" class="no-link">-</span>
-            </div>
-          </td>
-        </tr>
-
-        <tr *ngIf="pagedConferences.length === 0">
-          <td colspan="4" style="text-align: center; padding: 20px;">
-            {{ 'EVENTS.NO_DATA' | translate }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="pagination">
-    <button class="page-btn" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">&#8249;</button>
-
-    <button *ngFor="let p of pages" class="page-btn" [class.active]="p === currentPage" (click)="goToPage(p)">
-      {{ p }}
-    </button>
-
-    <button class="page-btn" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">&#8250;</button>
-
-    <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
-  </div>
-</div> -->
 <div class="events-container">
   <h2 class="section-title">{{ 'EVENTS.TITLE' | translate }}</h2>
-  
+
   <div class="missing-conf-message" style="margin: 15px 0; padding: 10px; border-radius: 4px;">
     <span>{{ 'EVENTS.MISSING_CONF' | translate }}</span>
     <a href="mailto:mindil102026@gmail.com" style="color: #1a237e; font-weight: bold;">
@@ -110,20 +12,23 @@
     <button class="nav-tab" [class.active]="selectedCategory === 'All'" (click)="selectCategory('All')">
       {{ 'CATEGORIES.ALL' | translate }}
     </button>
-    <button class="nav-tab" [class.active]="selectedCategory === 'Humanities and Arts'" (click)="selectCategory('Humanities and Arts')">
+    <button class="nav-tab" [class.active]="selectedCategory === 'Humanities and Arts'"
+      (click)="selectCategory('Humanities and Arts')">
       {{ 'CATEGORIES.HUMANITIES_ARTS' | translate }}
     </button>
-    <button class="nav-tab" [class.active]="selectedCategory === 'Social Sciences & Law'" (click)="selectCategory('Social Sciences & Law')">
+    <button class="nav-tab" [class.active]="selectedCategory === 'Social Sciences & Law'"
+      (click)="selectCategory('Social Sciences & Law')">
       {{ 'CATEGORIES.SOCIAL_SCIENCES_LAW' | translate }}
     </button>
     <button class="nav-tab" [class.active]="selectedCategory === 'BioMed'" (click)="selectCategory('BioMed')">
-      {{ 'CATEGORIES.BIOMED' | translate }} 
+      {{ 'CATEGORIES.BIOMED' | translate }}
     </button>
     <button class="nav-tab" [class.active]="selectedCategory === 'Engineering'" (click)="selectCategory('Engineering')">
-      {{ 'CATEGORIES.ENGINEERING' | translate }} 
+      {{ 'CATEGORIES.ENGINEERING' | translate }}
     </button>
-    <button class="nav-tab" [class.active]="selectedCategory === 'Exact Sciences'" (click)="selectCategory('Exact Sciences')">
-      {{ 'CATEGORIES.EXACT_SCIENCES' | translate }} 
+    <button class="nav-tab" [class.active]="selectedCategory === 'Exact Sciences'"
+      (click)="selectCategory('Exact Sciences')">
+      {{ 'CATEGORIES.EXACT_SCIENCES' | translate }}
     </button>
   </div>
 
@@ -144,7 +49,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let conf of pagedConferences">
-          
+
           <td class="conf-name-cell">
             <span class="mobile-label">{{ 'EVENTS.TABLE.NAME_FIELD' | translate }}</span>
             <strong>{{ conf.Conference }}</strong>
@@ -154,7 +59,8 @@
             <span class="mobile-label">{{ 'EVENTS.TABLE.ORGANIZERS' | translate }}</span>
             <ul class="organizers-list" *ngIf="conf.Organizers && conf.Organizers.length > 0">
               <li *ngFor="let org of conf.Organizers">
-                {{ org }}
+                {{ ('ORGANIZERS_DATA.' + org | translate) === 'ORGANIZERS_DATA.' + org ? org : ('ORGANIZERS_DATA.' + org
+                | translate) }}
               </li>
             </ul>
             <span *ngIf="!conf.Organizers || conf.Organizers.length === 0">-</span>
@@ -162,7 +68,7 @@
 
           <td>
             <span class="mobile-label">{{ 'EVENTS.TABLE.DESCRIPTION_FIELD' | translate }}</span>
-            <button *ngIf="conf.Description" (click)="openDescription(conf.Description)" class="view-desc-btn">
+            <button *ngIf="conf.Description" (click)="openDescription(conf)" class="view-desc-btn">
               {{ 'EVENTS.TABLE.VIEW_DESC_BTN' | translate }}
             </button>
             <span *ngIf="!conf.Description" class="no-link">-</span>
@@ -180,7 +86,7 @@
               <span *ngIf="!conf.Links?.survey && !conf.Links?.website" class="no-link">-</span>
             </div>
           </td>
-          
+
         </tr>
 
         <tr *ngIf="pagedConferences.length === 0">
@@ -197,22 +103,12 @@
     <button *ngFor="let p of pages" class="page-btn" [class.active]="p === currentPage" (click)="goToPage(p)">
       {{ p }}
     </button>
-    <button class="page-btn" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">&#8250;</button>
+    <button class="page-btn" (click)="goToPage(currentPage + 1)"
+      [disabled]="currentPage === totalPages">&#8250;</button>
     <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
   </div>
 </div>
 
-<div class="popup-overlay" *ngIf="activeDescription !== null" (click)="closeDescription()">
-  <div class="popup-content" (click)="$event.stopPropagation()">
-    <div class="popup-header">
-      <h3>{{ 'EVENTS.TABLE.POPUP_TITLE' | translate }}</h3>
-      <button class="close-popup-btn" (click)="closeDescription()">&times;</button>
-    </div>
-    <div class="popup-body">
-      <p>{{ activeDescription }}</p>
-    </div>
-  </div>
-</div>
 <div class="popup-overlay" *ngIf="activeDescription !== null" (click)="closeDescription()">
   <div class="popup-content" (click)="$event.stopPropagation()">
     <div class="popup-header">
