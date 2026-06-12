@@ -52,7 +52,9 @@
 
           <td class="conf-name-cell">
             <span class="mobile-label">{{ 'EVENTS.TABLE.NAME_FIELD' | translate }}</span>
-            <strong>{{ conf.Conference }}</strong>
+            <strong>
+              {{ 'CONFERENCES_NAMES.' + conf.Conference | translate }}
+            </strong>
           </td>
 
           <td>
@@ -75,14 +77,17 @@
           </td>
 
           <td class="text-center">
-            <span class="mobile-label">{{ 'EVENTS.TABLE.POPUP_TITLE' | translate }}</span>
+            <span class="mobile-label">{{ 'TABLE.ACTIONS' | translate }}</span>
             <div class="survey-links-wrapper">
+
               <a *ngIf="conf.Links?.survey" [href]="conf.Links.survey" target="_blank" class="view-desc-btn">
-                Survey
+                {{ 'EVENTS.TABLE.SURVEY_BTN' | translate }}
               </a>
+
               <a *ngIf="conf.Links?.website" [href]="conf.Links.website" target="_blank" class="view-desc-btn">
-                Website
+                {{ 'EVENTS.TABLE.WEBSITE_BTN' | translate }}
               </a>
+
               <span *ngIf="!conf.Links?.survey && !conf.Links?.website" class="no-link">-</span>
             </div>
           </td>
