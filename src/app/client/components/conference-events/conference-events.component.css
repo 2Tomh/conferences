@@ -189,7 +189,7 @@
   align-items: center;
 }
 
-.survey-btn, .view-desc-btn {
+.view-desc-btn {
   display: inline-block;
   padding: 8px 18px;
   font-size: 0.78rem;
@@ -203,10 +203,11 @@
   transition: all 0.2s ease;
   letter-spacing: 0.02em;
   white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.25);
+  width: -webkit-fill-available;
 }
 
-.survey-btn:hover, .view-desc-btn:hover {
+.survey-btn:hover,
+.view-desc-btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 6px 18px rgba(14, 165, 233, 0.35);
   filter: brightness(1.05);
@@ -281,6 +282,7 @@
     transform: scale(0.9);
     opacity: 0;
   }
+
   to {
     transform: scale(1);
     opacity: 1;
@@ -405,7 +407,8 @@
     padding: 10px 0 !important;
     border: none;
     font-size: 0.9rem;
-    text-align: right; /* ברירת מחדל לעברית */
+    text-align: right;
+    /* ברירת מחדל לעברית */
     width: 100% !important;
     box-sizing: border-box;
   }
@@ -455,7 +458,8 @@
     margin-top: 8px;
   }
 
-  .survey-btn, .view-desc-btn {
+  .survey-btn,
+  .view-desc-btn {
     display: block;
     text-align: center;
     width: 100%;

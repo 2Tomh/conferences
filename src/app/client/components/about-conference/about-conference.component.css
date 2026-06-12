@@ -124,7 +124,7 @@
 
 /* טאבלט — 481px עד 768px */
 @media (min-width: 481px) and (max-width: 768px) {
-    
+
     .about-section .container {
         padding: 0 12px;
     }
@@ -159,4 +159,24 @@
 
 :host-context([lang="en"]) .about-footer {
     text-align: left;
+}
+
+.survey-btn {
+    background: none;
+    background-color: rgba(0, 0, 0, 0);
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #555;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 20px;
+    color: #ffffff;
+    background-color: #1a237e;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 12px 28px;
+    font-size: 0.95rem;
 }

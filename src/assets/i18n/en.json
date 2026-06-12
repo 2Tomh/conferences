@@ -88,7 +88,8 @@
     "LEAD": "At the end of October, dozens of academic conferences will be held across the country in a wide range of research fields, as part of an initiative to strengthen ties between Israeli researchers and research institutions, both in Israel and abroad.",
     "CONTENT_1": "The initiative, in collaboration with <strong>the Israel Young Academy</strong>, seeks to leverage the arrival of thousands of Israeli researchers from abroad to Israel during the Knesset election period to create professional meetings, encourage research collaborations, reveal new academic opportunities, and strengthen the international status of Israeli academia.",
     "CONTENT_2": "Mind-IL invites researchers and industry partners to take part in a celebration of scientific excellence, creativity, and international cooperation.",
-    "CONTENT_3": "If you care about the future of science and research in Israel, join us.",
+    "CONTENT_3": "If you mind about the future of science and research in Israel, join us.",
+    "GO_TO_EVENTS": "For the list of conferences click here",
     "FOOTER": "Connecting researchers to scientific excellence.",
     "COMMITTEE": {
       "TITLE": "Steering Committee Members",
@@ -119,7 +120,7 @@
   },
   "EVENTS": {
     "TITLE": "Scientific Conferences, October 2026",
-    "MISSING_CONF": "Didn't find a conference in your field? Create one! For more details: ",
+    "MISSING_CONF": "Didn't find a conference in your field? Create one! Contact us: ",
     "SEARCH_PLACEHOLDER": "Search conferences...",
     "TABLE": {
       "NAME_FIELD": "Conference Name / Field",
@@ -131,6 +132,8 @@
     "NO_DATA": "No conferences found matching your search."
   },
   "CATEGORIES": {
+    "HUMANITIES_ARTS": "Humanities and Arts",
+    "SOCIAL_SCIENCES_LAW": "Social Sciences & Law",
     "ALL": "All",
     "EXACT_SCIENCES": "Exact Sciences",
     "ENGINEERING": "Engineering",
