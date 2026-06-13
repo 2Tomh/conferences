@@ -9,6 +9,8 @@ export interface PaymentPreparationResponse {
     orderId: string;
     amount: number;
     notifyUrl: string;
+    successUrl?: string; // הוספת השדה הזה
+    failureUrl?: string;
 }
 
 @Injectable({ providedIn: 'root' })

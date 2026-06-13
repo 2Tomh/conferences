@@ -8,28 +8,31 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class PaymentSuccessComponent implements OnInit, OnDestroy {
   orderId: string | null = null;
-  countdown: number = 4; // מונה שניות לאחור בשביל חווית המשתמש
+  
+  // הוספת המשתנים החסרים שה-HTML מחפש
+  loading: boolean = false; 
+  success: boolean = true;  
+
+  countdown: number = 4; 
   timerInterval: any;
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router // הזרקת ה-Router לצורך הניווט לדף הבית
+    private router: Router 
   ) { }
 
   ngOnInit(): void {
     this.orderId = this.route.snapshot.queryParamMap.get('orderId');
 
-    // ניהול טיימר לאחור שמעביר את המשתמש אוטומטית לדף הבית
     this.timerInterval = setInterval(() => {
       this.countdown--;
       if (this.countdown === 0) {
-        this.router.navigate(['/']); // ניווט אוטומטי לעמוד הבית
+        this.router.navigate(['/']); 
       }
     }, 1000);
   }
 
   ngOnDestroy(): void {
-    // ניקוי הטיימר במידה והמשתמש יצא מהעמוד באופן ידני לפני הזמן
     if (this.timerInterval) {
       clearInterval(this.timerInterval);
     }
