@@ -29,10 +29,11 @@ export class PaymentService {
     }
 
     // פונקציה לאימות תשלום (נקראת בדף ה-Success)
-    verifyPayment(txId: string, orderId: string): Observable<{ success: boolean }> {
-        return this.http.post<{ success: boolean }>(
-            `${this.api}/payment/verify`,
-            { txId, orderId }
-        );
+    verifyPayment(txId: string, orderId: string): Observable<any> {
+        // חובה לשלוח את ה-orderId כאובייקט בתוך ה-Body של ה-POST
+        return this.http.post('https://conference-backend-8339.onrender.com/api/payment/verify', {
+            txId: txId,
+            orderId: orderId
+        });
     }
 }
