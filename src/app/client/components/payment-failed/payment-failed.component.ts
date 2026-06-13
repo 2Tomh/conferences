@@ -7,16 +7,11 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./payment-failed.component.css']
 })
 export class PaymentFailedComponent implements OnInit {
-  errorMessage: string = 'התשלום לא הושלם.';
+  orderId: string | null = null;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute) { }
 
-  ngOnInit() {
-    // בודקים אם טרנזילה שלחה סיבה לכישלון דרך ה-URL
-    this.route.queryParams.subscribe(params => {
-      if (params['error']) {
-        this.errorMessage = `שגיאה: ${params['error']}`;
-      }
-    });
+  ngOnInit(): void {
+    this.orderId = this.route.snapshot.queryParamMap.get('orderId');
   }
 }

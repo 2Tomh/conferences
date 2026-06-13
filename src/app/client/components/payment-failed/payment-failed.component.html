@@ -1,29 +1,17 @@
-<!-- <div class="payment-result-container">
-  <div class="status-box error">
-    <h1 style="color: #d9534f;">התשלום נכשל</h1>
-    <p>{{ errorMessage }}</p>
-    <p>לא חויבת בגין פעולה זו.</p>
-    
-    <div class="actions">
-      <a routerLink="/payment" class="btn btn-retry">נסה שוב</a>
-      <a routerLink="/" class="btn btn-home">חזור לדף הבית</a>
+<div class="result-container failed-mode">
+  <div class="result-card">
+    <div class="icon-circle">
+      <span class="cross">&#10005;</span>
     </div>
-  </div>
-</div> -->
+    
+    <h2>{{ 'PAYMENT_RESULT.FAILED_TITLE' | translate }}</h2>
+    <p class="sub-message">{{ 'PAYMENT_RESULT.NOT_CHARGED' | translate }}</p>
 
-<div class="payment-result-container">
-  <div class="status-box error">
-    <h1>{{ 'PAYMENT_RESULT.FAILED_TITLE' | translate }}</h1>
-    
-    <p class="error-msg">{{ errorMessage }}</p>
-    
-    <p class="charge-info">{{ 'PAYMENT_RESULT.NOT_CHARGED' | translate }}</p>
-    
-    <div class="actions">
-      <a routerLink="/payment" class="btn btn-retry">
+    <div class="action-wrapper" style="display: flex; gap: 15px; justify-content: center;">
+      <a routerLink="/ConferenceEvents" class="survey-btn secondary-style">
         {{ 'PAYMENT_RESULT.RETRY' | translate }}
       </a>
-      <a routerLink="/" class="btn btn-home">
+      <a routerLink="/" class="survey-btn">
         {{ 'PAYMENT_RESULT.BACK_HOME' | translate }}
       </a>
     </div>
