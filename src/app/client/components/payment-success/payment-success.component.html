@@ -1,4 +1,4 @@
-<div class="payment-result-container">
+<!-- <div class="payment-result-container">
   <div *ngIf="loading" class="status-box">
     <p>מאמת תשלום מול המערכת, אנא המתן...</p>
   </div>
@@ -13,5 +13,17 @@
     <h1 style="color: red;">אירעה שגיאה באימות התשלום</h1>
     <p>ייתכן שהתשלום לא הושלם או שחלפה תקלה. אנא נסה שוב או פנה לתמיכה.</p>
     <a routerLink="/payment" class="btn">חזור לנסות שוב</a>
+  </div>
+</div> -->
+
+<div class="payment-result-container">
+  <div *ngIf="loading" class="status-box">
+    <p>מאמת תשלום מול המערכת, אנא המתן...</p>
+  </div>
+
+  <div *ngIf="!loading && success" class="status-box success">
+    <h1 style="color: green;">התשלום בוצע בהצלחה!</h1>
+    <p>תודה רבה, פרטי ההרשמה שלך נשמרו במערכת.</p>
+    <a routerLink="/" class="btn">חזור לדף הבית</a>
   </div>
 </div>

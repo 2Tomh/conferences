@@ -1,71 +1,106 @@
-.result-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 70vh;
-  padding: 20px;
-  background-color: #f8f9fa;
+:host {
+  display: block;
+  direction: rtl;
+  font-family: 'Open Sans', system-ui, -apple-system, sans-serif;
 }
 
+/* קונטיינר ראשי שממרכז את כרטיס השגיאה במסך */
+.result-container.failed-mode {
+  min-height: 75vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: #f8fafc; /* רקע בהיר ונקי זהה לעמוד ההצלחה */
+}
+
+/* כרטיס השגיאה הלבן */
 .result-card {
-  background: white;
-  padding: 40px;
+  background: #ffffff;
+  padding: 40px 30px;
   border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+  max-width: 450px;
+  width: 100%;
   text-align: center;
-  max-width: 500px;
+  border-top: 5px solid #ef4444; /* פס אדום בולט בראש הכרטיס */
+}
+
+/* עיגול האייקון של ה-X */
+.icon-circle {
+  width: 72px;
+  height: 72px;
+  background-color: #fef2f2; /* רקע אדמדם רך */
+  color: #ef4444; /* אדום התראה עבור ה-X */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px auto;
+}
+
+/* ה-X עצמו */
+.cross {
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+/* כותרת השגיאה */
+.result-card h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 12px;
+}
+
+/* תת הכתובת (לא חויבת) */
+.sub-message {
+  font-size: 16px;
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+/* קונטיינר הכפתורים */
+.action-wrapper {
   width: 100%;
 }
 
-.icon-circle {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
+/* סטייל בסיסי לכל כפתורי הסקר/פעולה שלך */
+.survey-btn {
+  display: inline-flex;
   align-items: center;
-  margin: 0 auto 24px auto;
-  font-size: 2rem;
-  font-weight: bold;
+  justify-content: center;
+  padding: 12px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  cursor: pointer;
+  flex: 1;
+  max-width: 180px;
+  
+  /* כפתור ראשי - "חזור לדף הבית" - צבע אפור כהה מקצועי */
+  background-color: #475569;
+  color: #ffffff;
 }
 
-/* הגדרות לעמוד הצלחה */
-.success-mode .icon-circle {
-  background-color: #e8f5e9;
-  color: #2e7d32;
+.survey-btn:hover {
+  background-color: #334155;
 }
 
-.success-mode h2 {
-  color: #2e7d32;
-  margin-bottom: 10px;
-}
-
-/* הגדרות לעמוד כישלון */
-.failed-mode .icon-circle {
-  background-color: #ffebee;
-  color: #c62828;
-}
-
-.failed-mode h2 {
-  color: #c62828;
-  margin-bottom: 10px;
-}
-
-.sub-message {
-  color: #555;
-  font-size: 1.1rem;
-  margin-bottom: 30px;
-}
-
-.action-wrapper {
-  margin-top: 20px;
-}
-
-/* כפתור משני למצב "נסה שוב" */
+/* כפתור משני - "נסה שוב" - מקבל רקע אדום בולט */
 .survey-btn.secondary-style {
-  background: #e0e0e0;
-  color: #333;
+  background-color: #ef4444;
+  color: #ffffff;
 }
+
 .survey-btn.secondary-style:hover {
-  background: #d5d5d5;
+  background-color: #dc2626;
+}
+
+.survey-btn:active {
+  transform: scale(0.98);
 }

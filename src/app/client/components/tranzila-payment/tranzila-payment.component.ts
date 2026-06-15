@@ -1,3 +1,124 @@
+// import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+// import { Router } from '@angular/router';
+// import { PaymentService, PaymentPreparationResponse } from '../../../services/payment.service';
+
+// @Component({
+//   selector: 'app-tranzila-payment',
+//   templateUrl: './tranzila-payment.component.html',
+//   styleUrls: ['./tranzila-payment.component.css']
+// })
+// export class TranzilaPaymentComponent implements OnInit, OnDestroy {
+//   @ViewChild('paymentForm') paymentForm!: ElementRef<HTMLFormElement>;
+
+//   loading: boolean = true;
+//   error: string | null = null;
+//   paymentData: PaymentPreparationResponse = { terminal: '', orderId: '', amount: 0, notifyUrl: '' };
+  
+//   // משתנים לניהול בדיקת סטטוס העסקה ברקע
+//   private statusCheckInterval: any;
+//   private isCheckingStatus: boolean = false;
+
+//   constructor(private paymentService: PaymentService, private router: Router) { }
+
+//   ngOnInit() {
+//     const data = history.state?.data;
+//     if (!data) {
+//       this.router.navigate(['/register/1']);
+//       return;
+//     }
+//     const payload = {
+//       ...data,
+//       orderId: data.orderId || "TEMP_" + Date.now().toString()
+//     };
+
+//     this.paymentService.preparePayment(payload).subscribe({
+//       next: (res) => {
+//         res.amount = 1;
+//         this.paymentData = res;
+//         this.loading = false;
+
+//         setTimeout(() => {
+//           this.paymentForm?.nativeElement.submit();
+//           // ברגע שהטופס נשלח ל-iFrame, אנחנו מתחילים להקשיב ל-DB שלנו
+//           this.startPollingTransactionStatus();
+//         }, 500);
+//       },
+//       error: (err) => {
+//         console.error("Payment error:", err);
+//         this.error = "אירעה שגיאה בטעינת דף התשלום.";
+//         this.loading = false;
+//       }
+//     });
+//   }
+
+//   // פונקציית הפולינג שבודקת את הסטטוס במונגו כל 1.5 שניות
+//   // startPollingTransactionStatus() {
+//   //   this.statusCheckInterval = setInterval(() => {
+//   //     // מניעת כפילויות של קריאות אם אחת עדיין בדרך
+//   //     if (this.isCheckingStatus) return;
+//   //     this.isCheckingStatus = true;
+
+//   //     // שימוש בפונקציית ה-verify שכבר קיימת לך ב-Service כדי לבדוק את הסטטוס בשרת
+//   //     this.paymentService.verifyPayment('', this.paymentData.orderId).subscribe({
+//   //       next: (res) => {
+//   //         this.isCheckingStatus = false;
+          
+//   //         if (res.success) {
+//   //           // ה-Webhook הגיע ל-C#, העסקה עודכנה ל-success במונגו -> טסבלעמוד שלך!
+//   //           this.stopPolling();
+//   //           this.router.navigate(['/payment/success'], { queryParams: { orderId: this.paymentData.orderId } });
+//   //         }
+//   //       },
+//   //       error: (err) => {
+//   //         this.isCheckingStatus = false;
+//   //         // אם השרת מחזיר BadRequest או סטטוס נכשל, נעביר לעמוד הכישלון שלך
+//   //         if (err.status === 400) {
+//   //           this.stopPolling();
+//   //           this.router.navigate(['/payment/failed'], { queryParams: { orderId: this.paymentData.orderId } });
+//   //         }
+//   //       }
+//   //     });
+//   //   }, 1500); // בדיקה כל שנייה וחצי
+//   // }
+// startPollingTransactionStatus() {
+//     this.statusCheckInterval = setInterval(() => {
+//       if (this.isCheckingStatus) return;
+//       this.isCheckingStatus = true;
+
+//       this.paymentService.verifyPayment('', this.paymentData.orderId).subscribe({
+//         next: (res) => {
+//           this.isCheckingStatus = false;
+          
+//           if (res && res.success) {
+//             this.stopPolling();
+//             this.router.navigate(['/payment/success'], { queryParams: { orderId: this.paymentData.orderId } });
+//           }
+//         },
+//         error: (err) => {
+//           this.isCheckingStatus = false;
+          
+//           // התיקון: בכל מקרה שחוזרת שגיאה מה-verify (כמו 400), אנחנו עוצרים את הריצה ועוברים לדף שלך
+//           console.log('Payment error or rejected status received:', err);
+//           this.stopPolling(); // עצירת הלולאה מיד!
+          
+//           // ניווט לעמוד הכישלון המעוצב שלך
+//           this.router.navigate(['/payment/failed'], { queryParams: { orderId: this.paymentData.orderId } });
+//         }
+//       });
+//     }, 1500);
+//   }
+//   stopPolling() {
+//     if (this.statusCheckInterval) {
+//       clearInterval(this.statusCheckInterval);
+//     }
+//   }
+
+//   ngOnDestroy() {
+//     // חובה לנקות את הצינור כשהקומפוננטה מושמדת
+//     this.stopPolling();
+//   }
+// }
+
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { PaymentService, PaymentPreparationResponse } from '../../../services/payment.service';
@@ -51,36 +172,8 @@ export class TranzilaPaymentComponent implements OnInit, OnDestroy {
     });
   }
 
-  // פונקציית הפולינג שבודקת את הסטטוס במונגו כל 1.5 שניות
-  // startPollingTransactionStatus() {
-  //   this.statusCheckInterval = setInterval(() => {
-  //     // מניעת כפילויות של קריאות אם אחת עדיין בדרך
-  //     if (this.isCheckingStatus) return;
-  //     this.isCheckingStatus = true;
-
-  //     // שימוש בפונקציית ה-verify שכבר קיימת לך ב-Service כדי לבדוק את הסטטוס בשרת
-  //     this.paymentService.verifyPayment('', this.paymentData.orderId).subscribe({
-  //       next: (res) => {
-  //         this.isCheckingStatus = false;
-          
-  //         if (res.success) {
-  //           // ה-Webhook הגיע ל-C#, העסקה עודכנה ל-success במונגו -> טסבלעמוד שלך!
-  //           this.stopPolling();
-  //           this.router.navigate(['/payment/success'], { queryParams: { orderId: this.paymentData.orderId } });
-  //         }
-  //       },
-  //       error: (err) => {
-  //         this.isCheckingStatus = false;
-  //         // אם השרת מחזיר BadRequest או סטטוס נכשל, נעביר לעמוד הכישלון שלך
-  //         if (err.status === 400) {
-  //           this.stopPolling();
-  //           this.router.navigate(['/payment/failed'], { queryParams: { orderId: this.paymentData.orderId } });
-  //         }
-  //       }
-  //     });
-  //   }, 1500); // בדיקה כל שנייה וחצי
-  // }
-startPollingTransactionStatus() {
+  // פונקציית הפולינג המעודכנת שקוראת את הסטטוס מתוך ה-JSON (בלי להסתמך על שגיאות HTTP)
+  startPollingTransactionStatus() {
     this.statusCheckInterval = setInterval(() => {
       if (this.isCheckingStatus) return;
       this.isCheckingStatus = true;
@@ -89,24 +182,32 @@ startPollingTransactionStatus() {
         next: (res) => {
           this.isCheckingStatus = false;
           
-          if (res && res.success) {
-            this.stopPolling();
-            this.router.navigate(['/payment/success'], { queryParams: { orderId: this.paymentData.orderId } });
+          if (res) {
+            // 1. ה-Webhook של טרנזילה עדכן בהצלחה במונגו
+            if (res.status === 'success') {
+              this.stopPolling();
+              this.router.navigate(['/payment/success'], { queryParams: { orderId: this.paymentData.orderId } });
+            } 
+            // 2. ה-Webhook של טרנזילה עדכן שהתשלום נכשל/נדחה
+            else if (res.status === 'failed') {
+              this.stopPolling();
+              this.router.navigate(['/payment/failed'], { queryParams: { orderId: this.paymentData.orderId } });
+            }
+            // 3. אם חוזר 'pending', הפונקציה לא עושה כלום וממשיכה לפעימה הבאה בעוד 1.5 שניות
           }
         },
         error: (err) => {
           this.isCheckingStatus = false;
+          console.error('Failsafe trigger - network error during verify polling:', err);
           
-          // התיקון: בכל מקרה שחוזרת שגיאה מה-verify (כמו 400), אנחנו עוצרים את הריצה ועוברים לדף שלך
-          console.log('Payment error or rejected status received:', err);
-          this.stopPolling(); // עצירת הלולאה מיד!
-          
-          // ניווט לעמוד הכישלון המעוצב שלך
+          // רשת ביטחון במקרה של ניתוק רשת מוחלט מול ה-API שלך - נעצור את הלולאה ונעביר לעמוד הכישלון
+          this.stopPolling();
           this.router.navigate(['/payment/failed'], { queryParams: { orderId: this.paymentData.orderId } });
         }
       });
-    }, 1500);
+    }, 1500); // בדיקה כל שנייה וחצי
   }
+
   stopPolling() {
     if (this.statusCheckInterval) {
       clearInterval(this.statusCheckInterval);
@@ -114,7 +215,7 @@ startPollingTransactionStatus() {
   }
 
   ngOnDestroy() {
-    // חובה לנקות את הצינור כשהקומפוננטה מושמדת
+    // חובה לנקות את ה-Interval כשהקומפוננטה מושמדת כדי למנוע זליגת זיכרון
     this.stopPolling();
   }
 }

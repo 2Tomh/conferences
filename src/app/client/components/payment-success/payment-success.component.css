@@ -1,4 +1,4 @@
-.payment-result-container {
+/* .payment-result-container {
   display: flex;
   justify-content: center;
   padding: 50px;
@@ -22,4 +22,74 @@
   color: white;
   text-decoration: none;
   border-radius: 5px;
+} */
+
+:host {
+  display: block;
+  direction: rtl;
+  font-family: 'Open Sans', system-ui, -apple-system, sans-serif;
+}
+
+/* קונטיינר ראשי שממרכז את הכרטיס באמצע המסך */
+.payment-result-container {
+  min-height: 75vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: #f8fafc; /* רקע בהיר ונקי לפרוטוקול מודרני */
+}
+
+/* עיצוב קופסת הסטטוס ככרטיס לבן מקצועי */
+.status-box {
+  background: #ffffff;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+  max-width: 450px;
+  width: 100%;
+  text-align: center;
+  border-top: 5px solid #3b82f6; /* פס כחול עדין בזמן טעינה/אימות */
+  transition: all 0.3s ease;
+}
+
+/* כשהאימות מצליח והקלאס success מתווסף - הפס הופך לירוק */
+.status-box.success {
+  border-top-color: #10b981; 
+}
+
+/* עיצוב הכותרת "התשלום בוצע בהצלחה" */
+.status-box h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+/* עיצוב הטקסטים והפסקאות */
+.status-box p {
+  font-size: 16px;
+  color: #475569;
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+/* עיצוב כפתור החזרה לדף הבית */
+.btn {
+  display: inline-block;
+  background-color: #10b981; /* ירוק מודרני שתואם להצלחה */
+  color: #ffffff;
+  padding: 12px 32px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn:hover {
+  background-color: #059669;
+}
+
+.btn:active {
+  transform: scale(0.98);
 }
