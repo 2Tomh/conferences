@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ConferenceEventsService } from '../../../services/conference-events.service';
-import { TranslateService } from '@ngx-translate/core'; 
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-conference-events',
@@ -12,16 +12,16 @@ export class ConferenceEventsComponent implements OnInit {
   currentPage = 1;
   conferences: any[] = [];
   searchText = '';
-  
+
   // --- שדות הניווט החדשים לפי תחום ---
-  selectedCategory: string = 'All'; 
+  selectedCategory: string = 'All';
 
   // --- ניהול ה-Popup של התיאור ---
   activeDescription: string | null = null;
 
   constructor(
     private conferenceEventsService: ConferenceEventsService,
-    private translate: TranslateService 
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -37,7 +37,7 @@ export class ConferenceEventsComponent implements OnInit {
   // הפתרון החכם: מקבלים את כל אובייקט הכנס
   openDescription(conf: any): void {
     const translationKey = 'CONFERENCES_DESC.' + conf.Conference;
-    
+
     // שימוש ב-get האסינכרוני כדי לוודא שקובץ השפה נטען ב-100%
     this.translate.get(translationKey).subscribe((translatedText: string) => {
       // אם התרגום נכשל או לא קיים ב-JSON, ניקח את התיאור המקורי באנגלית מה-DB
@@ -77,27 +77,41 @@ export class ConferenceEventsComponent implements OnInit {
   }
 
   // ה-Getter של הסינון שתומך גם בטאבים וגם בחיפוש חופשי
-  get filteredConferences(): any[] {
+get filteredConferences(): any[] {
     let list = this.conferences;
 
-    // סינון לפי התחום שנבחר ב-Navbar הפנימי
+    // 1. סינון לפי קטגוריות
     if (this.selectedCategory && this.selectedCategory !== 'All') {
       list = list.filter(c => c.Category === this.selectedCategory);
     }
 
     if (!this.searchText) { return list; }
 
-    const term = this.searchText.toLowerCase();
+    const term = this.searchText.toLowerCase().trim();
+
+    // 2. איפוס העמוד לעמוד 1 בכל פעם שמחפשים (פותר את הבעיה מהתמונה הראשונה)
+    if (this.currentPage !== 1) {
+      setTimeout(() => this.currentPage = 1);
+    }
+
     return list.filter(c => {
-      const conferenceName = c.Conference || '';
-      const description = c.Description || '';
+      const confNameEn = (c.Conference || c.conference || '').toLowerCase();
+      const description = (c.Description || c.description || '').toLowerCase();
 
-      const matchText = conferenceName.toLowerCase().includes(term) || 
-                        description.toLowerCase().includes(term);
+      // שליפת התרגום הדינמי (עובד בכל שפה שמוגדרת באתר)
+      const translationKey = 'CONFERENCES_NAMES.' + (c.Conference || c.conference);
+      const confNameTranslated = this.translate.instant(translationKey).toLowerCase();
 
+      // 3. בדיקה אם החיפוש מתאים לשם המקורי, לשם המתורגם או לתיאור
+      const matchText = confNameEn.includes(term) || 
+                        confNameTranslated.includes(term) || 
+                        description.includes(term);
+
+      // 4. בדיקת המארגנים
+      const organizersArray = c.Organizers || c.organizers;
       let matchOrganizer = false;
-      if (c.Organizers && Array.isArray(c.Organizers)) {
-        matchOrganizer = c.Organizers.some((org: string) => org?.toLowerCase().includes(term));
+      if (organizersArray && Array.isArray(organizersArray)) {
+        matchOrganizer = organizersArray.some((org: string) => org?.toLowerCase().includes(term));
       }
 
       return matchText || matchOrganizer;

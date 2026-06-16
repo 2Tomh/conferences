@@ -6,37 +6,93 @@
     </button>
   </div>
 
+  <div class="category-navbar">
+    <button class="nav-tab" [class.active]="selectedCategory === 'All'" (click)="selectCategory('All')">
+      {{ 'CATEGORIES.ALL' | translate }}
+    </button>
+    <button class="nav-tab" [class.active]="selectedCategory === 'Humanities and Arts'" (click)="selectCategory('Humanities and Arts')">
+      {{ 'CATEGORIES.HUMANITIES_ARTS' | translate }}
+    </button>
+    <button class="nav-tab" [class.active]="selectedCategory === 'Social Sciences & Law'" (click)="selectCategory('Social Sciences & Law')">
+      {{ 'CATEGORIES.SOCIAL_SCIENCES_LAW' | translate }}
+    </button>
+    <button class="nav-tab" [class.active]="selectedCategory === 'BioMed'" (click)="selectCategory('BioMed')">
+      {{ 'CATEGORIES.BIOMED' | translate }}
+    </button>
+    <button class="nav-tab" [class.active]="selectedCategory === 'Engineering'" (click)="selectCategory('Engineering')">
+      {{ 'CATEGORIES.ENGINEERING' | translate }}
+    </button>
+    <button class="nav-tab" [class.active]="selectedCategory === 'Exact Sciences'" (click)="selectCategory('Exact Sciences')">
+      {{ 'CATEGORIES.EXACT_SCIENCES' | translate }}
+    </button>
+  </div>
+
   <div *ngIf="loading" class="loader">{{ 'COMMON.LOADING' | translate }}</div>
 
-  <table *ngIf="!loading && conferences.length > 0" class="admin-table">
-    <thead>
-      <tr>
-        <th>{{ 'TABLE.NAME' | translate }}</th>
-        <th>{{ 'TABLE.DATE' | translate }}</th>
-        <th>{{ 'TABLE.LOCATION' | translate }}</th>
-        <th>{{ 'TABLE.ATTENDEES' | translate }}</th>
-        <th>{{ 'TABLE.ACTIONS' | translate }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let conf of conferences">
-        <td>{{ conf.name }}</td>
-        <td>{{ conf.date | date:'dd/MM/yyyy' }}</td>
-        <td>{{ conf.location }}</td>
-        <td>{{ conf.sessions?.length || 0 }}</td>
-        <td>
-          <button class="btn-edit" [routerLink]="['../manage-conference', conf.id]">
-            {{ 'COMMON_ACTIONS.EDIT' | translate }}
-          </button>
-          <button class="btn-delete" (click)="onDelete(conf.id)">
-            {{ 'COMMON_ACTIONS.DELETE' | translate }}
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-wrapper" *ngIf="!loading && filteredConferences.length > 0">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>{{ 'TABLE.NAME' | translate }}</th>
+          <th>קטגוריה</th>
+          <th>סטטוס סקר</th>
+          <th>הגשת תקצירים</th>
+          <th>{{ 'TABLE.ACTIONS' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let conf of pagedConferences">
+          <td>
+            {{ ('CONFERENCES_NAMES.' + conf.Conference | translate) === ('CONFERENCES_NAMES.' + conf.Conference)
+            ? conf.Conference
+            : ('CONFERENCES_NAMES.' + conf.Conference | translate) }}
+          </td>
+          <td>{{ conf.Category }}</td>
 
-  <div *ngIf="!loading && conferences.length === 0" class="no-data">
+          <td>
+            <div *ngIf="conf.Links?.survey || conf.Links?.Survey || conf.survey || conf.Survey" class="text-success" style="font-weight: 500;">
+              ✅ יש סקר פעיל
+            </div>
+            <div *ngIf="!(conf.Links?.survey || conf.Links?.Survey || conf.survey || conf.Survey)" class="text-muted">
+              ❌ אין לינק לסקר
+            </div>
+
+            <div *ngIf="conf.Links?.website || conf.website" class="text-info" style="font-size: 0.85rem; margin-top: 2px;">
+              🌐 יש אתר אינטרנט
+            </div>
+          </td>
+
+          <td>
+            <span [style.color]="(conf.AbstractSubmission || conf.Abstract_submission) ? '#2ecc71' : '#e74c3c'" style="font-weight: 500;">
+              {{ (conf.AbstractSubmission || conf.Abstract_submission) ? 'Yes' : 'No' }}
+            </span>
+          </td>
+
+          <td>
+            <button class="btn-edit" (click)="onEdit(conf.Id || conf._id)">
+              {{ 'COMMON_ACTIONS.EDIT' | translate }}
+            </button>
+            <button class="btn-delete" (click)="onDelete(conf.Id || conf._id)">
+              {{ 'COMMON_ACTIONS.DELETE' | translate }}
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" *ngIf="!loading && filteredConferences.length > pageSize">
+    <button class="page-btn" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">&#8249;</button>
+    
+    <button *ngFor="let p of pages" class="page-btn" [class.active]="p === currentPage" (click)="goToPage(p)">
+      {{ p }}
+    </button>
+    
+    <button class="page-btn" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">&#8250;</button>
+    <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
+  </div>
+
+  <div *ngIf="!loading && filteredConferences.length === 0" class="no-data">
     {{ 'DASHBOARD_PAGE.NO_DATA' | translate }}
   </div>
 </div>

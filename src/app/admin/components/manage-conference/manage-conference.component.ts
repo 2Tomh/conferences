@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../../services/api.service';
 
@@ -10,119 +10,139 @@ import { ApiService } from '../../../services/api.service';
 })
 export class ManageConferenceComponent implements OnInit {
   conferenceForm!: FormGroup;
+  conferenceId: string | null = null;
   isEditMode = false;
-  conferenceId!: string;
-  minDate: string = new Date().toISOString().split('T')[0];
-
-  facultyData: { [key: string]: string[] } = {};
-  faculties: string[] = [];
-  schools: string[] = [];
+  currentStep = 1;
+  
+  // מערך דינמי שיחזיק את הקטגוריות הייחודיות מהמונגו
+  categories: string[] = [];
 
   constructor(
     private fb: FormBuilder,
-    private apiService: ApiService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private apiService: ApiService
   ) { }
 
   ngOnInit(): void {
     this.initForm();
-    this.loadFaculties();
+    
+    // שליפת הקטגוריות מהמונגו ברגע שהקומפוננטה נטענת
+    this.loadCategoriesFromMongo();
 
-    this.conferenceId = this.route.snapshot.params.id;
+    // בדיקה האם הגענו לעמוד עם ID של כנס (מצב עריכה)
+    this.conferenceId = this.route.snapshot.paramMap.get('id');
     if (this.conferenceId) {
       this.isEditMode = true;
-      this.apiService.getConferenceById(this.conferenceId).subscribe(data => {
-        if (data) {
-          const dateVal = data.date || data.Date;
-          if (dateVal) {
-            const d = new Date(dateVal);
-            this.conferenceForm.patchValue({
-              title: data.name || data.Name,
-              description: data.description || data.Description,
-              dateOnly: d.toISOString().split('T')[0],
-              timeOnly: d.toTimeString().slice(0, 5),
-              location: data.location || data.Location,
-              maxParticipants: data.maxParticipants || data.MaxParticipants,
-              facultyName: data.facultyName || data.FacultyName || '',
-              schoolName: data.schoolName || data.SchoolName || ''
-            });
-            // טען בתי ספר לפי פקולטה
-            const faculty = data.facultyName || data.FacultyName;
-            if (faculty && this.facultyData[faculty]) {
-              this.schools = [...new Set(this.facultyData[faculty])];
-            }
-          }
+      this.loadConferenceData(this.conferenceId);
+    }
+  }
+
+  // פונקציה חכמה שמחלצת קטגוריות קיימות ללא כפילויות
+  loadCategoriesFromMongo(): void {
+    this.apiService.getSurveys().subscribe({
+      next: (conferencesList) => {
+        if (conferencesList && Array.isArray(conferencesList)) {
+          // מיפוי כל ערכי הקטגוריות (תמיכה ב-PascalCase ו-camelCase לכל מקרה)
+          const rawCategories = conferencesList.map(c => c.Category || c.category);
+          
+          // סינון ערכים ריקים ומחיקת כפילויות בעזרת Set
+          const uniqueCategories = [...new Set(rawCategories)].filter(cat => cat && cat.trim() !== '');
+          
+          // מיון אלפביתי קל כדי שהרשימה בדרופ-דאון תיראה מסודרת
+          this.categories = uniqueCategories.sort();
         }
-      }, error => console.error('שגיאה בטעינת כנס:', error));
-    }
-  }
-
-  loadFaculties(): void {
-    this.apiService.getFaculties().subscribe({
-      next: (data) => {
-        this.facultyData = data;
-        this.faculties = Object.keys(data);
       },
-      error: (err) => console.error('שגיאה בטעינת פקולטות:', err)
+      error: (err) => console.error('שגיאה בשליפת קטגוריות דינמיות מהמונגו:', err)
     });
   }
 
-  onFacultyChange(): void {
-    const selected = this.conferenceForm.get('facultyName')?.value;
-    this.schools = selected ? [...new Set(this.facultyData[selected])] : [];
-    this.conferenceForm.patchValue({ schoolName: '' });
-  }
-
-  initForm() {
-    this.conferenceForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(3)]],
-      description: ['', Validators.required],
-      dateOnly: ['', [Validators.required, this.futureDateValidator]],
-      timeOnly: ['12:00', Validators.required],
-      location: ['', Validators.required],
-      maxParticipants: [50, [Validators.required, Validators.min(1)]],
-      facultyName: ['', Validators.required],
-      schoolName: ['', Validators.required]
-    });
-  }
-
-  futureDateValidator(control: any) {
-    if (!control.value) { return null; }
-    const selected = new Date(control.value);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return selected >= today ? null : { pastDate: true };
-  }
-
-  onSubmit() {
-    if (this.conferenceForm.invalid) {
-      this.conferenceForm.markAllAsTouched();
-      return;
+  nextStep(): void {
+    if (this.currentStep < 3) {
+      this.currentStep++;
+      window.scrollTo({ top: 0, behavior: 'smooth' }); // קפיצה חלקה לראש הטופס
     }
-    const val = this.conferenceForm.value;
-    const combinedDate = new Date(`${val.dateOnly}T${val.timeOnly}`);
-    const conferenceDto = {
-      Name: val.title,
-      Description: val.description,
-      Date: combinedDate.toISOString(),
-      Location: val.location,
-      MaxParticipants: val.maxParticipants,
-      FacultyName: val.facultyName,
-      SchoolName: val.schoolName,
-      Sessions: [],
-      OwnerId: null
-    };
+  }
+
+  prevStep(): void {
+    if (this.currentStep > 1) {
+      this.currentStep--;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  initForm(): void {
+    this.conferenceForm = this.fb.group({
+      Id: [''], // שומרים את ה-ID
+      Category: ['', Validators.required],
+      Conference: ['', Validators.required],
+      Description: ['', Validators.required],
+      Abstract_submission: [false], // או AbstractSubmission תלוי ב-C# של ה-API
+      Organizers: this.fb.array([]), // מערך דינמי למארגנים
+
+      // תואם ב-100% למבנה המונגו שלך: אובייקט Links באות גדולה, שדות פנימיים באות קטנה
+      Links: this.fb.group({
+        survey: [''],
+        website: ['']
+      })
+    });
+  }
+
+  // Getter נוח למערך המארגנים
+  get organizersFormArray(): FormArray {
+    return this.conferenceForm.get('Organizers') as FormArray;
+  }
+
+  // הוספת מארגן חדש (בשביל ה-UI)
+  addOrganizer(value: string = ''): void {
+    this.organizersFormArray.push(this.fb.control(value));
+  }
+
+  // הסרת מארגן
+  removeOrganizer(index: number): void {
+    this.organizersFormArray.removeAt(index);
+  }
+
+  // טעינת הפרטים מהשרת והצגתם בטופס
+  loadConferenceData(id: string): void {
+    this.apiService.getSurveyById(id).subscribe({
+      next: (data) => {
+        if (data) {
+          this.organizersFormArray.clear();
+          const organizers = data.Organizers || data.organizers || [];
+          organizers.forEach((org: string) => this.addOrganizer(org));
+
+          this.conferenceForm.patchValue({
+            Id: data.Id || data._id,
+            Category: data.Category,
+            Conference: data.Conference,
+            Description: data.Description,
+            Abstract_submission: data.Abstract_submission !== undefined ? data.Abstract_submission : data.AbstractSubmission,
+            Links: {
+              survey: data.Links?.survey || '',
+              website: data.Links?.website || ''
+            }
+          });
+        }
+      },
+      error: (err) => console.error('שגיאה בטעינת נתוני הכנס לעריכה:', err)
+    });
+  }
+
+  onSubmit(): void {
+    if (this.conferenceForm.invalid) return;
+
+    const formData = this.conferenceForm.value;
 
     if (this.isEditMode) {
-      this.apiService.updateConference(this.conferenceId, conferenceDto).subscribe({
+      this.apiService.updateSurvey(this.conferenceId!, formData).subscribe({
         next: () => this.router.navigate(['/admin/dashboard']),
-        error: (err) => console.error('שגיאה בעדכון:', err)
+        error: (err) => console.error('שגיאה בעדכון כנס:', err)
       });
     } else {
-      this.apiService.createConference(conferenceDto).subscribe({
+      this.apiService.createConference(formData).subscribe({ 
         next: () => this.router.navigate(['/admin/dashboard']),
-        error: (err) => console.error('שגיאה ביצירה:', err)
+        error: (err) => console.error('שגיאה ביצירת כנס:', err)
       });
     }
   }

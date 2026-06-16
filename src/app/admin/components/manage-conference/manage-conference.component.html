@@ -1,114 +1,114 @@
-<!-- <div class="manage-container" dir="rtl">
+<div class="manage-container" dir="rtl">
   <div class="form-card">
 
-    <div class="form-header">
-      <div class="icon">{{ isEditMode ? '✏️' : '🎯' }}</div>
-      <h1>{{ isEditMode ? 'עריכת כנס' : 'יצירת כנס חדש' }}</h1>
-      <p>{{ isEditMode ? 'עדכן את פרטי הכנס' : 'מלא את הפרטים ליצירת כנס חדש' }}</p>
-    </div>
-
-    <form [formGroup]="conferenceForm" (ngSubmit)="onSubmit()">
-
-      <div class="form-group">
-        <label>שם הכנס</label>
-        <input type="text" formControlName="title" class="form-control" placeholder="הזן שם לכנס">
-        <small *ngIf="conferenceForm.get('title')?.invalid && conferenceForm.get('title')?.touched" class="text-danger">
-          שם הכנס חייב להכיל לפחות 3 תווים.
-        </small>
-      </div>
-      <div class="form-group">
-        <label>פקולטה</label>
-        <select formControlName="facultyName" class="form-control" (change)="onFacultyChange()">
-          <option value="">-- בחר פקולטה --</option>
-          <option *ngFor="let faculty of faculties" [value]="faculty">{{ faculty }}</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>בית ספר</label>
-        <select formControlName="schoolName" class="form-control" [disabled]="schools.length === 0">
-          <option value="">-- בחר בית ספר --</option>
-          <option *ngFor="let school of schools" [value]="school">{{ school }}</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>תיאור</label>
-        <textarea formControlName="description" class="form-control" rows="4"
-          placeholder="תאר את הכנס בקצרה"></textarea>
-        <small *ngIf="conferenceForm.get('description')?.invalid && conferenceForm.get('description')?.touched"
-          class="text-danger">
-          שדה תיאור הוא חובה.
-        </small>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label>תאריך</label>
-          <input type="date" formControlName="dateOnly" class="form-control" [min]="minDate">
-          <small *ngIf="conferenceForm.get('dateOnly')?.hasError('pastDate')" class="text-danger">
-            לא ניתן לבחור תאריך מהעבר.
-          </small>
-        </div>
-        <div class="form-group">
-          <label>שעה</label>
-          <input type="time" formControlName="timeOnly" class="form-control" step="60">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>מיקום</label>
-        <input type="text" formControlName="location" class="form-control" placeholder="עיר / אולם / כתובת">
-      </div>
-
-      <div class="form-group">
-        <label>מספר משתתפים מקסימלי</label>
-        <input type="number" formControlName="maxParticipants" class="form-control" min="1">
-      </div>
-
-      <div class="actions">
-        <button type="submit" class="btn-save" [disabled]="conferenceForm.invalid">
-          {{ isEditMode ? 'עדכן כנס' : 'צור כנס' }}
-        </button>
-        <button type="button" class="btn-cancel" routerLink="/admin/dashboard">ביטול</button>
-      </div>
-
-    </form>
-  </div>
-</div> -->
-
-<div class="manage-container">
-  <div class="form-card">
     <div class="form-header">
       <div class="icon">{{ isEditMode ? '✏️' : '🎯' }}</div>
       <h1>{{ (isEditMode ? 'MANAGE.EDIT_TITLE' : 'MANAGE.CREATE_TITLE') | translate }}</h1>
       <p>{{ (isEditMode ? 'MANAGE.EDIT_SUB' : 'MANAGE.CREATE_SUB') | translate }}</p>
     </div>
 
+    <div class="stepper">
+      <div class="step" [class.active]="currentStep >= 1" [class.completed]="currentStep > 1">
+        <span class="step-number">1</span>
+        <span class="step-label">פרטי הכנס</span>
+      </div>
+      <div class="step-line" [class.active]="currentStep >= 2"></div>
+      <div class="step" [class.active]="currentStep >= 2" [class.completed]="currentStep > 2">
+        <span class="step-number">2</span>
+        <span class="step-label">קישורים ומדיה</span>
+      </div>
+      <div class="step-line" [class.active]="currentStep >= 3"></div>
+      <div class="step" [class.active]="currentStep >= 3">
+        <span class="step-number">3</span>
+        <span class="step-label">👥 מארגנים</span>
+      </div>
+    </div>
+
     <form [formGroup]="conferenceForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label>{{ 'MANAGE.FIELDS.TITLE' | translate }}</label>
-        <input type="text" formControlName="title" [placeholder]="'MANAGE.PLACEHOLDERS.TITLE' | translate">
-        <small *ngIf="conferenceForm.get('title')?.invalid && conferenceForm.get('title')?.touched" class="text-danger">
-          {{ 'MANAGE.ERRORS.TITLE_MIN' | translate }}
-        </small>
+
+      <div *ngIf="currentStep === 1" class="step-content">
+        <div class="form-group">
+          <label>שם הכנס (באנגלית):</label>
+          <input type="text" formControlName="Conference" class="form-control" placeholder="הזן שם כנס באנגלית">
+        </div>
+
+        <div class="form-group">
+          <label>קטגוריה:</label>
+          <select formControlName="Category" class="form-control">
+            <option value="" disabled selected>-- בחר קטגוריה מתוך הרשימה --</option>
+            <option *ngFor="let cat of categories" [value]="cat">
+              {{ cat }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>תיאור הכנס:</label>
+          <textarea formControlName="Description" class="form-control" rows="6"
+            placeholder="תאר את הכנס בקצרה..."></textarea>
+        </div>
+
+        <div class="form-group checkbox-wrapper">
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="Abstract_submission" class="custom-checkbox">
+            <span>מאפשר הגשת תקצירים (Abstract Submission)</span>
+          </label>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label>{{ 'MANAGE.FIELDS.FACULTY' | translate }}</label>
-        <select formControlName="facultyName" (change)="onFacultyChange()">
-          <option value="">{{ 'MANAGE.PLACEHOLDERS.SELECT_FACULTY' | translate }}</option>
-          <option *ngFor="let faculty of faculties" [value]="faculty">{{ faculty }}</option>
-        </select>
+      <div *ngIf="currentStep === 2" class="step-content">
+        <div formGroupName="Links" class="links-card-section">
+          <h4>🔗 קישורים ומדיה</h4>
+
+          <div class="form-group">
+            <label>לינק לסקר (Google Forms):</label>
+            <input type="text" formControlName="survey" class="form-control"
+              placeholder="https://docs.google.com/forms/...">
+          </div>
+
+          <div class="form-group">
+            <label>אתר אינטרנט של הכנס:</label>
+            <input type="text" formControlName="website" class="form-control" placeholder="https://...">
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="currentStep === 3" class="step-content">
+        <div formArrayName="Organizers" class="organizers-card-section">
+          <h4>👥 מארגנים ואנשי סגל</h4>
+
+          <div class="organizers-grid">
+            <div *ngFor="let org of organizersFormArray.controls; let i = index" class="organizer-row">
+              <input type="text" [formControlName]="i" class="form-control" placeholder="שם המארגן ומוסד אקדמי">
+              <button type="button" class="btn-remove-org" (click)="removeOrganizer(i)" title="הסר מארגן">❌</button>
+            </div>
+          </div>
+
+          <button type="button" class="btn-add-org" (click)="addOrganizer()">
+            ➕ הוסף מארגן חדש
+          </button>
+        </div>
       </div>
 
       <div class="actions">
-        <button type="submit" [disabled]="conferenceForm.invalid">
-          {{ (isEditMode ? 'ACTIONS.UPDATE' : 'ACTIONS.CREATE') | translate }}
+        <button type="button" class="btn-cancel" *ngIf="currentStep > 1" (click)="prevStep()">
+          ➡️ קודם
         </button>
-        <button type="button" routerLink="/admin/dashboard">
-          {{ 'ACTIONS.CANCEL' | translate }}
+
+        <button type="button" class="btn-cancel" *ngIf="currentStep === 1" routerLink="/admin/dashboard">
+          ביטול
+        </button>
+
+        <button type="button" class="btn-save" *ngIf="currentStep < 3" (click)="nextStep()">
+          המשך ⬅️
+        </button>
+
+        <button type="submit" *ngIf="currentStep === 3" [disabled]="conferenceForm.invalid"
+          class="btn-save final-submit">
+          {{ isEditMode ? 'עדכן כנס סופית' : 'צור כנס חדש' }}
         </button>
       </div>
+
     </form>
   </div>
 </div>

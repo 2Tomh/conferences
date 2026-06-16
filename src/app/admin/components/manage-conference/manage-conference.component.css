@@ -1,202 +1,318 @@
-/* manage-conference.component.css
-
 .manage-container {
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
-  direction: rtl;
-}
-
-.form-card {
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-  padding: 48px;
-  width: 100%;
-  max-width: 580px;
-}
-
-.form-header {
-  text-align: center;
-  margin-bottom: 36px;
-}
-
-.form-header .icon {
-  font-size: 48px;
-  margin-bottom: 12px;
-}
-
-.form-header h1 {
-  font-size: 26px;
-  color: #2c3e50;
-  margin: 0;
-  font-weight: 700;
-}
-
-.form-header p {
-  color: #999;
-  margin-top: 8px;
-  font-size: 14px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-}
-
-.form-group label {
-  font-size: 13px;
-  font-weight: 700;
-  color: #555;
-  margin-bottom: 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.form-control {
-  padding: 12px 16px;
-  border: 2px solid #e8e8e8;
-  border-radius: 10px;
-  font-size: 15px;
-  font-family: inherit;
-  color: #2c3e50;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  outline: none;
-  background: #fafafa;
-}
-
-.form-control:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
-  background: #fff;
-}
-
-.form-control.ng-invalid.ng-touched {
-  border-color: #e74c3c;
-  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
-}
-
-textarea.form-control {
-  resize: vertical;
-  min-height: 100px;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.text-danger {
-  font-size: 12px;
-  color: #e74c3c;
-  margin-top: 5px;
-}
-
-.actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 32px;
-}
-
-.btn-save {
-  flex: 1;
-  padding: 14px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: opacity 0.2s, transform 0.1s;
-}
-
-.btn-save:hover:not(:disabled) {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-.btn-save:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.btn-cancel {
-  padding: 14px 24px;
-  background: transparent;
-  color: #999;
-  border: 2px solid #e8e8e8;
-  border-radius: 10px;
-  font-size: 15px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-cancel:hover {
-  border-color: #ccc;
-  color: #666;
-} */
-
-/* מכל עוטף - מרכז את הטופס עם רקע כהה */
-.manage-container {
-  min-height: 100vh;
-  padding: 40px 20px;
+  padding: 60px 20px;
   background-color: #0b1120;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
   color: white;
+  font-family: 'Open Sans', sans-serif;
 }
 
 /* הכרטיס המרכזי */
 .form-card {
   width: 100%;
-  max-width: 600px;
-  background: #0b1120;
+  max-width: 650px;
+  background: #111827;
   padding: 40px;
-  border-radius: 12px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  border: 1px solid #1f2937;
 }
 
-/* כותרת */
-.form-header { text-align: center; margin-bottom: 30px; }
-.form-header .icon { font-size: 2.5rem; margin-bottom: 10px; }
-.form-header h1 { font-size: 1.8rem; margin: 0; }
-.form-header p { color: #a0aec0; margin-top: 5px; }
+/* כותרת הטופס */
+.form-header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+.form-header .icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+.form-header h1 {
+  font-size: 2rem;
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+.form-header p {
+  color: #9ca3af;
+  margin-top: 8px;
+  font-size: 0.95rem;
+}
 
-/* מבנה שדות */
-.form-group { margin-bottom: 20px; display: flex; flex-direction: column; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+/* מבנה קופסאות הקלט */
+.form-group {
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+}
 
-label { font-size: 0.9rem; margin-bottom: 8px; color: #a0aec0; }
+label {
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  color: #9ca3af;
+  font-weight: 500;
+}
 
 .form-control {
-  background: #1e293b;
-  border: 1px solid #334155;
-  border-radius: 6px;
-  padding: 12px;
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  padding: 14px 16px;
   color: white;
   width: 100%;
   box-sizing: border-box;
+  font-size: 0.95rem;
+  transition: all 0.2s ease-in-out;
 }
 
-.form-control:focus { outline: none; border-color: #6366f1; }
-.form-control:disabled { opacity: 0.5; cursor: not-allowed; }
-
-/* טקסט שגיאה */
-.text-danger { color: #f87171; font-size: 0.8rem; margin-top: 5px; }
-
-/* כפתורים */
-.actions { display: flex; gap: 15px; margin-top: 30px; }
-button { 
-  flex: 1; padding: 12px; border: none; border-radius: 6px; 
-  font-weight: 600; cursor: pointer; transition: 0.2s; 
+.form-control:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
 }
 
-.btn-save { background: #4f46e5; color: white; }
-.btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
-.btn-cancel { background: #334155; color: white; }
+.form-control::placeholder {
+  color: #4b5563;
+}
 
-button:hover:not(:disabled) { opacity: 0.9; }
+textarea.form-control {
+  resize: vertical;
+}
+
+/* קופסאות קטגוריות משנה (מארגנים וקישורים) */
+.links-card-section, .organizers-card-section {
+  background: #131b2e;
+  border: 1px solid #22304e;
+  padding: 24px;
+  margin-bottom: 28px;
+  border-radius: 12px;
+}
+
+.links-card-section h4, .organizers-card-section h4 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+  color: #e5e7eb;
+  border-bottom: 1px solid #22304e;
+  padding-bottom: 10px;
+}
+
+/* גריד מארגנים משופר בתצורת שורות חצי-חצי */
+.organizers-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.organizer-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-remove-org {
+  background: #271c1c;
+  border: 1px solid #7f1d1d;
+  color: #f87171;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-remove-org:hover {
+  background: #7f1d1d;
+  color: white;
+}
+
+.btn-add-org {
+  background: transparent;
+  border: 2px dashed #374151;
+  color: #9ca3af;
+  padding: 12px;
+  border-radius: 8px;
+  width: 100%;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.btn-add-org:hover {
+  border-color: #4f46e5;
+  color: white;
+  background: rgba(79, 70, 229, 0.05);
+}
+
+/* צ'קבוקס מעוצב */
+.checkbox-wrapper {
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  color: #e5e7eb;
+  font-size: 0.95rem;
+}
+
+.custom-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #4f46e5;
+}
+
+/* כפתורי שמירה וביטול תחתונים */
+.actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.actions button {
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-save {
+  background: #4f46e5;
+  color: white;
+  flex: 2; /* נותן לכפתור השמירה נפח משמעותי יותר */
+}
+
+.btn-save:hover:not(:disabled) {
+  background: #4338ca;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.btn-save:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-cancel {
+  background: #374151;
+  color: #d1d5db;
+  flex: 1;
+}
+
+.btn-cancel:hover {
+  background: #4b5563;
+  color: white;
+}
+
+/* --- עיצוב ה-Stepper החדש --- */
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  background: #131b2e;
+  padding: 16px 24px;
+  border-radius: 12px;
+  border: 1px solid #1f2937;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.step-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #1f2937;
+  border: 2px solid #374151;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.step-label {
+  font-size: 0.8rem;
+  color: #6b7280;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* שלב פעיל */
+.step.active .step-number {
+  background: #4f46e5;
+  border-color: #6366f1;
+  color: white;
+  box-shadow: 0 0 12px rgba(79, 70, 229, 0.4);
+}
+
+.step.active .step-label {
+  color: white;
+  font-weight: 600;
+}
+
+/* שלב שהושלם */
+.step.completed .step-number {
+  background: #10b981;
+  border-color: #10b981;
+  color: white;
+}
+
+.step.completed .step-label {
+  color: #10b981;
+}
+
+/* קווי החיבור בין השלבים */
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: #374151;
+  margin: 0 10px;
+  margin-bottom: 22px; /* יישור עם העיגולים */
+  transition: all 0.3s ease;
+}
+
+.step-line.active {
+  background: #4f46e5;
+}
+
+/* אפקט כניסה קל לתוכן השלב */
+.step-content {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.final-submit {
+  background: #10b981 !important;
+}
+.final-submit:hover {
+  background: #059669 !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+}
+
+/* --- שאר ה-CSS שנתתי לך קודם נשאר אותו דבר ומולבש פה פיקס --- */
