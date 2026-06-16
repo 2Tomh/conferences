@@ -1,4 +1,4 @@
-<nav class="top-navbar">
+<!-- <nav class="top-navbar">
   <div class="nav-container">
     <div class="nav-links" dir="rtl">
       <app-header-actions></app-header-actions>
@@ -19,6 +19,38 @@
           <i class="icon-exit"></i>
         </button>
       </div>
+    </div>
+  </div>
+</nav> -->
+
+<nav class="top-navbar">
+  <div class="nav-container">
+    <div class="nav-links" dir="rtl">
+      <app-header-actions></app-header-actions>
+      
+      <a routerLink="/admin/dashboard" routerLinkActive="active">
+        <i class="icon-dashboard"></i> {{ 'Admin_NAV.DASHBOARD' | translate }}
+      </a>
+
+      <ng-container *ngIf="authService.isAnyManager()">
+        <a routerLink="/admin/attendees" routerLinkActive="active">
+          נרשמים
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf="authService.isAdmin()">
+        <a routerLink="/admin/users" routerLinkActive="active">
+          <i class="icon-users"></i> {{ 'Admin_NAV.USERS' | translate }}
+        </a>
+      </ng-container>
+
+      <div class="nav-actions" *ngIf="(isLoggedIn$ | async) && !isLoginPage">
+        <button class="btn-logout" (click)="onLogout()">
+          <span>{{ 'Admin_NAV.LOGOUT' | translate }}</span>
+          <i class="icon-exit"></i>
+        </button>
+      </div>
+      
     </div>
   </div>
 </nav>

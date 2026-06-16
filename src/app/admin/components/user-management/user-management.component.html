@@ -1,93 +1,7 @@
-<!-- <div class="user-management-container" dir="rtl">
-    <div class="header-section">
-        <h2>ניהול משתמשים</h2>
-        <button class="btn-primary" (click)="isCreateModalOpen = true">+ הוסף משתמש</button>
-    </div>
-
-    <div class="modal-overlay" *ngIf="isCreateModalOpen">
-        <div class="modal-content">
-            <span class="close-btn" (click)="isCreateModalOpen = false">&times;</span>
-            <app-create-user (userCreated)="isCreateModalOpen = false"></app-create-user>
-        </div>
-    </div>
-
-    <div class="table-wrapper" *ngIf="!editingUser">
-        <table>
-            <thead>
-                <tr>
-                    <th>שם מלא</th>
-                    <th>מייל</th>
-                    <th>תפקיד</th>
-                    <th>פקולטה</th>
-                    <th>פעולות</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let user of users">
-                    <td>{{ user.FullName }}</td>
-                    <td>{{ user.Email }}</td>
-                    <td>
-                        <span class="badge" [ngClass]="user.Role">{{ user.Role }}</span>
-                    </td>
-                    <td>{{ user.FacultyName || '—' }}</td>
-                    <td class="actions">
-                        <button class="btn-edit" (click)="startEdit(user)">עריכה</button>
-                        <button class="btn-delete" (click)="deleteUser(user.Id)">מחיקה</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="edit-card" *ngIf="editingUser">
-        <div class="edit-header">
-            <h3>עריכת משתמש: {{ editingUser.FullName }}</h3>
-        </div>
-        
-        <form [formGroup]="editForm" (ngSubmit)="saveEdit()">
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>שם מלא</label>
-                    <input formControlName="fullName">
-                </div>
-                <div class="form-group">
-                    <label>מייל</label>
-                    <input formControlName="email">
-                </div>
-                <div class="form-group">
-                    <label>תפקיד</label>
-                    <select formControlName="role">
-                        <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label>פקולטה</label>
-                    <select formControlName="facultyName">
-                        <option value="">-- בחר פקולטה --</option>
-                        <option *ngFor="let faculty of faculties" [value]="faculty">
-                            {{ faculty }}
-                        </option>
-                    </select>
-                </div>
-
-                <div class="form-group full-width">
-                    <label>סיסמה חדשה</label>
-                    <input type="password" formControlName="password" placeholder="השאר ריק אם לא רוצה לשנות">
-                </div>
-            </div>
-
-            <div class="form-actions">
-                <button type="submit" class="btn-save">שמור שינויים</button>
-                <button type="button" class="btn-cancel" (click)="cancelEdit()">ביטול</button>
-            </div>
-        </form>
-    </div>
-</div> -->
 <div class="user-management-container">
     <div class="header-section">
         <h2>{{ 'USER_MGMT.TITLE' | translate }}</h2>
-        <button class="btn-primary" (click)="isCreateModalOpen = true">
+        <button class="btn-primary" [routerLink]="['/admin/create-user']">
             + {{ 'USER_MGMT.ADD_USER' | translate }}
         </button>
     </div>
@@ -108,12 +22,15 @@
                     <td>{{ user.FullName }}</td>
                     <td>{{ user.Email }}</td>
                     <td>
-                        <span class="badge" [ngClass]="user.Role">{{ 'ROLES.' + user.Role.toUpperCase() | translate }}</span>
+                        <span class="badge" [ngClass]="user.Role">{{ 'ROLES.' + user.Role.toUpperCase() | translate
+                            }}</span>
                     </td>
                     <td>{{ user.FacultyName || '—' }}</td>
                     <td class="actions">
-                        <button class="btn-edit" (click)="startEdit(user)">{{ 'COMMON_ACTIONS.EDIT' | translate }}</button>
-                        <button class="btn-delete" (click)="deleteUser(user.Id)">{{ 'COMMON_ACTIONS.DELETE' | translate }}</button>
+                        <button class="btn-edit" (click)="startEdit(user)">{{ 'COMMON_ACTIONS.EDIT' | translate
+                            }}</button>
+                        <button class="btn-delete" (click)="deleteUser(user.Id)">{{ 'COMMON_ACTIONS.DELETE' | translate
+                            }}</button>
                     </td>
                 </tr>
             </tbody>
@@ -124,10 +41,11 @@
         <div class="edit-header">
             <h3>{{ 'USER_MGMT.EDIT.TITLE' | translate: {name: editingUser.FullName} }}</h3>
         </div>
-        
+
         <form [formGroup]="editForm" (ngSubmit)="saveEdit()">
             <button type="submit" class="btn-save">{{ 'COMMON_ACTIONS.UPDATE' | translate }}</button>
-            <button type="button" class="btn-cancel" (click)="cancelEdit()">{{ 'COMMON_ACTIONS.CANCEL' | translate }}</button>
+            <button type="button" class="btn-cancel" (click)="cancelEdit()">{{ 'COMMON_ACTIONS.CANCEL' | translate
+                }}</button>
         </form>
     </div>
 </div>

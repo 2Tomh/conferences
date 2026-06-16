@@ -66,6 +66,9 @@ openDescription(conf: any) {
       .reduce((max, d) => d > max ? d : max, new Date(0));
   }
 
+  // ה-Getter של הסינון שתומך גם בטאבים וגם בחיפוש חופשי
+
+
   get filteredConferences(): any[] {
     let list = this.conferences;
 

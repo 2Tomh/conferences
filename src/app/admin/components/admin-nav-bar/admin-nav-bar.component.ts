@@ -60,7 +60,7 @@ export class AdminNavBarComponent implements OnInit {
   //   });
   // }
   constructor(
-    private authService: AuthService,
+    public authService: AuthService, // שים לב לשינוי ל-public
     private router: Router,
     private translate: TranslateService
   ) {
@@ -75,7 +75,7 @@ export class AdminNavBarComponent implements OnInit {
     this.isLoggedIn$ = this.authService.isLoggedIn();
   }
 
-  onLogout():void {
+  onLogout(): void {
     this.authService.logOut();
     this.router.navigate(['/admin/login']);
   }

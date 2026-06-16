@@ -1,20 +1,20 @@
-<!-- <div class="create-user-container">
-  <h2>יצירת משתמש חדש</h2>
-  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-    
+<div class="create-user-container">
+  <h2>{{ 'CREATE_USER.TITLE' | translate }}</h2>
+  <!-- <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+
     <div class="form-group">
       <label>שם מלא</label>
-      <input formControlName="fullName" placeholder="שם מלא">
+      <input formControlName="fullName" placeholder="הכנס שם מלא">
     </div>
 
     <div class="form-group">
-      <label>מייל</label>
-      <input formControlName="email" placeholder="מייל">
+      <label>Email</label>
+      <input formControlName="email" placeholder="הכנס אימייל">
     </div>
 
     <div class="form-group">
       <label>סיסמה</label>
-      <input type="password" formControlName="password" placeholder="סיסמה">
+      <input type="password" formControlName="password" placeholder="הכנס סיסמה">
     </div>
 
     <div class="form-group">
@@ -22,53 +22,36 @@
       <select formControlName="role">
         <option value="Admin">Admin</option>
         <option value="FacultyManager">FacultyManager</option>
-        <option value="Lecturer">Lecturer</option>
       </select>
     </div>
 
-    <div class="form-group">
-      <label>שם פקולטה</label>
-      <select formControlName="facultyName">
-        <option value="">-- בחר פקולטה --</option>
-        <option *ngFor="let faculty of faculties" [value]="faculty">
-          {{ faculty }}
+    <div class="form-group" *ngIf="userForm.value.role === 'FacultyManager'">
+      <label>בחר מחלקה לניהול</label>
+      <select formControlName="departmentName">
+        <option value="" disabled selected>-- בחר מחלקה --</option>
+        <option *ngFor="let dept of departments" [value]="dept">
+          {{ dept }}
         </option>
       </select>
     </div>
 
-    <button type="submit" [disabled]="userForm.invalid">צור משתמש</button>
-  </form>
-</div> -->
-<div class="create-user-container">
-  <h2>{{ 'CREATE_USER.TITLE' | translate }}</h2>
+    <button type="submit" [disabled]="userForm.invalid">יצירת משתמש</button>
+  </form> -->
   <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+  <input formControlName="fullName" placeholder="שם מלא">
+  <input formControlName="email" placeholder="אימייל">
+  <input type="password" formControlName="password" placeholder="סיסמה">
+  
+  <select formControlName="role">
+    <option value="Admin">Admin</option>
+    <option value="FacultyManager">FacultyManager</option>
+  </select>
 
-    <div class="form-group">
-      <label>{{ 'CREATE_USER.FULL_NAME' | translate }}</label>
-      <input formControlName="fullName" [placeholder]="'CREATE_USER.FULL_NAME' | translate">
-    </div>
+  <select *ngIf="userForm.value.role === 'FacultyManager'" formControlName="departmentName">
+    <option value="" disabled selected>-- בחר מחלקה --</option>
+    <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+  </select>
 
-    <div class="form-group">
-      <label>{{ 'CREATE_USER.EMAIL' | translate }}</label>
-      <input formControlName="email" [placeholder]="'CREATE_USER.EMAIL' | translate">
-    </div>
-
-    <div class="form-group">
-      <label>{{ 'CREATE_USER.PASSWORD' | translate }}</label>
-      <input type="password" formControlName="password" [placeholder]="'CREATE_USER.PASSWORD' | translate">
-    </div>
-
-    <div class="form-group">
-      <label>{{ 'CREATE_USER.ROLE' | translate }}</label>
-      <select formControlName="role">
-        <option value="Admin">{{ 'ROLES.ADMIN' | translate }}</option>
-        <option value="FacultyManager">{{ 'ROLES.FACULTY_MANAGER' | translate }}</option>
-        <option value="Lecturer">{{ 'ROLES.LECTURER' | translate }}</option>
-      </select>
-    </div>
-
-    <button type="submit" [disabled]="userForm.invalid">
-      {{ 'CREATE_USER.SUBMIT' | translate }}
-    </button>
-  </form>
+  <button type="submit" [disabled]="userForm.invalid">יצירת משתמש</button>
+</form>
 </div>
