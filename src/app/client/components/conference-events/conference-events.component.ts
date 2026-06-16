@@ -35,15 +35,26 @@ export class ConferenceEventsComponent implements OnInit {
   }
 
   // הפתרון החכם: מקבלים את כל אובייקט הכנס
-  openDescription(conf: any): void {
+openDescription(conf: any): void {
     const translationKey = 'CONFERENCES_DESC.' + conf.Conference;
+    const dbDescription = conf.Description || conf.description || '';
 
-    // שימוש ב-get האסינכרוני כדי לוודא שקובץ השפה נטען ב-100%
+    // שליפת התיאור מה-JSON
     this.translate.get(translationKey).subscribe((translatedText: string) => {
-      // אם התרגום נכשל או לא קיים ב-JSON, ניקח את התיאור המקורי באנגלית מה-DB
+      
+      // 1. אם אין בכלל מפתח כזה ב-JSON (למשל כנס חדש לגמרי שהמנהל יצר)
       if (translatedText === translationKey) {
-        this.activeDescription = conf.Description || conf.description || 'No description available.';
+        this.activeDescription = dbDescription || 'No description available.';
+        return;
+      }
+
+      // 2. הטריק הגדול: אם התיאור ב-DB שונה מהתיאור ב-JSON, זה אומר שהמנהל ערך אותו!
+      // נבדוק את זה ללא רווחים מיותרים (trim) כדי למנוע זיופים
+      if (dbDescription && dbDescription.trim() !== translatedText.trim()) {
+        // המנהל שינה את הטקסט באדמין -> נציג את מה שיש במונגו
+        this.activeDescription = dbDescription;
       } else {
+        // הטקסטים זהים או שאין שינוי -> נציג את התרגום הדינמי מה-JSON
         this.activeDescription = translatedText;
       }
     });
