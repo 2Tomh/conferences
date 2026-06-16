@@ -35,30 +35,9 @@ export class ConferenceEventsComponent implements OnInit {
   }
 
   // הפתרון החכם: מקבלים את כל אובייקט הכנס
-openDescription(conf: any): void {
-    const translationKey = 'CONFERENCES_DESC.' + conf.Conference;
-    const dbDescription = conf.Description || conf.description || '';
-
-    // שליפת התיאור מה-JSON
-    this.translate.get(translationKey).subscribe((translatedText: string) => {
-      
-      // 1. אם אין בכלל מפתח כזה ב-JSON (למשל כנס חדש לגמרי שהמנהל יצר)
-      if (translatedText === translationKey) {
-        this.activeDescription = dbDescription || 'No description available.';
-        return;
-      }
-
-      // 2. הטריק הגדול: אם התיאור ב-DB שונה מהתיאור ב-JSON, זה אומר שהמנהל ערך אותו!
-      // נבדוק את זה ללא רווחים מיותרים (trim) כדי למנוע זיופים
-      if (dbDescription && dbDescription.trim() !== translatedText.trim()) {
-        // המנהל שינה את הטקסט באדמין -> נציג את מה שיש במונגו
-        this.activeDescription = dbDescription;
-      } else {
-        // הטקסטים זהים או שאין שינוי -> נציג את התרגום הדינמי מה-JSON
-        this.activeDescription = translatedText;
-      }
-    });
-  }
+openDescription(conf: any) {
+  this.activeDescription = conf.Description; // לוקח ישירות מהאובייקט
+}
 
   closeDescription(): void {
     this.activeDescription = null;
@@ -87,8 +66,7 @@ openDescription(conf: any): void {
       .reduce((max, d) => d > max ? d : max, new Date(0));
   }
 
-  // ה-Getter של הסינון שתומך גם בטאבים וגם בחיפוש חופשי
-get filteredConferences(): any[] {
+  get filteredConferences(): any[] {
     let list = this.conferences;
 
     // 1. סינון לפי קטגוריות
