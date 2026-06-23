@@ -36,10 +36,10 @@ export class ConferenceEventsComponent implements OnInit {
   }
 
   // הפתרון החכם: מקבלים את כל אובייקט הכנס
-  openDescription(conf: any) {
-    // השדה ב-JSON נקרא "description" (אותיות קטנות)
-    this.activeDescription = conf.description;
-  }
+openDescription(conf: any) {
+  // נבדוק את כל האפשרויות לשם השדה
+  this.activeDescription = conf.Description || conf.description || 'אין תיאור זמין';
+}
 
   closeDescription(): void {
     this.activeDescription = null;
