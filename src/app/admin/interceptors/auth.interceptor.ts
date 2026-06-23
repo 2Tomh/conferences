@@ -23,10 +23,19 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
+        // בדיקה: האם זו שגיאת 401?
         if (error.status === 401) {
-          console.warn('Token expired or invalid, logging out...');
-          this.authService.logOut(); // ניקוי ה-localStorage ועדכון ה-Subject
-          this.router.navigate(['/admin/login']); // הפניה חזרה ללוגין
+          
+          // בדיקה: האם המשתמש נמצא כרגע בנתיב של ה-Admin?
+          // אם כן - נבצע Logout ונפנה ללוגין.
+          // אם לא - נשאיר אותו בדף הלקוח (הוא פשוט לא יראה נתונים מוגנים).
+          if (this.router.url.includes('/admin')) {
+            console.warn('Unauthorized access to admin area, logging out...');
+            this.authService.logOut();
+            this.router.navigate(['/admin/login']);
+          } else {
+            console.warn('Unauthorized access in public area, staying on page.');
+          }
         }
 
         return throwError(() => error);

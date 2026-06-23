@@ -44,61 +44,45 @@
           <th>{{ 'EVENTS.TABLE.NAME_FIELD' | translate }}</th>
           <th>{{ 'EVENTS.TABLE.ORGANIZERS' | translate }}</th>
           <th>{{ 'EVENTS.TABLE.DESCRIPTION_FIELD' | translate }}</th>
-          <th></th>
+          <th>{{ 'TABLE.ACTIONS' | translate }}</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let conf of pagedConferences">
-
           <td class="conf-name-cell">
             <span class="mobile-label">{{ 'EVENTS.TABLE.NAME_FIELD' | translate }}</span>
-            <strong>
-              {{ ('CONFERENCES_NAMES.' + conf.Conference | translate) === ('CONFERENCES_NAMES.' + conf.Conference)
-              ? conf.Conference
-              : ('CONFERENCES_NAMES.' + conf.Conference | translate) }}
-            </strong>
+            <strong>{{ conf.Name }}</strong>
           </td>
 
           <td>
             <span class="mobile-label">{{ 'EVENTS.TABLE.ORGANIZERS' | translate }}</span>
             <ul class="organizers-list" *ngIf="conf.Organizers && conf.Organizers.length > 0">
-              <li *ngFor="let org of conf.Organizers">
-                {{ ('ORGANIZERS_DATA.' + org | translate) === 'ORGANIZERS_DATA.' + org ? org : ('ORGANIZERS_DATA.' + org
-                | translate) }}
-              </li>
+              <li *ngFor="let org of conf.Organizers">{{ org }}</li>
             </ul>
-            <span *ngIf="!conf.Organizers || conf.Organizers.length === 0">-</span>
+            <span *ngIf="!conf.Organizers || conf.Organizers.length === 0" style="color: #999; font-style: italic;">
+              Not specified
+            </span>
           </td>
 
           <td>
-            <span class="mobile-label">{{ 'EVENTS.TABLE.DESCRIPTION_FIELD' | translate }}</span>
-            <button *ngIf="conf.Description" (click)="openDescription(conf)" class="view-desc-btn">
-              {{ 'EVENTS.TABLE.VIEW_DESC_BTN' | translate }}
-            </button>
-            <span *ngIf="!conf.Description" class="no-link">-</span>
-          </td>
-
-          <td class="text-center">
-            <span class="mobile-label">{{ 'TABLE.ACTIONS' | translate }}</span>
-            <div class="survey-links-wrapper">
-
-              <a *ngIf="conf.Links?.survey" [href]="conf.Links.survey" target="_blank" class="view-desc-btn">
-                {{ 'EVENTS.TABLE.SURVEY_BTN' | translate }}
+            <div class="survey-links-wrapper"
+              style="display: flex; flex-direction: column; gap: 5px; align-items: center;">
+              <button *ngIf="conf.Description" (click)="openDescription(conf)" class="view-desc-btn">
+                View Description
+              </button>
+              <a [routerLink]="['/conference', conf.Id]" class="view-desc-btn">
+                Website
               </a>
-
-              <a *ngIf="conf.Links?.website" [href]="conf.Links.website" target="_blank" class="view-desc-btn">
-                {{ 'EVENTS.TABLE.WEBSITE_BTN' | translate }}
-              </a>
-
-              <span *ngIf="!conf.Links?.survey && !conf.Links?.website" class="no-link">-</span>
             </div>
           </td>
 
-        </tr>
-
-        <tr *ngIf="pagedConferences.length === 0">
-          <td colspan="4" style="text-align: center; padding: 20px;">
-            {{ 'EVENTS.NO_DATA' | translate }}
+          <td class="text-center">
+            <div class="survey-links-wrapper"
+              style="display: flex; flex-direction: column; gap: 5px; align-items: center;">
+              <a *ngIf="conf.Links?.website" [href]="conf.Links.website" target="_blank"
+                class="view-desc-btn">Website</a>
+              <a *ngIf="conf.Links?.survey" [href]="conf.Links.survey" target="_blank" class="view-desc-btn">Survey</a>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -123,7 +107,6 @@
       <button class="close-popup-btn" (click)="closeDescription()">&times;</button>
     </div>
     <div class="popup-body">
-      <!-- השינוי הוא כאן: הוספנו white-space: pre-wrap כדי לשמור על ירידות שורה מה-DB -->
       <p style="white-space: pre-wrap; margin: 0;">{{ activeDescription }}</p>
     </div>
   </div>

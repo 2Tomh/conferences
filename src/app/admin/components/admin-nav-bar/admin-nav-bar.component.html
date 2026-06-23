@@ -1,33 +1,8 @@
-<!-- <nav class="top-navbar">
-  <div class="nav-container">
-    <div class="nav-links" dir="rtl">
-      <app-header-actions></app-header-actions>
-      <a routerLink="/admin/dashboard" routerLinkActive="active">
-        <i class="icon-dashboard"></i> {{ 'Admin_NAV.DASHBOARD' | translate }}
-      </a>
-
-      <a routerLink="/admin/users" routerLinkActive="active">
-        <i class="icon-users"></i> {{ 'Admin_NAV.USERS' | translate }}
-      </a>
-      <a routerLink="/admin/attendees" routerLinkActive="active">
-        נרשמים
-      </a>
-
-      <div class="nav-actions" *ngIf="(isLoggedIn$ | async) && !isLoginPage">
-        <button class="btn-logout" (click)="onLogout()">
-          <span>{{ 'Admin_NAV.LOGOUT' | translate }}</span>
-          <i class="icon-exit"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-</nav> -->
-
 <nav class="top-navbar">
   <div class="nav-container">
     <div class="nav-links" dir="rtl">
       <app-header-actions></app-header-actions>
-      
+
       <a routerLink="/admin/dashboard" routerLinkActive="active">
         <i class="icon-dashboard"></i> {{ 'Admin_NAV.DASHBOARD' | translate }}
       </a>
@@ -44,13 +19,22 @@
         </a>
       </ng-container>
 
+      <ng-container *ngIf="authService.isAdmin()">
+        <a routerLink="/admin/manage-conference" routerLinkActive="active">
+          <i class="icon-calendar"></i> ניהול כנסים
+        </a>
+
+        <a routerLink="/admin/edit-conference" routerLinkActive="active" class="edit-nav-btn">
+          <i class="icon-edit"></i> עריכת כנס
+        </a>
+      </ng-container>
+
       <div class="nav-actions" *ngIf="(isLoggedIn$ | async) && !isLoginPage">
         <button class="btn-logout" (click)="onLogout()">
           <span>{{ 'Admin_NAV.LOGOUT' | translate }}</span>
-          <i class="icon-exit"></i>
+          <i class="icon-exit">LogOut</i>
         </button>
       </div>
-      
     </div>
   </div>
 </nav>

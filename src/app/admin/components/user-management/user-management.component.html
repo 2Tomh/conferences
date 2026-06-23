@@ -22,15 +22,12 @@
                     <td>{{ user.FullName }}</td>
                     <td>{{ user.Email }}</td>
                     <td>
-                        <span class="badge" [ngClass]="user.Role">{{ 'ROLES.' + user.Role.toUpperCase() | translate
-                            }}</span>
+                        <span class="badge" [ngClass]="user.Role">{{ 'ROLES.' + user.Role.toUpperCase() | translate }}</span>
                     </td>
                     <td>{{ user.FacultyName || '—' }}</td>
                     <td class="actions">
-                        <button class="btn-edit" (click)="startEdit(user)">{{ 'COMMON_ACTIONS.EDIT' | translate
-                            }}</button>
-                        <button class="btn-delete" (click)="deleteUser(user.Id)">{{ 'COMMON_ACTIONS.DELETE' | translate
-                            }}</button>
+                        <button class="btn-edit" (click)="startEdit(user)">{{ 'COMMON_ACTIONS.EDIT' | translate }}</button>
+                        <button class="btn-delete" (click)="deleteUser(user.Id)">{{ 'COMMON_ACTIONS.DELETE' | translate }}</button>
                     </td>
                 </tr>
             </tbody>
@@ -43,9 +40,35 @@
         </div>
 
         <form [formGroup]="editForm" (ngSubmit)="saveEdit()">
-            <button type="submit" class="btn-save">{{ 'COMMON_ACTIONS.UPDATE' | translate }}</button>
-            <button type="button" class="btn-cancel" (click)="cancelEdit()">{{ 'COMMON_ACTIONS.CANCEL' | translate
-                }}</button>
+            <div>
+                <label>{{ 'USER_MGMT.TABLE.NAME' | translate }}</label>
+                <input formControlName="fullName" type="text">
+            </div>
+            
+            <div>
+                <label>{{ 'USER_MGMT.TABLE.EMAIL' | translate }}</label>
+                <input formControlName="email" type="email">
+            </div>
+            
+            <div>
+                <label>{{ 'USER_MGMT.TABLE.ROLE' | translate }}</label>
+                <select formControlName="role">
+                    <option *ngFor="let role of roles" [value]="role">{{ 'ROLES.' + role.toUpperCase() | translate }}</option>
+                </select>
+            </div>
+
+            <div>
+                <label>{{ 'USER_MGMT.TABLE.FACULTY' | translate }}</label>
+                <select formControlName="facultyName">
+                    <option value="">-- בחר פקולטה --</option>
+                    <option *ngFor="let f of faculties" [value]="f">{{ f }}</option>
+                </select>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-save">{{ 'COMMON_ACTIONS.UPDATE' | translate }}</button>
+                <button type="button" class="btn-cancel" (click)="cancelEdit()">{{ 'COMMON_ACTIONS.CANCEL' | translate }}</button>
+            </div>
         </form>
     </div>
 </div>

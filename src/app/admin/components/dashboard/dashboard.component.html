@@ -1,4 +1,4 @@
-<!-- <div class="dashboard-container">
+<div class="dashboard-container">
   <div class="header-actions">
     <h1>{{ 'DASHBOARD_PAGE.TITLE' | translate }}</h1>
     <button class="btn-add" routerLink="../manage-conference">
@@ -54,9 +54,10 @@
       <tbody>
         <tr *ngFor="let conf of pagedConferences">
           <td>
-            {{ ('CONFERENCES_NAMES.' + conf.Conference | translate) === ('CONFERENCES_NAMES.' + conf.Conference)
-            ? conf.Conference
-            : ('CONFERENCES_NAMES.' + conf.Conference | translate) }}
+            <div class="conf-name-cell">
+              <!-- {{ conf.Name || conf.Conference || 'כנס ללא שם' }} -->
+                {{ conf.name || conf.Name || conf.Conference || conf.conference || 'כנס ללא שם' }}
+            </div>
           </td>
           <td>{{ conf.Category }}</td>
 
@@ -109,76 +110,5 @@
 
   <div *ngIf="!loading && filteredConferences.length === 0" class="no-data">
     {{ 'DASHBOARD_PAGE.NO_DATA' | translate }}
-  </div>
-</div> -->
-<div class="dashboard-container">
-  <div class="header-actions">
-    <h1>{{ 'DASHBOARD_PAGE.TITLE' | translate }}</h1>
-    <button class="btn-add" routerLink="../manage-conference">
-      ➕ {{ 'DASHBOARD_PAGE.CREATE_NEW' | translate }}
-    </button>
-  </div>
-
-  <div class="category-navbar">
-    <button *ngIf="userRole === 'Admin'" class="nav-tab" [class.active]="selectedCategory === 'All'" (click)="selectCategory('All')">
-      {{ 'CATEGORIES.ALL' | translate }}
-    </button>
-
-    <button *ngIf="canShowCategory('Humanities and Arts')" class="nav-tab" [class.active]="selectedCategory === 'Humanities and Arts'" (click)="selectCategory('Humanities and Arts')">
-      {{ 'CATEGORIES.HUMANITIES_ARTS' | translate }}
-    </button>
-
-    <button *ngIf="canShowCategory('Social Sciences & Law')" class="nav-tab" [class.active]="selectedCategory === 'Social Sciences & Law'" (click)="selectCategory('Social Sciences & Law')">
-      {{ 'CATEGORIES.SOCIAL_SCIENCES_LAW' | translate }}
-    </button>
-
-    <button *ngIf="canShowCategory('BioMed')" class="nav-tab" [class.active]="selectedCategory === 'BioMed'" (click)="selectCategory('BioMed')">
-      {{ 'CATEGORIES.BIOMED' | translate }}
-    </button>
-
-    <button *ngIf="canShowCategory('Engineering')" class="nav-tab" [class.active]="selectedCategory === 'Engineering'" (click)="selectCategory('Engineering')">
-      {{ 'CATEGORIES.ENGINEERING' | translate }}
-    </button>
-
-    <button *ngIf="canShowCategory('Exact Sciences')" class="nav-tab" [class.active]="selectedCategory === 'Exact Sciences'" (click)="selectCategory('Exact Sciences')">
-      {{ 'CATEGORIES.EXACT_SCIENCES' | translate }}
-    </button>
-  </div>
-
-  <div *ngIf="loading" class="loader">{{ 'COMMON.LOADING' | translate }}</div>
-
-  <div class="table-wrapper" *ngIf="!loading && filteredConferences.length > 0">
-    <table class="admin-table">
-      <thead>
-        <tr>
-          <th>{{ 'TABLE.NAME' | translate }}</th>
-          <th>קטגוריה</th>
-          <th>סטטוס סקר</th>
-          <th>הגשת תקצירים</th>
-          <th>{{ 'TABLE.ACTIONS' | translate }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let conf of pagedConferences">
-          <td>{{ conf.Conference || conf.Title }}</td>
-          <td>{{ conf.Category }}</td>
-          <td>
-            <div *ngIf="conf.Links?.survey || conf.survey" class="text-success">✅ יש סקר פעיל</div>
-            <div *ngIf="!(conf.Links?.survey || conf.survey)" class="text-muted">❌ אין לינק לסקר</div>
-          </td>
-          <td>{{ (conf.AbstractSubmission || conf.Abstract_submission) ? 'Yes' : 'No' }}</td>
-          <td>
-            <button class="btn-edit" (click)="onEdit(conf.Id || conf._id)">עריכה</button>
-            <button class="btn-delete" (click)="onDelete(conf.Id || conf._id)">מחיקה</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  
-  <div class="pagination" *ngIf="!loading && filteredConferences.length > pageSize">
-     <button class="page-btn" (click)="goToPage(currentPage - 1)">&#8249;</button>
-     <button *ngFor="let p of pages" class="page-btn" [class.active]="p === currentPage" (click)="goToPage(p)">{{ p }}</button>
-     <button class="page-btn" (click)="goToPage(currentPage + 1)">&#8250;</button>
   </div>
 </div>

@@ -18,6 +18,7 @@ import { UserManagementComponent } from './components/user-management/user-manag
 import { TranslateModule } from '@ngx-translate/core';
 
 import { SharedModule } from '../shared/shared.module';
+import { ConferenceEditComponent } from './components/conference-edit/conference-edit.component';
 @NgModule({
   declarations: [
     AdminRootComponent,
@@ -28,6 +29,7 @@ import { SharedModule } from '../shared/shared.module';
     AdminNavBarComponent,
     CreateUserComponent,
     UserManagementComponent,
+    ConferenceEditComponent,
   ],
   imports: [
     CommonModule,

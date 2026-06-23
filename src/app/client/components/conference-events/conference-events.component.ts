@@ -25,19 +25,21 @@ export class ConferenceEventsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // טעינת הנתונים מהשרת
     this.conferenceEventsService.getSurveys().subscribe({
       next: (data) => {
+        console.log('--- נתונים שהתקבלו מהשרת ---');
+        console.log(data); // בדוק את זה ב-Console (F12)
         this.conferences = data;
       },
-      error: (err) => console.error('Error fetching surveys', err)
+      error: (err) => console.error('שגיאה בטעינת נתונים:', err)
     });
   }
 
   // הפתרון החכם: מקבלים את כל אובייקט הכנס
-openDescription(conf: any) {
-  this.activeDescription = conf.Description; // לוקח ישירות מהאובייקט
-}
+  openDescription(conf: any) {
+    // השדה ב-JSON נקרא "description" (אותיות קטנות)
+    this.activeDescription = conf.description;
+  }
 
   closeDescription(): void {
     this.activeDescription = null;
@@ -95,9 +97,9 @@ openDescription(conf: any) {
       const confNameTranslated = this.translate.instant(translationKey).toLowerCase();
 
       // 3. בדיקה אם החיפוש מתאים לשם המקורי, לשם המתורגם או לתיאור
-      const matchText = confNameEn.includes(term) || 
-                        confNameTranslated.includes(term) || 
-                        description.includes(term);
+      const matchText = confNameEn.includes(term) ||
+        confNameTranslated.includes(term) ||
+        description.includes(term);
 
       // 4. בדיקת המארגנים
       const organizersArray = c.Organizers || c.organizers;

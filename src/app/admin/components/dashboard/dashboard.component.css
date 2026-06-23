@@ -16,7 +16,11 @@
   margin: 0 auto 30px;
 }
 
-.header-actions h1 { font-size: 1.75rem; margin: 0; color: white; }
+.header-actions h1 {
+  font-size: 1.75rem;
+  margin: 0;
+  color: white;
+}
 
 .btn-add {
   background: #4f46e5;
@@ -35,10 +39,12 @@
   display: flex;
   gap: 12px;
   max-width: 1000px;
-  margin: 0 auto 25px; /* ממורכז בול עם הטבלה והכותרת */
+  margin: 0 auto 25px;
+  /* ממורכז בול עם הטבלה והכותרת */
   border-bottom: 1px solid #334155;
   padding-bottom: 16px;
-  flex-wrap: wrap; /* מונע שבירה במסכים קטנים */
+  flex-wrap: wrap;
+  /* מונע שבירה במסכים קטנים */
 }
 
 /* עיצוב הטאבים (הכפתורים) */
@@ -70,6 +76,16 @@
 }
 
 /* טבלה מעוצבת */
+/* .admin-table {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  border-collapse: collapse;
+  background: #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #334155;
+} */
 .admin-table {
   width: 100%;
   max-width: 1000px;
@@ -79,6 +95,8 @@
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid #334155;
+  /* 🆕 הנה התיקון הקריטי */
+  table-layout: fixed;
 }
 
 .admin-table thead {
@@ -89,18 +107,39 @@
   letter-spacing: 0.05em;
 }
 
-.admin-table th, .admin-table td {
+/* הגדרת רוחב לכל עמודה (5 עמודות סה"כ, אז 20% לכל אחת) */
+.admin-table th,
+.admin-table td {
   padding: 18px;
   text-align: right;
   border-bottom: 1px solid #334155;
+  width: 20%;
+  /* 🆕 מוסיף הגנה למקרה של טקסט ארוך מדי */
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.admin-table tr:hover { background: #2d3748; }
+.admin-table td:last-child {
+  text-align: center;
+}
+
+.admin-table tr:hover {
+  background: #2d3748;
+}
 
 /* 🆕 צבעי סטטוס קטנים וטקסטים בתוך הטבלה */
-.text-success { color: #10b981; }
-.text-muted { color: #6b7280; }
-.text-info { color: #38bdf8; }
+.text-success {
+  color: #10b981;
+}
+
+.text-muted {
+  color: #6b7280;
+}
+
+.text-info {
+  color: #38bdf8;
+}
 
 /* כפתורי פעולה בטבלה */
 .btn-edit {
@@ -124,12 +163,15 @@
   transition: opacity 0.2s;
 }
 
-.btn-edit:hover, .btn-delete:hover, .btn-add:hover {
+.btn-edit:hover,
+.btn-delete:hover,
+.btn-add:hover {
   opacity: 0.9;
 }
 
 /* מצבי טעינה וריק */
-.loader, .no-data {
+.loader,
+.no-data {
   text-align: center;
   color: #94a3b8;
   margin-top: 50px;

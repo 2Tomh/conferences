@@ -31,12 +31,11 @@ const routes: Routes = [
       { path: 'register/:sessionId', component: RegistrationFormComponent },
       { path: 'about', component: AboutConferenceComponent },
       { path: 'conference/:id', component: ConferenceDetailsComponent },
-      
       // נתיבי תשלום - ממוקמים בבטחה לפני ה-Wildcard
       { path: 'payment', component: TranzilaPaymentComponent },
       { path: 'payment/success', component: PaymentSuccessComponent },
       { path: 'payment/failed', component: PaymentFailedComponent },
-      
+
       // ה-Wildcard חייב להיות תמיד, אבל תמיד, האיבר האחרון במערך!
       { path: '**', component: PageNotFoundComponent }
     ]

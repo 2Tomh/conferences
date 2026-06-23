@@ -1,0 +1,63 @@
+<div class="user-management-container">
+  <form [formGroup]="conferenceForm" (ngSubmit)="saveConference()" class="edit-card">
+    <div class="edit-header">
+      <h3>Conference Management - Step {{ currentStep }} of 3</h3>
+    </div>
+
+    <div *ngIf="currentStep === 1" class="form-grid">
+      <div class="form-group full-width">
+        <label>Conference Title</label>
+        <input formControlName="title" placeholder="Conference Title">
+      </div>
+      <div class="form-group full-width">
+        <label>Short Tagline</label>
+        <input formControlName="tagline" placeholder="Short Tagline">
+      </div>
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" formControlName="date">
+      </div>
+      <div class="form-group">
+        <label>Venue</label>
+        <input formControlName="venue" placeholder="Venue">
+      </div>
+    </div>
+
+    <div *ngIf="currentStep === 2" class="form-grid">
+      <h3 class="full-width">Organizers</h3>
+      <div formArrayName="organizersDetails" class="full-width">
+        <div *ngFor="let org of organizers.controls; let i=index" [formGroupName]="i" class="form-grid" style="margin-bottom: 10px;">
+          <input formControlName="name" placeholder="Name">
+          <input formControlName="affiliation" placeholder="Affiliation">
+        </div>
+      </div>
+      <button type="button" class="btn-primary" (click)="addOrganizer()">+ Add Organizer</button>
+      <div class="form-group full-width">
+        <label>Description</label>
+        <textarea formControlName="description" placeholder="About the Conference"></textarea>
+      </div>
+    </div>
+
+    <div *ngIf="currentStep === 3" class="form-grid">
+      <h3>Program & Submission</h3>
+      <div formArrayName="programBlocks" class="full-width">
+        <div *ngFor="let block of program.controls; let i=index" [formGroupName]="i" class="form-grid">
+          <input formControlName="startTime" type="time">
+          <input formControlName="endTime" type="time">
+          <input formControlName="title" placeholder="Session Title" class="full-width">
+        </div>
+      </div>
+      <button type="button" class="btn-primary" (click)="addProgramBlock()">+ Add Block</button>
+      <div class="form-group full-width">
+        <label><input type="checkbox" formControlName="acceptsAbstracts"> Accepts Abstracts?</label>
+        <input type="date" formControlName="abstractDeadline">
+      </div>
+    </div>
+
+    <div class="pagination-controls" style="margin-top: 20px; display: flex; justify-content: space-between;">
+      <button type="button" class="btn-cancel" (click)="prevStep()" [disabled]="currentStep === 1">Back</button>
+      <button type="button" class="btn-primary" (click)="nextStep()" [disabled]="currentStep === 3" *ngIf="currentStep < 3">Next</button>
+      <button type="submit" class="btn-save" *ngIf="currentStep === 3">Save Conference</button>
+    </div>
+  </form>
+</div>

@@ -10,7 +10,7 @@
 // export class DashboardComponent implements OnInit {
 //   conferences: any[] = []; 
 //   loading = true;
-  
+
 //   // משתנה לניהול הטאב הנבחר באדמין
 //   selectedCategory = 'All';
 
@@ -109,14 +109,14 @@ import { AuthService } from '../../services/auth.service'; // וודא שזה ה
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  conferences: any[] = []; 
+  conferences: any[] = [];
   loading = true;
-  
+
   // משתנה לניהול הטאב הנבחר באדמין
   selectedCategory = 'All';
 
   // --- שדות לניהול ה-Pagination ---
-  pageSize = 10; 
+  pageSize = 10;
   currentPage = 1;
 
   // משתני הרשאה לסינון התפריט (NAV)
@@ -131,7 +131,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     // שליפת נתוני משתמש כדי לדעת מה להציג ב-NAV
-    const user = this.authService.getCurrentUser(); 
+    const user = this.authService.getCurrentUser();
     this.userRole = user?.role || '';
     this.userScope = user?.scope || '';
 
@@ -144,21 +144,35 @@ export class DashboardComponent implements OnInit {
     return this.userScope === categoryName;
   }
 
+  // loadSurveys(): void {
+  //   this.loading = true;
+  //   this.apiService.getMySurveys().subscribe({
+  //     next: (data) => {
+  //       this.conferences = data;
+  //       this.loading = false;
+  //     },
+  //     error: (err) => {
+  //       console.error('שגיאה בטעינת סקרים מהמונגו:', err);
+  //       this.loading = false;
+  //     }
+  //   });
+  // }
+
+  // פונקציית הפעלה בעת לחיצה על טאב ב-Navbar
   loadSurveys(): void {
     this.loading = true;
     this.apiService.getMySurveys().subscribe({
       next: (data) => {
+        console.log('--- נתונים שהגיעו מהשרת ---', data); // הוסף את זה
         this.conferences = data;
         this.loading = false;
       },
       error: (err) => {
-        console.error('שגיאה בטעינת סקרים מהמונגו:', err);
+        console.error('שגיאה:', err);
         this.loading = false;
       }
     });
   }
-
-  // פונקציית הפעלה בעת לחיצה על טאב ב-Navbar
   selectCategory(category: string): void {
     this.selectedCategory = category;
     this.currentPage = 1; // 🛠️ מאפסים לעמוד הראשון בכל שינוי קטגוריה
@@ -204,7 +218,7 @@ export class DashboardComponent implements OnInit {
     if (confirm('האם אתה בטוח שברצונך למחוק את הסקר מהדאטהבייס?')) {
       this.apiService.deleteSurvey(id).subscribe({
         next: () => {
-          this.loadSurveys(); 
+          this.loadSurveys();
         },
         error: (err) => {
           console.error('שגיאה במחיקה:', err);
