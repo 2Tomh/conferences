@@ -47,24 +47,24 @@
         <button type="button" (click)="ngOnInit()">נסה שוב</button>
     </div>
 
-    <form #paymentForm
-          ngNoForm
-          action="https://direct.tranzila.com/kapaim3/iframenew.php"
-          target="tranzila-iframe"
-          method="POST"
-          style="display: none;">
+    <form #paymentForm ngNoForm action="https://direct.tranzila.com/{{paymentData.terminal}}/iframenew.php"
+        target="tranzila-iframe" method="POST" style="display: none;">
 
-        <input type="hidden" name="sum"                [value]="paymentData.amount">
-        <input type="hidden" name="orderId"            [value]="paymentData.orderId">
-        <input type="hidden" name="currency"           value="2">
-        <input type="hidden" name="notify_url_address" value="https://conference-backend-8339.onrender.com/api/payment/notify">
+        <input type="hidden" name="sum" [value]="paymentData.amount">
+        <input type="hidden" name="orderId" [value]="paymentData.orderId">
+        <input type="hidden" name="currency" value="1">
+
+        <input type="hidden" name="notify_url_address"
+            value="https://conference-backend-8339.onrender.com/api/payment/notify">
+
+        <input type="hidden" name="success_url"
+            [value]="'https://www.mind-il.org/payment/success?orderId=' + paymentData.orderId">
+        <input type="hidden" name="failure_url"
+            [value]="'https://www.mind-il.org/payment/failed?orderId=' + paymentData.orderId">
     </form>
 
-    <iframe name="tranzila-iframe"
-            width="100%"
-            height="600px"
-            frameborder="0"
-            title="Tranzila Payment"
-            sandbox="allow-forms allow-scripts allow-same-origin allow-top-navigation">
+    <iframe name="tranzila-iframe" width="100%" height="600px" frameborder="0" title="Tranzila Payment"
+        sandbox="allow-forms allow-scripts allow-same-origin allow-top-navigation">
+        הדפדפן שלך אינו תומך ב-iframes.
     </iframe>
 </div>
