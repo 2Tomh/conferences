@@ -94,12 +94,14 @@
     "COMMITTEE": {
       "TITLE": "Steering Committee Members",
       "MEMBERS": [
-        "Noam Gidron, The Hebrew University",
-        "Nadav Davidovitch, Bar-Ilan University",
-        "Niron Hashai, Reichman University",
+        "Uri Ashery, Tel Aviv University",
+        "Kinneret Teodorescu, Technion - Israel Institute of Technology",
         "Ran I. Snitkovsky, Tel Aviv University",
         "Adi Stern, Tel Aviv University, The Israel Young Academy",
-        "Kinneret Teodorescu, The Technion",
+        "Nadav Davidovitch, Bar-Ilan University",
+        "Niron Hashai, Reichman University",
+        "Noam Gidron, The Hebrew University",
+        "Ofer Firstenberg, Weizmann Institute of Science, The Israel Young Academy",
         "Sigal Berman, Ben-Gurion University"
       ],
       "CONTACT_MSG": "Want to organize a conference in your field? Contact us:"

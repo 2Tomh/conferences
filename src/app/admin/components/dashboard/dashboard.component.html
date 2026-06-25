@@ -55,8 +55,7 @@
         <tr *ngFor="let conf of pagedConferences">
           <td>
             <div class="conf-name-cell">
-              <!-- {{ conf.Name || conf.Conference || 'כנס ללא שם' }} -->
-                {{ conf.name || conf.Name || conf.Conference || conf.conference || 'כנס ללא שם' }}
+              {{ conf.name || conf.Name || conf.Conference || conf.conference || 'כנס ללא שם' }}
             </div>
           </td>
           <td>{{ conf.Category }}</td>
@@ -83,13 +82,37 @@
             </span>
           </td>
 
+          <!-- <td>
+            <div style="display: flex; gap: 5px; align-items: center;">
+              <button class="btn-edit" (click)="onEdit(conf.Id || conf._id)">
+                {{ 'COMMON_ACTIONS.EDIT' | translate }}
+              </button>
+
+              <button class="btn-edit" [routerLink]="['/admin/manage-conference', conf.Id || conf._id]"
+                style="background-color: #f39c12; color: white;">
+                ערוך
+              </button>
+
+              <button class="btn-delete" (click)="onDelete(conf.Id || conf._id)">
+                {{ 'COMMON_ACTIONS.DELETE' | translate }}
+              </button>
+            </div>
+          </td> -->
           <td>
-            <button class="btn-edit" (click)="onEdit(conf.Id || conf._id)">
-              {{ 'COMMON_ACTIONS.EDIT' | translate }}
-            </button>
-            <button class="btn-delete" (click)="onDelete(conf.Id || conf._id)">
-              {{ 'COMMON_ACTIONS.DELETE' | translate }}
-            </button>
+            <div style="display: flex; gap: 5px; align-items: center;">
+              <button class="btn-edit" (click)="onEdit(conf.Id || conf._id)">
+                {{ 'COMMON_ACTIONS.EDIT' | translate }}
+              </button>
+
+              <button class="btn-edit" [routerLink]="['/admin/edit-conference', conf.Id || conf._id]"
+                style="background-color: #f39c12; color: white; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer;">
+                ערוך
+              </button>
+
+              <button class="btn-delete" (click)="onDelete(conf.Id || conf._id)">
+                {{ 'COMMON_ACTIONS.DELETE' | translate }}
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>

@@ -114,7 +114,7 @@ export class DashboardComponent implements OnInit {
 
   // משתנה לניהול הטאב הנבחר באדמין
   selectedCategory = 'All';
-
+  managedConferenceId: string = '';
   // --- שדות לניהול ה-Pagination ---
   pageSize = 10;
   currentPage = 1;
@@ -129,15 +129,21 @@ export class DashboardComponent implements OnInit {
     private authService: AuthService
   ) { }
 
-  ngOnInit(): void {
-    // שליפת נתוני משתמש כדי לדעת מה להציג ב-NAV
-    const user = this.authService.getCurrentUser();
-    this.userRole = user?.role || '';
-    this.userScope = user?.scope || '';
+  // ngOnInit(): void {
+  //   const user = this.authService.getCurrentUser();
+  //   this.userRole = user?.role || '';
+  //   this.userScope = user?.facultyName || '';
+  //   this.managedConferenceId = user?.managedConferenceId || '';
 
-    this.loadSurveys();
-  }
-
+  //   this.loadSurveys();
+  // }
+ngOnInit(): void {
+  const user = this.authService.getCurrentUser();
+  this.userRole = user?.role || '';
+  this.userScope = user?.scope || '';
+  this.managedConferenceId = user?.managedConferenceId || '';
+  this.loadSurveys();
+}
   // פונקציה לבדיקת הרשאה להצגת טאב ב-NAV
   canShowCategory(categoryName: string): boolean {
     if (this.userRole === 'Admin' || this.userScope === 'ALL') return true;
@@ -161,10 +167,27 @@ export class DashboardComponent implements OnInit {
   // פונקציית הפעלה בעת לחיצה על טאב ב-Navbar
   loadSurveys(): void {
     this.loading = true;
-    this.apiService.getMySurveys().subscribe({
+    this.apiService.getSurveys().subscribe({  // אותו endpoint רגיל
       next: (data) => {
-        console.log('--- נתונים שהגיעו מהשרת ---', data); // הוסף את זה
-        this.conferences = data;
+        const allData = Array.isArray(data) ? data : [data];
+        console.log('--- ALL DATA ---', allData);
+        console.log('userRole:', this.userRole);
+        console.log('userScope:', this.userScope);
+        console.log('managedConferenceId:', this.managedConferenceId);
+
+        if (this.userRole === 'Admin') {
+          // אדמין רואה הכל – אבל זה לא אמור לקרות כאן
+          this.conferences = allData;
+        } else if (this.managedConferenceId) {
+          // יש כנס ספציפי משויך – רק אותו
+          this.conferences = allData.filter(c => c._id === this.managedConferenceId || c.Id === this.managedConferenceId);
+        } else if (this.userScope) {
+          // יש פקולטה – כל הכנסים של הפקולטה
+          this.conferences = allData.filter(c => c.Category === this.userScope);
+        } else {
+          this.conferences = [];
+        }
+
         this.loading = false;
       },
       error: (err) => {

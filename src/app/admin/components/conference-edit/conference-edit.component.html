@@ -1,63 +1,133 @@
-<div class="user-management-container">
-  <form [formGroup]="conferenceForm" (ngSubmit)="saveConference()" class="edit-card">
-    <div class="edit-header">
-      <h3>Conference Management - Step {{ currentStep }} of 3</h3>
-    </div>
+<!-- <div class="manage-container" dir="rtl">
+  <div class="form-card">
+    <form [formGroup]="conferenceForm" (ngSubmit)="saveConference()">
+<input type="hidden" formControlName="id">
+      <div *ngIf="currentStep === 1" class="step-content">
+        <h3>פרטי הכנס</h3>
+        <div class="form-group"><label>שם הכנס:</label><input formControlName="conference" class="form-control"></div>
+        <div class="form-group"><label>סוג:</label><input formControlName="type" class="form-control"></div>
+        <div class="form-group"><label>קטגוריה:</label><input formControlName="category" class="form-control"></div>
+        <div class="form-group"><label>תיאור:</label><textarea formControlName="description" class="form-control"></textarea></div>
+        <div class="form-group"><label>תאריך:</label><input formControlName="date" class="form-control"></div>
+        <div class="form-group"><label>מיקום:</label><input formControlName="location" class="form-control"></div>
+        <div class="form-group"><label>קהל יעד:</label><input formControlName="audience" class="form-control"></div>
+      </div>
 
-    <div *ngIf="currentStep === 1" class="form-grid">
-      <div class="form-group full-width">
-        <label>Conference Title</label>
-        <input formControlName="title" placeholder="Conference Title">
+      <div *ngIf="currentStep === 2" class="step-content">
+        <h3>הנחיות ותאריכים</h3>
+        <div class="form-group checkbox-wrapper">
+          <label><input type="checkbox" formControlName="abstract_submission"> מאפשר הגשת תקצירים</label>
+        </div>
+        <div class="form-group"><label>הנחיות לתקציר:</label><textarea formControlName="abstractGuidelines" class="form-control"></textarea></div>
+        <div class="form-group"><label>מגבלת תווים:</label><input type="number" formControlName="abstractMaxLimit" class="form-control"></div>
+        <div class="form-group"><label>דד-ליין תקציר:</label><input formControlName="abstractDeadline" class="form-control"></div>
+        <div class="form-group"><label>דד-ליין הרשמה:</label><input formControlName="registrationDeadline" class="form-control"></div>
+        <div class="form-group"><label>איש קשר:</label><input formControlName="contactName" class="form-control"></div>
+        <div class="form-group"><label>אימייל קשר:</label><input formControlName="contactEmail" class="form-control"></div>
       </div>
-      <div class="form-group full-width">
-        <label>Short Tagline</label>
-        <input formControlName="tagline" placeholder="Short Tagline">
-      </div>
-      <div class="form-group">
-        <label>Date</label>
-        <input type="date" formControlName="date">
-      </div>
-      <div class="form-group">
-        <label>Venue</label>
-        <input formControlName="venue" placeholder="Venue">
-      </div>
-    </div>
 
-    <div *ngIf="currentStep === 2" class="form-grid">
-      <h3 class="full-width">Organizers</h3>
-      <div formArrayName="organizersDetails" class="full-width">
-        <div *ngFor="let org of organizers.controls; let i=index" [formGroupName]="i" class="form-grid" style="margin-bottom: 10px;">
-          <input formControlName="name" placeholder="Name">
-          <input formControlName="affiliation" placeholder="Affiliation">
+      <div *ngIf="currentStep === 3" class="step-content">
+        <h3>מבנה ותוכן הכנס</h3>
+        
+        <div formGroupName="links" class="sub-section">
+          <label>קישורים:</label>
+          <input formControlName="survey" placeholder="לינק לסקר" class="form-control">
+          <input formControlName="website" placeholder="אתר הכנס" class="form-control">
+        </div>
+
+        <div formArrayName="organizers" class="sub-section">
+          <label>מארגנים:</label>
+          <div *ngFor="let org of organizers.controls; let i = index" class="row">
+            <input [formControlName]="i" class="form-control">
+          </div>
+          <button type="button" (click)="addOrganizer()">+ הוסף מארגן</button>
+        </div>
+
+        <div formArrayName="programBlocks" class="sub-section">
+          <label>בלוקים של תוכנית:</label>
+          <div *ngFor="let pb of program.controls; let i = index" [formGroupName]="i" class="row">
+            <input formControlName="startTime" placeholder="התחלה" class="form-control">
+            <input formControlName="endTime" placeholder="סיום" class="form-control">
+            <input formControlName="title" placeholder="כותרת" class="form-control">
+          </div>
+          <button type="button" (click)="addProgramBlock()">+ הוסף בלוק תוכנית</button>
         </div>
       </div>
-      <button type="button" class="btn-primary" (click)="addOrganizer()">+ Add Organizer</button>
-      <div class="form-group full-width">
-        <label>Description</label>
-        <textarea formControlName="description" placeholder="About the Conference"></textarea>
-      </div>
-    </div>
 
-    <div *ngIf="currentStep === 3" class="form-grid">
-      <h3>Program & Submission</h3>
-      <div formArrayName="programBlocks" class="full-width">
-        <div *ngFor="let block of program.controls; let i=index" [formGroupName]="i" class="form-grid">
-          <input formControlName="startTime" type="time">
-          <input formControlName="endTime" type="time">
-          <input formControlName="title" placeholder="Session Title" class="full-width">
+      <div class="actions">
+        <button type="button" *ngIf="currentStep > 1" (click)="prevStep()">קודם</button>
+        <button type="button" *ngIf="currentStep < 3" (click)="nextStep()">המשך</button>
+        <button type="submit" class="btn-save">שמור את כל הנתונים</button>
+      </div>
+    </form>
+  </div>
+</div> -->
+<div class="manage-container" dir="rtl">
+  <div class="form-card">
+    <form [formGroup]="conferenceForm" (ngSubmit)="saveConference()">
+      
+      <input type="hidden" formControlName="id">
+
+      <div *ngIf="currentStep === 1" class="step-content">
+        <h3>פרטי הכנס</h3>
+        <div class="form-group"><label>שם הכנס:</label><input formControlName="conference" class="form-control"></div>
+        <div class="form-group"><label>סוג:</label><input formControlName="type" class="form-control"></div>
+        <div class="form-group"><label>קטגוריה:</label><input formControlName="category" class="form-control"></div>
+        <div class="form-group"><label>תיאור:</label><textarea formControlName="description" class="form-control"></textarea></div>
+        <div class="form-group"><label>תאריך:</label><input formControlName="date" class="form-control"></div>
+        <div class="form-group"><label>מיקום:</label><input formControlName="location" class="form-control"></div>
+        <div class="form-group"><label>קהל יעד:</label><input formControlName="audience" class="form-control"></div>
+      </div>
+
+      <div *ngIf="currentStep === 2" class="step-content">
+        <h3>הנחיות ותאריכים</h3>
+        <div class="form-group checkbox-wrapper">
+          <label><input type="checkbox" formControlName="abstract_submission"> מאפשר הגשת תקצירים</label>
+        </div>
+        <div class="form-group"><label>הנחיות לתקציר:</label><textarea formControlName="abstractGuidelines" class="form-control"></textarea></div>
+        <div class="form-group"><label>מגבלת תווים:</label><input type="number" formControlName="abstractMaxLimit" class="form-control"></div>
+        <div class="form-group"><label>דד-ליין תקציר:</label><input formControlName="abstractDeadline" class="form-control"></div>
+        <div class="form-group"><label>דד-ליין הרשמה:</label><input formControlName="registrationDeadline" class="form-control"></div>
+        <div class="form-group"><label>איש קשר:</label><input formControlName="contactName" class="form-control"></div>
+        <div class="form-group">
+          <label>אימייל קשר:</label>
+          <input formControlName="contactEmail" class="form-control">
         </div>
       </div>
-      <button type="button" class="btn-primary" (click)="addProgramBlock()">+ Add Block</button>
-      <div class="form-group full-width">
-        <label><input type="checkbox" formControlName="acceptsAbstracts"> Accepts Abstracts?</label>
-        <input type="date" formControlName="abstractDeadline">
-      </div>
-    </div>
 
-    <div class="pagination-controls" style="margin-top: 20px; display: flex; justify-content: space-between;">
-      <button type="button" class="btn-cancel" (click)="prevStep()" [disabled]="currentStep === 1">Back</button>
-      <button type="button" class="btn-primary" (click)="nextStep()" [disabled]="currentStep === 3" *ngIf="currentStep < 3">Next</button>
-      <button type="submit" class="btn-save" *ngIf="currentStep === 3">Save Conference</button>
-    </div>
-  </form>
+      <div *ngIf="currentStep === 3" class="step-content">
+        <h3>מבנה ותוכן הכנס</h3>
+        
+        <div formGroupName="links" class="sub-section">
+          <label>קישורים:</label>
+          <input formControlName="survey" placeholder="לינק לסקר" class="form-control">
+          <input formControlName="website" placeholder="אתר הכנס" class="form-control">
+        </div>
+
+        <div formArrayName="organizers" class="sub-section">
+          <label>מארגנים:</label>
+          <div *ngFor="let org of organizers.controls; let i = index" class="row">
+            <input [formControlName]="i" class="form-control">
+          </div>
+          <button type="button" (click)="addOrganizer()">+ הוסף מארגן</button>
+        </div>
+
+        <div formArrayName="programBlocks" class="sub-section">
+          <label>בלוקים של תוכנית:</label>
+          <div *ngFor="let pb of program.controls; let i = index" [formGroupName]="i" class="row">
+            <input formControlName="startTime" placeholder="התחלה" class="form-control">
+            <input formControlName="endTime" placeholder="סיום" class="form-control">
+            <input formControlName="title" placeholder="כותרת" class="form-control">
+          </div>
+          <button type="button" (click)="addProgramBlock()">+ הוסף בלוק תוכנית</button>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="button" *ngIf="currentStep > 1" (click)="prevStep()">קודם</button>
+        <button type="button" *ngIf="currentStep < 3" (click)="nextStep()">המשך</button>
+        <button type="submit" class="btn-save">שמור את כל הנתונים</button>
+      </div>
+    </form>
+  </div>
 </div>

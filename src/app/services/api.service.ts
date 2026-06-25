@@ -27,16 +27,18 @@ export class ApiService {
     return this.http.get<any[]>(`${this.apiUrl}/Conferences/my-conferences`);
   }
 
-  createConference(conference: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/Surveys`, conference); // שיניתי מ-Conferences ל-Surveys
+  createConference(data: any) {
+    // זה עובד ל-Surveys, אז תשמור על זה ככה
+    return this.http.post(`${this.apiUrl}/Surveys`, data);
   }
 
   // getConferenceById(id: string): Observable<any> {
   //   return this.http.get<any>(`${this.apiUrl}/Conferences/${id}`);
   // }
 
-  updateConference(id: string, conference: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/Conferences/${id}`, conference);
+  updateConference(id: string, data: any) {
+    // החלפתי ל-Surveys כדי שתואם ל-Controller שלך
+    return this.http.put(`${this.apiUrl}/Surveys/${id}`, data);
   }
 
   deleteConference(id: string): Observable<any> {
@@ -57,7 +59,8 @@ export class ApiService {
 
   // 1. משיכת כל הסקרים עבור הדאשבורד
   getMySurveys(): Observable<any[]> {
-    return this.getSurveys();
+    // וודא שזה פונה לכתובת שבה השרת מחיל את הסינון
+    return this.http.get<any[]>(`${this.apiUrl}/Surveys`);
   }
 
   getSurveys(): Observable<any[]> {

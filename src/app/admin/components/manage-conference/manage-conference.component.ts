@@ -61,17 +61,36 @@ export class ManageConferenceComponent implements OnInit {
     }
   }
 
+  // initForm(): void {
+  //   // הסרת ה-Validators מהשדות Conference ו-Description
+  //   this.conferenceForm = this.fb.group({
+  //     Id: [''],
+  //     Category: ['', Validators.required],
+  //     Conference: [''],
+  //     Description: [''],
+
+  //     AbstractGuidelines: [''],
+  //     AbstractMaxLimit: [2500],
+  //     Abstract_submission: [false],
+  //     Organizers: this.fb.array([]),
+  //     Links: this.fb.group({
+  //       survey: [''],
+  //       website: ['']
+  //     })
+  //   });
+  // }
   initForm(): void {
-    // הסרת ה-Validators מהשדות Conference ו-Description
     this.conferenceForm = this.fb.group({
       Id: [''],
       Category: ['', Validators.required],
       Conference: [''],
       Description: [''],
 
+      // שדות חדשים שנוספו
       AbstractGuidelines: [''],
       AbstractMaxLimit: [2500],
       Abstract_submission: [false],
+
       Organizers: this.fb.array([]),
       Links: this.fb.group({
         survey: [''],
@@ -79,7 +98,6 @@ export class ManageConferenceComponent implements OnInit {
       })
     });
   }
-
   get organizersFormArray(): FormArray {
     return this.conferenceForm.get('Organizers') as FormArray;
   }
@@ -92,6 +110,32 @@ export class ManageConferenceComponent implements OnInit {
     this.organizersFormArray.removeAt(index);
   }
 
+  // loadConferenceData(id: string): void {
+  //   this.apiService.getSurveyById(id).subscribe({
+  //     next: (data) => {
+  //       if (data) {
+  //         this.organizersFormArray.clear();
+  //         const organizers = data.Organizers || data.organizers || [];
+  //         organizers.forEach((org: string) => this.addOrganizer(org));
+
+  //         this.conferenceForm.patchValue({
+  //           Id: data.Id || data._id,
+  //           Category: data.Category,
+  //           Conference: data.Conference,
+  //           Description: data.Description,
+  //           AbstractGuidelines: data.AbstractGuidelines || '',
+  //           AbstractMaxLimit: data.AbstractMaxLimit || 2500,
+  //           Abstract_submission: data.Abstract_submission !== undefined ? data.Abstract_submission : data.AbstractSubmission,
+  //           Links: {
+  //             survey: data.Links?.survey || '',
+  //             website: data.Links?.website || ''
+  //           }
+  //         });
+  //       }
+  //     },
+  //     error: (err) => console.error('שגיאה בטעינת נתונים:', err)
+  //   });
+  // }
   loadConferenceData(id: string): void {
     this.apiService.getSurveyById(id).subscribe({
       next: (data) => {
@@ -103,8 +147,9 @@ export class ManageConferenceComponent implements OnInit {
           this.conferenceForm.patchValue({
             Id: data.Id || data._id,
             Category: data.Category,
-            Conference: data.Conference,
-            Description: data.Description,
+            // כאן התיקון: נבדוק גם Conference וגם Name
+            Conference: data.Conference || data.Name || data.name || '',
+            Description: data.Description || data.description || '',
             AbstractGuidelines: data.AbstractGuidelines || '',
             AbstractMaxLimit: data.AbstractMaxLimit || 2500,
             Abstract_submission: data.Abstract_submission !== undefined ? data.Abstract_submission : data.AbstractSubmission,
@@ -118,7 +163,6 @@ export class ManageConferenceComponent implements OnInit {
       error: (err) => console.error('שגיאה בטעינת נתונים:', err)
     });
   }
-
   onSubmit(): void {
     const formData = this.conferenceForm.value;
 

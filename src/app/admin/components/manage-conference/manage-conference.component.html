@@ -1,4 +1,4 @@
-<div class="manage-container" dir="rtl">
+<!-- <div class="manage-container" dir="rtl">
   <div class="form-card">
 
     <div class="form-header">
@@ -103,6 +103,113 @@
           המשך ⬅️
         </button>
 
+        <button type="submit" class="btn-save final-submit">
+          {{ isEditMode ? 'עדכן כנס סופית' : 'צור כנס חדש' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div> -->
+
+<div class="manage-container" dir="rtl">
+  <div class="form-card">
+
+    <div class="form-header">
+      <div class="icon">{{ isEditMode ? '✏️' : '🎯' }}</div>
+      <h1>{{ (isEditMode ? 'MANAGE.EDIT_TITLE' : 'MANAGE.CREATE_TITLE') | translate }}</h1>
+      <p>{{ (isEditMode ? 'MANAGE.EDIT_SUB' : 'MANAGE.CREATE_SUB') | translate }}</p>
+    </div>
+
+    <div class="stepper">
+      <div class="step" [class.active]="currentStep >= 1" [class.completed]="currentStep > 1">
+        <span class="step-number">1</span>
+        <span class="step-label">פרטי הכנס</span>
+      </div>
+      <div class="step-line" [class.active]="currentStep >= 2"></div>
+      <div class="step" [class.active]="currentStep >= 2" [class.completed]="currentStep > 2">
+        <span class="step-number">2</span>
+        <span class="step-label">קישורים ומדיה</span>
+      </div>
+      <div class="step-line" [class.active]="currentStep >= 3"></div>
+      <div class="step" [class.active]="currentStep >= 3">
+        <span class="step-number">3</span>
+        <span class="step-label">👥 מארגנים</span>
+      </div>
+    </div>
+
+    <form [formGroup]="conferenceForm" (ngSubmit)="onSubmit()">
+
+      <div *ngIf="currentStep === 1" class="step-content">
+        <div class="form-group">
+          <label>שם הכנס (באנגלית):</label>
+          <input type="text" formControlName="Conference" class="form-control" placeholder="הזן שם כנס באנגלית">
+        </div>
+
+        <div class="form-group">
+          <label>קטגוריה:</label>
+          <select formControlName="Category" class="form-control">
+            <option value="" disabled selected>-- בחר קטגוריה --</option>
+            <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>תיאור הכנס:</label>
+          <textarea formControlName="Description" class="form-control" rows="4"
+            placeholder="תאר את הכנס בקצרה..."></textarea>
+        </div>
+
+        <div class="form-group checkbox-wrapper" style="margin-top: 20px;">
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="Abstract_submission" class="custom-checkbox">
+            <span>מאפשר הגשת תקצירים (Abstract Submission)</span>
+          </label>
+        </div>
+
+        <div *ngIf="conferenceForm.get('Abstract_submission')?.value" class="admin-abstract-settings"
+          style="margin-top: 15px; padding: 15px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px;">
+          <h4 style="margin-top: 0; color: #3b82f6;">⚙️ הגדרות הנחיות למגישים</h4>
+
+          <div class="form-group">
+            <label>הנחיות להגשת תקציר (יוצג למשתמש):</label>
+            <textarea formControlName="AbstractGuidelines" class="form-control" rows="3"
+              placeholder="כתוב כאן הנחיות הגשה..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="currentStep === 2" class="step-content">
+        <div formGroupName="Links" class="links-card-section">
+          <h4>🔗 קישורים ומדיה</h4>
+          <div class="form-group">
+            <label>לינק לסקר (Google Forms):</label>
+            <input type="text" formControlName="survey" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>אתר אינטרנט של הכנס:</label>
+            <input type="text" formControlName="website" class="form-control">
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="currentStep === 3" class="step-content">
+        <div formArrayName="Organizers" class="organizers-card-section">
+          <h4>👥 מארגנים ואנשי סגל</h4>
+          <div class="organizers-grid">
+            <div *ngFor="let org of organizersFormArray.controls; let i = index" class="organizer-row">
+              <input type="text" [formControlName]="i" class="form-control" placeholder="שם המארגן">
+              <button type="button" class="btn-remove-org" (click)="removeOrganizer(i)">❌</button>
+            </div>
+          </div>
+          <button type="button" class="btn-add-org" (click)="addOrganizer()">➕ הוסף מארגן חדש</button>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn-cancel" *ngIf="currentStep > 1" (click)="prevStep()">➡️ קודם</button>
+        <button type="button" class="btn-cancel" *ngIf="currentStep === 1" routerLink="/admin/dashboard">ביטול</button>
+        <button type="button" class="btn-save" *ngIf="currentStep < 3" (click)="nextStep()">המשך ⬅️</button>
         <button type="submit" class="btn-save final-submit">
           {{ isEditMode ? 'עדכן כנס סופית' : 'צור כנס חדש' }}
         </button>

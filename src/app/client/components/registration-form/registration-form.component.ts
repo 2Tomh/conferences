@@ -4,6 +4,19 @@ import { ApiService } from '../../../services/api.service';
 import { Router } from '@angular/router';
 import { AbstractControl, ValidationErrors } from '@angular/forms';
 
+export function abstractValidator(maxWordsLimit: number, maxCharsLimit: number) {
+  return (control: AbstractControl): ValidationErrors | null => {
+    if (!control.value) return null;
+    const text = control.value;
+    const wordCount = text.trim().split(/\s+/).filter((w: string) => w.length > 0).length;
+    const charCount = text.length;
+
+    if (wordCount > maxWordsLimit) return { maxWords: { limit: maxWordsLimit } };
+    if (charCount > maxCharsLimit) return { maxChars: { limit: maxCharsLimit } };
+
+    return null;
+  };
+}
 // וולידטור למספר מילים מקסימלי
 export function maxWords(limit: number) {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -51,33 +64,13 @@ export class RegistrationFormComponent implements OnInit {
     this.loadConferences();
   }
 
-  // initForms() {
-  //   this.regForm = this.fb.group({
-  //     fullName: ['', [Validators.required, Validators.minLength(2)]],
-  //     email: ['', [Validators.required, Validators.email]],
-  //     address: ['', Validators.required],
-  //     phone: ['', [Validators.required, Validators.pattern(/^[0-9+\-\s]{7,15}$/)]],
-  //     institution: [''],
-  //     conferenceId: ['', Validators.required],
-  //     sessionId: ['']
-  //   });
-
-  //   this.abstractForm = this.fb.group({
-  //     title: ['', Validators.required],
-  //     body: ['', Validators.required],
-  //     notes: ['']
-  //   });
-  // }
-
   initForms() {
     this.regForm = this.fb.group({
       fullName: ['', [Validators.required, Validators.minLength(5)]],
-      // email: ['', [Validators.required, Validators.email]],
       email: ['', [
         Validators.required,
         Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]{2,}\.[a-zA-Z]{2,}$/)
       ]],
-      // ה-Pattern הזה תופס גם מספרים עם מקף וגם בלי:
       phone: ['', [
         Validators.required,
         Validators.pattern(/^0[0-9]{9,10}$|^\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}$/)
@@ -86,20 +79,55 @@ export class RegistrationFormComponent implements OnInit {
       institution: [''],
       conferenceId: ['', Validators.required]
     });
+
     this.abstractForm = this.fb.group({
       // כותרת עד 25 מילים
       title: ['', [Validators.required, maxWords(25)]],
-      // גוף עד 250 מילים
-      body: ['', [Validators.required, maxWords(250)]],
+      // גוף עד 250 מילים או 2500 תווים
+      body: ['', [Validators.required, abstractValidator(250, 2500)]],
       notes: ['']
     });
   }
+
+  // ===== פופאפ בחירת כנס =====
+  // loadConferences() {
+  //   this.isLoading = true;
+  //   this.apiService.getSurveys().subscribe({
+  //     next: (data) => {
+  //       this.allConferences = data.map(conf => ({
+  //         ...conf,
+  //         id: conf.Id || conf._id || conf.id,
+  //         name: conf.Name || conf.name || conf.Conference || 'כנס ללא שם',
+  //         location: conf.Location || conf.location || 'מיקום לא מוגדר',
+  //         description: conf.Description || conf.description || '',
+  //         // משיכת ההנחיות שהאדמין הגדיר
+  //         abstractGuidelines: conf.AbstractGuidelines || ''
+  //       }));
+
+  //       this.filteredConferences = [...this.allConferences];
+  //       this.isLoading = false;
+  //     },
+  //     error: (err) => {
+  //       console.error('שגיאה בטעינת כנסים', err);
+  //       this.isLoading = false;
+  //     }
+  //   });
+  // }
   loadConferences() {
     this.isLoading = true;
-    this.apiService.getAllConferences().subscribe({
+    this.apiService.getSurveys().subscribe({
       next: (data) => {
-        this.allConferences = data;
-        this.filteredConferences = data;
+        this.allConferences = data.map(conf => ({
+          ...conf,
+          id: conf.Id || conf._id || conf.id,
+          name: conf.Name || conf.name || conf.Conference || 'כנס ללא שם',
+          location: conf.Location || conf.location || 'מיקום לא מוגדר',
+          description: conf.Description || conf.description || '',
+          // הנה התיקון הקריטי: אנחנו מוודאים שהשדה מועבר לאובייקט החדש
+          abstractGuidelines: conf.AbstractGuidelines || ''
+        }));
+
+        this.filteredConferences = [...this.allConferences];
         this.isLoading = false;
       },
       error: (err) => {
@@ -108,9 +136,6 @@ export class RegistrationFormComponent implements OnInit {
       }
     });
   }
-
-  // ===== פופאפ בחירת כנס =====
-
   openConferencePopup() {
     this.conferenceSearch = '';
     this.filteredConferences = [...this.allConferences];
@@ -175,77 +200,53 @@ export class RegistrationFormComponent implements OnInit {
     this.showAbstractNotice = false;
   }
 
-  // ===== שליחת הטופס =====
-
-  // onSubmit() {
-  //   if (this.regForm.invalid) {
-  //     this.regForm.markAllAsTouched();
-  //     return;
-  //   }
-
-  //   const formVal = this.regForm.value;
-  //   const abstract = this.abstractSaved ? this.abstractForm.value : null;
-
-  //   this.router.navigate(['/payment'], {
-  //     state: {
-  //       data: {
-  //         fullName:      formVal.fullName,
-  //         email:         formVal.email,
-  //         address:       formVal.address,
-  //         phone:         formVal.phone,
-  //         institution:   formVal.institution,
-  //         conferenceId:  formVal.conferenceId,
-  //         sessionId:     formVal.sessionId || '',
-  //         amount:        this.selectedConference?.price || 50,
-  //         hasAbstract:   this.abstractSaved,
-  //         abstractTitle: abstract?.title || null,
-  //         abstractBody:  abstract?.body  || null,
-  //         abstractNotes: abstract?.notes || null
-  //       }
-  //     }
-  //   });
-  // }
   onSubmit() {
     if (this.regForm.invalid) {
       this.regForm.markAllAsTouched();
       return;
     }
 
-    this.isLoading = true; // נציג מצב טעינה למשתמש
+    this.isLoading = true;
     const formVal = this.regForm.value;
     const abstract = this.abstractSaved ? this.abstractForm.value : null;
 
-    // הכנת האובייקט לשליחה לשרת
+    // התאמה מדויקת לשמות המשתנים ב-C# (אותיות גדולות בהתחלה)
+    // כך שה-Deserializer של השרת יזהה אותם בוודאות
     const payload = {
-      ...formVal,
-      hasAbstract: this.abstractSaved,
-      abstractTitle: abstract?.title || null,
-      abstractBody: abstract?.body || null,
-      abstractNotes: abstract?.notes || null,
-      paymentStatus: 'pending' // חשוב: השרת מגדיר זאת, אבל כדאי לדעת
+      FullName: formVal.fullName,
+      Email: formVal.email,
+      Phone: formVal.phone,
+      Address: formVal.address,
+      Institution: formVal.institution || '',
+      ConferenceId: formVal.conferenceId,
+      HasAbstract: this.abstractSaved,
+      AbstractTitle: abstract?.title || null,
+      AbstractBody: abstract?.body || null,
+      AbstractNotes: abstract?.notes || null
     };
 
-    // 1. קריאה לשרת לשמירת הנתונים ב-DB בסטטוס pending
     this.apiService.registerAttendee(payload).subscribe({
       next: (res: any) => {
         this.isLoading = false;
-        const attendeeId = res.attendeeId; // וודא שהשרת מחזיר את ה-ID החדש
+        const attendeeId = res.attendeeId;
         sessionStorage.setItem('pendingAttendeeId', attendeeId);
-        // 2. ניווט לעמוד התשלום עם ה-ID שנוצר
+
         this.router.navigate(['/payment'], {
           state: {
             data: {
               ...payload,
-              attendeeId: attendeeId, // מעבירים את ה-ID כדי שנוכל לעדכן אותו אח"כ
-              amount: this.selectedConference?.price || 50
+              attendeeId: attendeeId,
+              amount: this.selectedConference?.price || 1
             }
           }
         });
       },
       error: (err) => {
         this.isLoading = false;
-        alert('שגיאה בשמירת פרטי ההרשמה, אנא נסה שוב');
-        console.error(err);
+        // נדפיס את השגיאה המלאה לקונסול כדי לראות אם השרת החזיר לנו הודעת וולידציה
+        console.error('Server error details:', err);
+        const msg = err.error?.Message || err.error || 'שגיאה בשמירת פרטי ההרשמה';
+        alert(msg);
       }
     });
   }
@@ -253,3 +254,4 @@ export class RegistrationFormComponent implements OnInit {
   get f() { return this.regForm.controls; }
   get af() { return this.abstractForm.controls; }
 }
+

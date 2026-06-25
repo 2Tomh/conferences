@@ -63,21 +63,20 @@ export class AuthService {
     return this.isAdmin() || this.isFacultyManager();
   }
   // בתוך auth.service.ts
-  getCurrentUser(): any {
-    const token = localStorage.getItem('token'); // או השם שבו אתה שומר את הטוקן
-    if (!token) return null;
-
-    try {
-      // פענוח ידני של ה-Payload של הטוקן
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      return {
-        role: payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'],
-        scope: payload['ScopeId']
-      };
-    } catch (e) {
-      return null;
-    }
+getCurrentUser(): any {
+  const token = localStorage.getItem('token');
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return {
+      role: payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'],
+      scope: payload['ScopeId'],
+      managedConferenceId: payload['ManagedConferenceId'] || ''
+    };
+  } catch (e) {
+    return null;
   }
+}
   // --- מתודות ה-API ---
 
   createUser(userData: any): Observable<any> {

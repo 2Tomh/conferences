@@ -1,7 +1,7 @@
-<header class="hero-section">
+<!-- <header class="hero-section">
   <div class="hero-content">
     <span class="badge">Part of Mind-IL 2026</span>
-    <h1>{{ conference.name || conference.Conference }}</h1>
+    <h1>{{ conference.Name || conference.Conference }}</h1>
     <p class="description">{{ conference.tagline || conference.description }}</p>
 
     <div class="meta-info">
@@ -79,7 +79,7 @@
       <h3>Organizers</h3>
       <div class="organizers-layout">
         <div *ngFor="let org of conference.organizersDetails">
-          <strong>{{ org.name }}</strong><br><span>{{ org.affiliation }}</span>
+          <strong>{{ org.Name }}</strong>
         </div>
       </div>
     </section>
@@ -114,4 +114,126 @@
     <p>Registration, payment, and abstract submission are managed through the Mind-IL portal.</p>
   </div>
   <button class="btn-primary">Register Through Mind-IL →</button>
-</section>
+</section> -->
+<div *ngIf="conference; else loading">
+  <header class="hero-section">
+    <div class="hero-content">
+      <span class="badge">Part of Mind-IL 2026</span>
+      <h1>{{ conference?.Name || conference?.Conference }}</h1>
+      <p class="description">{{ conference?.tagline || conference?.description }}</p>
+
+      <div class="meta-info">
+        <span>📅 {{ formatDate(conference?.date) }}</span>
+        <span>📍 {{ conference?.location }}</span>
+        <span>👥 Organized by {{ conference?.organizerName || 'Tel Aviv University' }}</span>
+      </div>
+
+      <div class="hero-actions">
+        <button class="btn-primary">Register Through Mind-IL →</button>
+        <button class="btn-secondary">📝 Abstract Submission Open</button>
+      </div>
+    </div>
+    <div class="hero-image"></div>
+  </header>
+
+  <div class="info-grid">
+    <section class="card">
+      <div class="card-header"><i class="icon-about"></i>
+        <h3>About the Conference</h3>
+      </div>
+      <p>{{ conference?.description }}</p>
+    </section>
+
+    <section class="card highlights">
+      <div class="card-header"><i class="icon-attend"></i>
+        <h3>Who Should Attend?</h3>
+      </div>
+      <p>{{ conference?.whoShouldAttend || 'Researchers, practitioners, and students interested in the field.' }}</p>
+    </section>
+  </div>
+
+  <div class="stats-bar card">
+    <div class="stat-item">
+      <span>📅</span>
+      <div><strong>Date</strong>
+        <p>{{ formatDate(conference?.date) }}</p>
+      </div>
+    </div>
+    <div class="stat-item">
+      <span>📍</span>
+      <div><strong>Venue</strong>
+        <p>{{ conference?.location }}</p>
+      </div>
+    </div>
+    <div class="stat-item">
+      <span>🌐</span>
+      <div><strong>Language</strong>
+        <p>{{ conference?.language || 'English' }}</p>
+      </div>
+    </div>
+    <div class="stat-item">
+      <span>👥</span>
+      <div><strong>Participation</strong>
+        <p>By Registration</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-grid">
+    <div class="main-column">
+      <section class="card">
+        <h3>Program at a Glance</h3>
+        <div class="program-table">
+          <div class="row" *ngFor="let block of conference?.programBlocks">
+            <span class="time">{{ block?.startTime }} - {{ block?.endTime }}</span>
+            <span class="title">{{ block?.title }}</span>
+          </div>
+        </div>
+        <button class="btn-secondary mt-20">Download Detailed Program (PDF)</button>
+      </section>
+
+      <section class="card">
+        <h3>Organizers</h3>
+        <div class="organizers-layout">
+          <div *ngFor="let org of conference?.organizersDetails">
+            <strong>{{ org?.name }}</strong>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="side-column">
+      <section class="card">
+        <h3>Abstract Submission</h3>
+        <p>This conference welcomes abstract submissions through the Mind-IL registration system.</p>
+        <p><strong>Submission Deadline: {{ conference?.submissionDeadline | date:'longDate' }}</strong></p>
+      </section>
+
+      <section class="card">
+        <h3>Key Dates</h3>
+        <ul class="dates-list">
+          <li><span>Conference Date</span> <strong>{{ formatDate(conference?.date) }}</strong></li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h3>Contact</h3>
+        <p>For questions about the conference, please contact:<br>
+          <a href="mailto:{{conference?.contactEmail}}">{{conference?.contactEmail}}</a>
+        </p>
+      </section>
+    </div>
+  </div>
+
+  <section class="cta-banner">
+    <div>
+      <h3>Ready to Participate?</h3>
+      <p>Registration, payment, and abstract submission are managed through the Mind-IL portal.</p>
+    </div>
+    <button class="btn-primary">Register Through Mind-IL →</button>
+  </section>
+</div>
+
+<ng-template #loading>
+  <div class="loading-spinner">טוען נתונים...</div>
+</ng-template>

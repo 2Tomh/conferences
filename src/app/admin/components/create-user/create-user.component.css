@@ -1,69 +1,65 @@
-/* מכל עוטף - מותאם לשאר המערכת */
 .create-user-container {
-  padding: 20px;
-  background-color: #1e293b; /* מתאים לרקע של ה-Modal/Card */
-  border-radius: 12px;
-  color: white;
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.create-user-container h2 {
-  font-size: 1.5rem;
-  margin-bottom: 25px;
-  text-align: center;
-  color: #f8fafc;
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 1.5rem;
 }
 
-/* מבנה הטופס */
-.form-group {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-.form-group label {
-  font-size: 0.85rem;
-  margin-bottom: 8px;
-  color: #94a3b8;
+input, select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box; /* מבטיח שה-padding לא ירחיב את האלמנט */
+    transition: border-color 0.3s ease;
 }
 
-.create-user-container input, 
-.create-user-container select {
-  padding: 12px;
-  background: #0f172a; /* שדה קלט כהה */
-  border: 1px solid #334155;
-  border-radius: 8px;
-  color: white;
-  width: 100%;
-  box-sizing: border-box;
-  transition: border-color 0.2s;
+input:focus, select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
 }
 
-.create-user-container input:focus, 
-.create-user-container select:focus {
-  outline: none;
-  border-color: #6366f1;
-}
-
-/* כפתור יצירה */
 button[type="submit"] {
-  width: 100%;
-  padding: 12px;
-  background: #4f46e5;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: opacity 0.2s;
-}
-
-button[type="submit"]:disabled {
-  background: #334155;
-  color: #94a3b8;
-  cursor: not-allowed;
+    background-color: #007bff;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
 }
 
 button[type="submit"]:hover:not(:disabled) {
-  opacity: 0.9;
+    background-color: #0056b3;
+}
+
+button[type="submit"]:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+/* התאמה לעברית/ימין לשמאל */
+[dir="rtl"] .create-user-container {
+    text-align: right;
 }

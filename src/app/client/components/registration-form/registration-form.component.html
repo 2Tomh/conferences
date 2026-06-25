@@ -13,7 +13,10 @@
           (click)="openConferencePopup()">
           {{ selectedConference ? selectedConference.name : 'לחץ לבחירת כנס...' }}
         </div>
-        <div *ngIf="f['conferenceId'].invalid && f['conferenceId'].touched" class="error-text">יש לבחור כנס</div>
+
+        <div *ngIf="f['conferenceId'].invalid && f['conferenceId'].touched" class="error-text">
+          חובה לבחור כנס כדי להמשיך
+        </div>
       </div>
 
       <div *ngIf="selectedConference" class="form-row">
@@ -35,8 +38,13 @@
       <div class="form-row">
         <label>שם מלא</label>
         <input type="text" formControlName="fullName" class="form-control" placeholder="ישראל ישראלי">
-        <div *ngIf="f['fullName'].touched && f['fullName'].hasError('minlength')" class="error-text">נא להזין שם מלא
-          (מינימום 5 תווים)</div>
+
+        <div *ngIf="f['fullName'].touched">
+          <div *ngIf="f['fullName'].hasError('required')" class="error-text">שדה זה הוא חובה</div>
+          <div *ngIf="f['fullName'].hasError('minlength')" class="error-text">
+            נא להזין שם מלא (מינימום 5 תווים)
+          </div>
+        </div>
       </div>
 
       <div class="form-row">
@@ -76,6 +84,12 @@
       <button type="submit" [disabled]="regForm.invalid" class="btn-submit">
         המשך לתשלום
       </button>
+      <div *ngIf="regForm.invalid && regForm.touched" class="summary-errors"
+        style="margin-top: 10px; color: #e74c3c; font-size: 13px;">
+        <ul>
+          <li *ngIf="f['conferenceId'].invalid">נא לבחור כנס מהרשימה</li>
+        </ul>
+      </div>
     </form>
   </div>
 </div>
@@ -86,14 +100,14 @@
     <input type="text" (input)="onConferenceSearch($event)" placeholder="חפש כנס...">
     <div class="conf-list">
       <div *ngFor="let conf of filteredConferences" class="conf-item" (click)="selectConference(conf)">
-        {{ conf.name }} - {{ conf.location }}
+        {{ conf.Name || conf.name || 'כנס ללא שם' }}
       </div>
     </div>
     <button (click)="closeConferencePopup()">סגור</button>
   </div>
 </div>
 
-<div *ngIf="showAbstractPopup" class="popup-overlay">
+<!-- <div *ngIf="showAbstractPopup" class="popup-overlay">
   <div class="popup-content">
     <h3>הגשת תקציר</h3>
     <form [formGroup]="abstractForm">
@@ -107,6 +121,54 @@
         <textarea formControlName="body" placeholder="תוכן התקציר..." class="form-control" rows="4"></textarea>
         <div *ngIf="af['body'].hasError('required') && af['body'].touched" class="error-text">שדה חובה</div>
         <div *ngIf="af['body'].hasError('maxWords')" class="error-text">מקסימום 250 מילים</div>
+      </div>
+
+      <div class="form-row">
+        <label>הערות נוספות (אופציונלי):</label>
+        <textarea formControlName="notes" placeholder="הערות או בקשות מיוחדות..." class="form-control"
+          rows="2"></textarea>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 15px;">
+        <button type="button" class="btn-submit" (click)="saveAbstract()" style="flex: 2;">שמור תקציר</button>
+        <button type="button" (click)="closeAbstractPopup()"
+          style="flex: 1; border-radius: 50px; border: 1px solid #ccc; cursor: pointer; background: white;">ביטול</button>
+      </div>
+    </form>
+  </div>
+</div> -->
+<div *ngIf="showAbstractPopup" class="popup-overlay">
+  <div class="popup-content">
+    <h3>הגשת תקציר</h3>
+    <div *ngIf="selectedConference?.abstractGuidelines" class="notice-box"
+      style="margin-bottom: 15px; text-align: right; background-color: #e3f2fd; color: #1565c0; border: 1px solid #bbdefb; padding: 10px; border-radius: 8px;">
+      <strong style="display: block; margin-bottom: 5px;">הנחיות להגשה:</strong>
+      <p style="margin: 0; font-size: 0.9rem; line-height: 1.4;">{{ selectedConference.abstractGuidelines }}</p>
+    </div>
+
+    <form [formGroup]="abstractForm">
+      <div class="form-row">
+        <label>כותרת התקציר (עד 25 מילים)</label>
+        <input formControlName="title" placeholder="כותרת התקציר" class="form-control">
+        <div *ngIf="af['title'].touched">
+          <div *ngIf="af['title'].hasError('required')" class="error-text">שדה חובה</div>
+          <div *ngIf="af['title'].hasError('maxWords')" class="error-text">מקסימום 25 מילים</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>תוכן התקציר</label>
+        <textarea formControlName="body" placeholder="תוכן התקציר..." class="form-control" rows="4"></textarea>
+
+        <div class="char-counter" style="text-align: left; font-size: 11px; color: #666; margin-top: 4px;">
+          {{ af['body'].value?.length || 0 }} / 2500 תווים
+        </div>
+
+        <div *ngIf="af['body'].touched">
+          <div *ngIf="af['body'].hasError('required')" class="error-text">שדה חובה</div>
+          <div *ngIf="af['body'].hasError('maxWords')" class="error-text">מקסימום 250 מילים</div>
+          <div *ngIf="af['body'].hasError('maxChars')" class="error-text">מקסימום 2500 תווים</div>
+        </div>
       </div>
 
       <div class="form-row">

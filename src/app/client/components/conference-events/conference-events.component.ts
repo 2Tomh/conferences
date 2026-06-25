@@ -36,10 +36,10 @@ export class ConferenceEventsComponent implements OnInit {
   }
 
   // הפתרון החכם: מקבלים את כל אובייקט הכנס
-openDescription(conf: any) {
-  // נבדוק את כל האפשרויות לשם השדה
-  this.activeDescription = conf.Description || conf.description || 'אין תיאור זמין';
-}
+  openDescription(conf: any) {
+    // נבדוק את כל האפשרויות לשם השדה
+    this.activeDescription = conf.Description || conf.description || 'אין תיאור זמין';
+  }
 
   closeDescription(): void {
     this.activeDescription = null;
@@ -76,37 +76,38 @@ openDescription(conf: any) {
 
     // 1. סינון לפי קטגוריות
     if (this.selectedCategory && this.selectedCategory !== 'All') {
-      list = list.filter(c => c.Category === this.selectedCategory);
+      // נרמול גם של הקטגוריה כדי למנוע טעויות Case Sensitivity
+      list = list.filter(c =>
+        (c.Category || c.category || '').toLowerCase() === this.selectedCategory.toLowerCase()
+      );
     }
 
     if (!this.searchText) { return list; }
 
     const term = this.searchText.toLowerCase().trim();
 
-    // 2. איפוס העמוד לעמוד 1 בכל פעם שמחפשים (פותר את הבעיה מהתמונה הראשונה)
-    if (this.currentPage !== 1) {
-      setTimeout(() => this.currentPage = 1);
-    }
-
     return list.filter(c => {
-      const confNameEn = (c.Conference || c.conference || '').toLowerCase();
+      // א. נרמול שמות ושדות טקסט (שימוש ב-|| כדי לתפוס את כל הווריאציות)
+      const name = (c.Conference || c.conference || c.Name || c.name || '').toLowerCase();
       const description = (c.Description || c.description || '').toLowerCase();
 
-      // שליפת התרגום הדינמי (עובד בכל שפה שמוגדרת באתר)
+      // ב. טיפול ב-TranslateService:
+      // נבדוק אם התרגום אכן קיים ולא מחזיר את ה-Key עצמו
       const translationKey = 'CONFERENCES_NAMES.' + (c.Conference || c.conference);
-      const confNameTranslated = this.translate.instant(translationKey).toLowerCase();
+      const translated = this.translate.instant(translationKey);
+      const confNameTranslated = (translated !== translationKey ? translated : '').toLowerCase();
 
-      // 3. בדיקה אם החיפוש מתאים לשם המקורי, לשם המתורגם או לתיאור
-      const matchText = confNameEn.includes(term) ||
+      // ג. בדיקת התאמה (חיפוש גמיש)
+      const matchText = name.includes(term) ||
         confNameTranslated.includes(term) ||
         description.includes(term);
 
-      // 4. בדיקת המארגנים
-      const organizersArray = c.Organizers || c.organizers;
-      let matchOrganizer = false;
-      if (organizersArray && Array.isArray(organizersArray)) {
-        matchOrganizer = organizersArray.some((org: string) => org?.toLowerCase().includes(term));
-      }
+      // ד. בדיקת מארגנים (טיפול גם באובייקטים וגם במערך מחרוזות)
+      const organizers = c.Organizers || c.organizers || [];
+      const matchOrganizer = organizers.some((org: any) => {
+        const orgName = typeof org === 'string' ? org : (org.Name || org.name || '');
+        return orgName.toLowerCase().includes(term);
+      });
 
       return matchText || matchOrganizer;
     });
