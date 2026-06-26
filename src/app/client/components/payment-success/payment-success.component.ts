@@ -94,26 +94,27 @@ export class PaymentSuccessComponent implements OnInit, OnDestroy {
   //     }
   //   }, 1000);
   // }
-  ngOnInit(): void {
+ngOnInit(): void {
     this.orderId = this.route.snapshot.queryParamMap.get('orderId');
+    console.log('[SUCCESS] orderId from URL:', this.orderId);
 
-    // המתן 3 שניות לפני שליחת המייל כדי לתת לנוטיפיקציה להגיע
     if (this.orderId) {
-      setTimeout(() => {
-        this.apiService.sendPaymentConfirmation(this.orderId!).subscribe({
-          next: () => console.log('[EMAIL] בקשת מייל נשלחה'),
-          error: (err) => console.error('[EMAIL ERROR]', err)
-        });
-      }, 3000); // 3 שניות השהיה
+        setTimeout(() => {
+            console.log('[SUCCESS] sending confirmation for orderId:', this.orderId);
+            this.apiService.sendPaymentConfirmation(this.orderId!).subscribe({
+                next: (res) => console.log('[EMAIL] תשובה מהשרת:', res),
+                error: (err) => console.error('[EMAIL ERROR]', err)
+            });
+        }, 3000);
     }
 
     this.timerInterval = setInterval(() => {
-      this.countdown--;
-      if (this.countdown === 0) {
-        this.router.navigate(['/']);
-      }
+        this.countdown--;
+        if (this.countdown === 0) {
+            this.router.navigate(['/']);
+        }
     }, 1000);
-  }
+}
   ngOnDestroy(): void {
     if (this.timerInterval) {
       clearInterval(this.timerInterval);
