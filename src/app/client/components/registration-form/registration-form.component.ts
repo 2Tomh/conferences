@@ -228,14 +228,15 @@ export class RegistrationFormComponent implements OnInit {
     this.apiService.registerAttendee(payload).subscribe({
       next: (res: any) => {
         this.isLoading = false;
-        const attendeeId = res.attendeeId;
-        sessionStorage.setItem('pendingAttendeeId', attendeeId);
+        const attendeeId = res.attendeeId || res.AttendeeId;
+        const orderId = res.orderId || res.OrderId; // ← קח את ה-OrderId מהשרת!
 
         this.router.navigate(['/payment'], {
           state: {
             data: {
               ...payload,
               attendeeId: attendeeId,
+              orderId: orderId,  // ← שלח אותו לדף התשלום
               amount: this.selectedConference?.price || 1
             }
           }
