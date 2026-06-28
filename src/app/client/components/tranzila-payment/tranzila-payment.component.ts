@@ -27,7 +27,7 @@ export class TranzilaPaymentComponent implements OnInit, OnDestroy {
   private statusCheckInterval: any;
   private isCheckingStatus: boolean = false;
   private pollingStartTime: number = 0;
-  private readonly POLLING_TIMEOUT_MS = 30 * 1000; // 30 שניות
+  private readonly POLLING_TIMEOUT_MS = 10 * 60 * 1000; // 10 דקות
   constructor(private paymentService: PaymentService, private router: Router) { }
 
   ngOnInit() {
@@ -44,7 +44,6 @@ export class TranzilaPaymentComponent implements OnInit, OnDestroy {
 
     this.paymentService.preparePayment(payload).subscribe({
       next: (res) => {
-        console.log('[PAYMENT DATA]', res); // ← הוסף כאן
         res.amount = res.amount || 1;
         this.paymentData = res;
         this.loading = false;
