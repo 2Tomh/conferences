@@ -12,12 +12,22 @@ export class TranzilaPaymentComponent implements OnInit, OnDestroy {
 
   loading: boolean = true;
   error: string | null = null;
-  paymentData: PaymentPreparationResponse = { terminal: '', orderId: '', amount: 0, notifyUrl: '', successUrl: '', failureUrl: '' };
+  // paymentData: PaymentPreparationResponse = { terminal: '', orderId: '', amount: 0, notifyUrl: '', successUrl: '', failureUrl: '' };
 
-  private statusCheckInterval: any;
+  paymentData: PaymentPreparationResponse = {
+    terminal: '',
+    orderId: '',
+    amount: 0,
+    notifyUrl: '',
+    successUrl: '',
+    failureUrl: '',
+    email: '',   // ← הוסף
+    fullName: ''    // ← הוסף
+  };
+   private statusCheckInterval: any;
   private isCheckingStatus: boolean = false;
   private pollingStartTime: number = 0;
-private readonly POLLING_TIMEOUT_MS = 30 * 1000; // 30 שניות
+  private readonly POLLING_TIMEOUT_MS = 30 * 1000; // 30 שניות
   constructor(private paymentService: PaymentService, private router: Router) { }
 
   ngOnInit() {
@@ -29,7 +39,7 @@ private readonly POLLING_TIMEOUT_MS = 30 * 1000; // 30 שניות
 
     const payload = {
       ...data,
-       orderId: data.orderId
+      orderId: data.orderId
     };
 
     this.paymentService.preparePayment(payload).subscribe({
