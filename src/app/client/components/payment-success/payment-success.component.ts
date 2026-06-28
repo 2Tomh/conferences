@@ -1,5 +1,6 @@
 // import { Component, OnInit, OnDestroy } from '@angular/core';
 // import { ActivatedRoute, Router } from '@angular/router';
+// import { ApiService } from '../../../services/api.service';
 
 // @Component({
 //   selector: 'app-payment-success',
@@ -8,37 +9,27 @@
 // })
 // export class PaymentSuccessComponent implements OnInit, OnDestroy {
 //   orderId: string | null = null;
-
-//   // הוספת המשתנים החסרים שה-HTML מחפש
-//   loading: boolean = false; 
-//   success: boolean = true;  
-
-//   countdown: number = 4; 
+//   loading: boolean = false;
+//   success: boolean = true;
+//   countdown: number = 4;
 //   timerInterval: any;
 
 //   constructor(
 //     private route: ActivatedRoute,
-//     private router: Router 
+//     private router: Router,
+//     private apiService: ApiService
 //   ) { }
 
-//   // ngOnInit(): void {
-//   //   this.orderId = this.route.snapshot.queryParamMap.get('orderId');
-
-//   //   this.timerInterval = setInterval(() => {
-//   //     this.countdown--;
-//   //     if (this.countdown === 0) {
-//   //       this.router.navigate(['/']); 
-//   //     }
-//   //   }, 1000);
-//   // }
 // ngOnInit(): void {
 //     this.orderId = this.route.snapshot.queryParamMap.get('orderId');
 
-//     // שלח מייל אישור
 //     if (this.orderId) {
-//         this.http.post('https://conference-backend-8339.onrender.com/api/payment/send-confirmation', 
-//             { orderId: this.orderId }
-//         ).subscribe();
+//         setTimeout(() => {
+//             this.apiService.sendPaymentConfirmation(this.orderId!).subscribe({
+//                 next: (res) => console.log('[EMAIL] תשובה מהשרת:', res),
+//                 error: (err) => console.error('[EMAIL ERROR]', err)
+//             });
+//         }, 3000);
 //     }
 
 //     this.timerInterval = setInterval(() => {
@@ -77,44 +68,25 @@ export class PaymentSuccessComponent implements OnInit, OnDestroy {
     private apiService: ApiService
   ) { }
 
-  // ngOnInit(): void {
-  //   this.orderId = this.route.snapshot.queryParamMap.get('orderId');
+  ngOnInit(): void {
+    if (this.timerInterval) return;
 
-  //   if (this.orderId) {
-  //     this.apiService.sendPaymentConfirmation(this.orderId).subscribe({
-  //       next: () => console.log('[EMAIL] בקשת מייל נשלחה'),
-  //       error: (err) => console.error('[EMAIL ERROR]', err)
-  //     });
-  //   }
-
-  //   this.timerInterval = setInterval(() => {
-  //     this.countdown--;
-  //     if (this.countdown === 0) {
-  //       this.router.navigate(['/']);
-  //     }
-  //   }, 1000);
-  // }
-ngOnInit(): void {
     this.orderId = this.route.snapshot.queryParamMap.get('orderId');
-    console.log('[SUCCESS] orderId from URL:', this.orderId);
 
     if (this.orderId) {
-        setTimeout(() => {
-            console.log('[SUCCESS] sending confirmation for orderId:', this.orderId);
-            this.apiService.sendPaymentConfirmation(this.orderId!).subscribe({
-                next: (res) => console.log('[EMAIL] תשובה מהשרת:', res),
-                error: (err) => console.error('[EMAIL ERROR]', err)
-            });
-        }, 3000);
+      setTimeout(() => {
+        this.apiService.sendPaymentConfirmation(this.orderId!).subscribe();
+      }, 3000);
     }
 
     this.timerInterval = setInterval(() => {
-        this.countdown--;
-        if (this.countdown === 0) {
-            this.router.navigate(['/']);
-        }
+      this.countdown--;
+      if (this.countdown === 0) {
+        this.router.navigate(['/']);
+      }
     }, 1000);
-}
+  }
+
   ngOnDestroy(): void {
     if (this.timerInterval) {
       clearInterval(this.timerInterval);
