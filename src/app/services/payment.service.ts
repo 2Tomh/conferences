@@ -4,15 +4,25 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.prod';
 import { PaymentInitRequest } from '../interfaces/PaymentInitRequest';
 
+// export interface PaymentPreparationResponse {
+//     terminal: string;
+//     orderId: string;
+//     amount: number;
+//     notifyUrl: string;
+//     successUrl?: string; // הוספת השדה הזה
+//     failureUrl?: string;
+// }
+
 export interface PaymentPreparationResponse {
     terminal: string;
     orderId: string;
     amount: number;
     notifyUrl: string;
-    successUrl?: string; // הוספת השדה הזה
+    successUrl?: string;
     failureUrl?: string;
+    email?: string;      // ← הוסף
+    fullName?: string;   // ← הוסף
 }
-
 @Injectable({ providedIn: 'root' })
 export class PaymentService {
     private api = environment.apiUrl;
