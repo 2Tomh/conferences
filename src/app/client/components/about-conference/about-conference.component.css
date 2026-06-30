@@ -1,182 +1,123 @@
-/* ========== ABOUT SECTION ========== */
+/* ═══════════════════════════════════════════
+   MIND-IL — About Conference Component
+   ═══════════════════════════════════════════ */
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .about-section {
-    width: 85%;
-    box-sizing: border-box;
-    background: white;
-    margin: auto;
-    border-radius: 25px;
-    position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-.about-section .container {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 0 16px;
-    box-sizing: border-box;
+.container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
+/* ── Card ── */
 .about-card {
-    /* border-radius: 18px;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    box-shadow: 0 10px 40px rgba(0, 242, 255, 0.05);
-    position: relative;
-    overflow: hidden;
-    direction: rtl; */
-    padding: 24px 24px 24px 20px;
-    /* box-sizing: border-box; */
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #E0DEDB;
+  padding: 40px 40px 32px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
 }
 
-.about-card::before {
-    content: '';
-    position: absolute;
-    top: -80px;
-    left: -80px;
-    width: 250px;
-    height: 250px;
-    pointer-events: none;
+/* Gold accent line */
+.accent-line {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #C9A84C, #E8C97A 50%, #C9A84C);
 }
 
-
-
+/* ── Lead ── */
 .about-lead {
-    font-size: clamp(1rem, 2.5vw, 1.2rem);
-    font-weight: 700;
-    color: black;
-    margin-bottom: 28px;
-    line-height: 1.6;
-    letter-spacing: -0.3px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0F1B4C;
+  line-height: 1.65;
+  margin: 0 0 22px;
+  padding-top: 6px;
 }
+
+/* ── Body ── */
+.about-content { flex: 1; }
 
 .about-content p {
-    color: #000000;
-    font-size: clamp(0.85rem, 2vw, 0.95rem);
-    line-height: 1.8;
-    margin-bottom: 16px;
+  font-size: 0.88rem;
+  line-height: 1.9;
+  color: #4a4a6a;
+  margin-bottom: 14px;
 }
 
-.about-content strong {
-    color: #000000;
-    font-weight: 700;
+.about-content p:last-child { margin-bottom: 0; }
+
+.about-content p strong {
+  color: #0F1B4C;
+  font-weight: 600;
 }
 
-.about-footer {
-    margin-top: 32px;
-    padding-top: 24px;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.about-footer p {
-    color: rgba(0, 0, 0, 0.4);
-    font-size: 0.85rem;
-    margin: 0;
-    font-style: italic;
-}
-
-/* .about-committee {
-    margin-top: 1.5rem;
-    padding-top: 1rem;
-    border-top: 1px solid #e0e0e0;
-    font-size: clamp(0.82rem, 2vw, 0.95rem);
-    color: #555;
-    line-height: 1.8;
-    border-bottom: 1px solid lightblue;
-}
-
-.about-committee :last-child {
-    border-bottom: none;
-}
-
-.about-committee a {
-    color: #2563eb;
-    text-decoration: none;
-}
-
-.about-committee a:hover {
-    text-decoration: underline;
-} */
-
-/* ========== RESPONSIVE ========== */
-
-/* מובייל קטן — עד 480px */
-@media (max-width: 480px) {
-    .about-section .container {
-        padding: 0 8px;
-    }
-
-    .about-card {
-        border-radius: 12px;
-        padding: 16px 16px 16px 12px;
-    }
-
-    .accent-line {
-        margin-bottom: 18px;
-    }
-
-    .about-footer {
-        margin-top: 20px;
-        padding-top: 16px;
-    }
-
-    .about-committee {
-        margin-top: 1rem;
-    }
-}
-
-/* טאבלט — 481px עד 768px */
-@media (min-width: 481px) and (max-width: 768px) {
-
-    .about-section .container {
-        padding: 0 12px;
-    }
-
-    .about-card {
-        padding: 20px 20px 20px 16px;
-    }
-}
-
-/* דסקטופ — 1025px+ */
-@media (min-width: 1025px) {
-    .about-section .container {
-        max-width: 860px;
-    }
-}
-
-/* מסכים ענקיים — 1600px+ */
-@media (min-width: 1600px) {
-    .about-section .container {
-        max-width: 1000px;
-    }
-}
-
-:host-context([lang="en"]) .about-card {
-    direction: ltr;
-    text-align: left;
-}
-
-:host-context([lang="en"]) .about-committee {
-    text-align: left;
-}
-
-:host-context([lang="en"]) .about-footer {
-    text-align: left;
+/* ── CTA ── */
+.about-actions {
+  margin-top: auto;
+  padding-top: 30px;
+  text-align: center;
 }
 
 .survey-btn {
-    background: none;
-    background-color: rgba(0, 0, 0, 0);
-    background-color: rgba(0, 0, 0, 0);
-    border: none;
-    font-size: 1rem;
-    font-weight: 500;
-    color: #555;
-    padding: 10px 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border-radius: 20px;
-    color: #ffffff;
-    background-color: #1a237e;
-    font-weight: bold;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 12px 28px;
-    font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #C9A84C;
+  color: #0F1B4C;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 0.87rem;
+  letter-spacing: 0.05em;
+  padding: 14px 34px;
+  border: 2px solid #C9A84C;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.22s, color 0.22s, transform 0.22s, box-shadow 0.22s;
+}
+
+.survey-btn:hover {
+  background: transparent;
+  color: #C9A84C;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(201, 168, 76, 0.25);
+}
+
+.survey-btn::after {
+  content: '→';
+  font-size: 1rem;
+  transition: transform 0.2s;
+}
+
+.survey-btn:hover::after { transform: translateX(4px); }
+
+/* ── Responsive ── */
+@media (max-width: 860px) {
+  .about-card { padding: 30px 26px; }
+  .about-lead  { font-size: 0.95rem; }
+  .about-content p { font-size: 0.85rem; }
+}
+
+@media (max-width: 480px) {
+  .about-card { padding: 22px 18px; }
+  .survey-btn { width: 100%; justify-content: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .survey-btn, .survey-btn::after { transition: none; }
 }

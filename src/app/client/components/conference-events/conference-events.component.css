@@ -1,6 +1,4 @@
-/* ==========================================================================
-   Events Container Base Style
-   ========================================================================== */
+/* 
 .events-container {
   box-sizing: border-box;
   margin-top: 35px;
@@ -13,9 +11,7 @@
   margin-left: auto;
 }
 
-/* ==========================================================================
-   Hero & Headers
-   ========================================================================== */
+
 .section-title {
   font-size: 2.4rem;
   font-weight: 700;
@@ -40,9 +36,6 @@
   margin-bottom: 36px;
 }
 
-/* ==========================================================================
-   Category Navbar (טאבים לסינון תחומים)
-   ========================================================================== */
 .category-navbar {
   display: flex;
   justify-content: center;
@@ -77,9 +70,7 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* ==========================================================================
-   Table & Content Wrapper (Desktop Views)
-   ========================================================================== */
+
 .table-wrapper {
   border-radius: 16px;
   overflow: hidden;
@@ -169,15 +160,10 @@
   padding: 1px 5px;
   margin-right: 4px;
 }
-
-/* הסתרת תוויות המובייל כברירת מחדל בדסקטופ */
 .mobile-label {
   display: none;
 }
 
-/* ==========================================================================
-   Action Elements (Buttons & Popup)
-   ========================================================================== */
 .text-center {
   text-align: center;
 }
@@ -218,7 +204,6 @@
   font-size: 0.9rem;
 }
 
-/* רכיבי המודאל / פופאפ */
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -289,9 +274,7 @@
   }
 }
 
-/* ==========================================================================
-   Pagination
-   ========================================================================== */
+
 .pagination {
   display: flex;
   justify-content: center;
@@ -337,9 +320,7 @@
   margin-right: 8px;
 }
 
-/* ==========================================================================
-   Responsive Breakpoints (Tablets)
-   ========================================================================== */
+
 @media (max-width: 900px) {
   .events-container {
     max-width: 95%;
@@ -351,9 +332,6 @@
   }
 }
 
-/* ==========================================================================
-   Responsive Breakpoints (Mobile Phones - Pure Layout & Style Changes)
-   ========================================================================== */
 @media (max-width: 600px) {
   .events-container {
     max-width: 100%;
@@ -378,12 +356,10 @@
     margin-bottom: 24px;
   }
 
-  /* הסתרת כותרות הטבלה המקוריות במובייל */
   .events-table thead {
     display: none;
   }
 
-  /* הפיכת השורות לכרטיסים מרווחים ונקיים */
   .events-table tbody tr {
     display: block;
     border: 1px solid #e2e8f0;
@@ -401,19 +377,16 @@
     box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
   }
 
-  /* הפיכת התאים לבלוקים אנכיים מיושרים לפי כיווניות */
   .events-table td {
     display: block;
     padding: 10px 0 !important;
     border: none;
     font-size: 0.9rem;
     text-align: right;
-    /* ברירת מחדל לעברית */
     width: 100% !important;
     box-sizing: border-box;
   }
 
-  /* חשיפת תוויות המובייל הדינמיות ועיצובן */
   .mobile-label {
     display: block;
     font-size: 0.7rem;
@@ -425,14 +398,12 @@
     opacity: 0.85;
   }
 
-  /* שם הכנס */
   .conf-name-cell strong {
     font-size: 1.05rem;
     color: #0f172a;
     line-height: 1.4;
   }
 
-  /* רשימת המארגנים */
   .organizers-list {
     padding-right: 0;
     padding-left: 0;
@@ -445,7 +416,6 @@
     color: #475569;
   }
 
-  /* כפתורי פעולה וקישורים במובייל */
   .events-table td.text-center {
     text-align: right;
     margin-top: 6px;
@@ -468,7 +438,6 @@
     box-sizing: border-box;
   }
 
-  /* רכיב הניווט (Pagination) */
   .pagination {
     flex-wrap: wrap;
     justify-content: center;
@@ -492,9 +461,7 @@
   }
 }
 
-/* ==========================================================================
-   Desktop Screen Scaling (Large Displays)
-   ========================================================================== */
+
 @media (min-width: 1400px) {
   .events-container {
     max-width: 1200px;
@@ -507,9 +474,7 @@
   }
 }
 
-/* ==========================================================================
-   Internationalization & Language Direction Rules (RTL / LTR)
-   ========================================================================== */
+
 .events-table {
   direction: inherit;
 }
@@ -539,7 +504,6 @@
   margin-left: 4px;
 }
 
-/* היפוך כיווניות של תאי הכרטיס במובייל לאנגלית */
 :host-context([lang="en"]) @media (max-width: 600px) {
   .events-table td {
     text-align: left;
@@ -550,28 +514,499 @@
   }
 }
 
-/* עיצוב אחיד לכפתורים בטבלה */
 .view-desc-btn {
   display: inline-block;
   padding: 6px 12px;
-  background-color: #1a237e; /* או הצבע הראשי של האתר שלך */
+  background-color: #1a237e; 
   color: white;
   border-radius: 4px;
   text-decoration: none;
   font-size: 14px;
   text-align: center;
-  min-width: 100px; /* רוחב מינימלי כדי שייראו טוב */
+  min-width: 100px; 
   transition: background-color 0.3s;
 }
 
 .view-desc-btn:hover {
-  background-color: #283593; /* גוון מעט שונה למעבר עכבר */
+  background-color: #283593; 
 }
 
-/* הגנה למובייל בתוך ה-Actions */
 .survey-links-wrapper {
   display: flex; 
   flex-direction: column; 
   gap: 8px; 
   align-items: center;
+} */
+/* ═══════════════════════════════════════════
+   MIND-IL — Conference Events Page
+   ═══════════════════════════════════════════ */
+
+:host {
+  display: block;
+  background: #F8F6F0;
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+}
+
+* {
+  font-family: Arial, sans-serif !important;
+}
+
+/* ══ PAGE WRAPPER ══ */
+.events-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 60px 100px;
+}
+
+/* ══ TITLE ══ */
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 700;
+  color: #0F1B4C;
+  margin-bottom: 8px;
+  position: relative;
+  padding-bottom: 16px;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 52px;
+  height: 3px;
+  background: linear-gradient(90deg, #C9A84C, #E8C97A);
+  border-radius: 2px;
+}
+
+/* ══ MISSING CONF MESSAGE ══ */
+.missing-conf-message {
+  margin: 24px 0 32px !important;
+  padding: 14px 20px !important;
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  border-radius: 8px !important;
+  font-size: 0.88rem;
+  color: #4a4a6a;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.missing-conf-message a {
+  color: #C9A84C !important;
+  font-weight: 600 !important;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.missing-conf-message a:hover {
+  opacity: 0.75;
+}
+
+/* ══ CATEGORY NAVBAR ══ */
+.category-navbar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #E8E8ED;
+}
+
+.nav-tab {
+  background: transparent;
+  border: 1.5px solid #E8E8ED;
+  color: #4a4a6a;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 8px 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+.nav-tab:hover {
+  border-color: #C9A84C;
+  color: #C9A84C;
+}
+
+.nav-tab.active {
+  background: #0F1B4C;
+  border-color: #0F1B4C;
+  color: #C9A84C;
+  font-weight: 600;
+}
+
+/* ══ SEARCH ══ */
+.search-container {
+  margin-bottom: 24px !important;
+  text-align: right;
+}
+
+.search-container input {
+  padding: 11px 16px !important;
+  width: 300px !important;
+  border-radius: 8px !important;
+  border: 1.5px solid #E8E8ED !important;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.88rem;
+  color: #1a1a2e;
+  background: #ffffff;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-container input:focus {
+  border-color: #C9A84C !important;
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.12);
+}
+
+.search-container input::placeholder {
+  color: #aaa;
+}
+
+/* ══ TABLE ══ */
+.table-wrapper {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #E8E8ED;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(15, 27, 76, 0.06);
+}
+
+.events-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+/* Head */
+.events-table thead tr {
+  background: #0F1B4C;
+}
+
+.events-table thead th {
+  padding: 16px 20px;
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #C9A84C;
+  white-space: nowrap;
+  border: none;
+}
+
+/* Body rows */
+.events-table tbody tr {
+  border-bottom: 1px solid #F0EEEA;
+  transition: background 0.18s;
+}
+
+.events-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.events-table tbody tr:hover {
+  background: rgba(201, 168, 76, 0.04);
+}
+
+.events-table tbody td {
+  padding: 16px 20px;
+  color: #2a2a4a;
+  vertical-align: top;
+  line-height: 1.55;
+}
+
+.conf-name-cell strong {
+  color: #0F1B4C;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Organizers list */
+.organizers-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.organizers-list li {
+  font-size: 0.83rem;
+  color: #4a4a6a;
+  padding-left: 12px;
+  position: relative;
+}
+
+.organizers-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #C9A84C;
+}
+
+/* Mobile label (hidden on desktop) */
+.mobile-label {
+  display: none;
+}
+
+/* Action buttons */
+.view-desc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: #0F1B4C;
+  border: 1.5px solid rgba(15, 27, 76, 0.25);
+  border-radius: 6px;
+  padding: 7px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.2s;
+  min-width: 90px;
+}
+
+.view-desc-btn:hover {
+  background: #0F1B4C;
+  color: #C9A84C;
+  border-color: #0F1B4C;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* ══ PAGINATION ══ */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+
+.page-btn {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 1.5px solid #E8E8ED;
+  border-radius: 8px;
+  color: #4a4a6a;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+  border-color: #C9A84C;
+  color: #C9A84C;
+}
+
+.page-btn.active {
+  background: #0F1B4C;
+  border-color: #0F1B4C;
+  color: #C9A84C;
+  font-weight: 700;
+}
+
+.page-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.page-info {
+  font-size: 0.8rem;
+  color: #aaa;
+  margin-left: 8px;
+  font-weight: 500;
+}
+
+/* ══ POPUP ══ */
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 27, 76, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.popup-content {
+  background: #ffffff;
+  border-radius: 12px;
+  max-width: 560px;
+  width: 100%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(15, 27, 76, 0.25);
+  animation: slideUp 0.25s ease;
+  position: relative;
+}
+
+.popup-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #C9A84C, #E8C97A, #C9A84C);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid #F0EEEA;
+}
+
+.popup-header h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0F1B4C;
+  margin: 0;
+}
+
+.close-popup-btn {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  color: #aaa;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 4px;
+  transition: color 0.2s;
+}
+
+.close-popup-btn:hover {
+  color: #0F1B4C;
+}
+
+.popup-body {
+  padding: 20px 24px 24px;
+  overflow-y: auto;
+  font-size: 0.9rem;
+  line-height: 1.8;
+  color: #4a4a6a;
+}
+
+/* ══ RESPONSIVE ══ */
+@media (max-width: 768px) {
+  .events-container {
+    padding: 40px 20px 60px;
+  }
+
+  .events-table thead {
+    display: none;
+  }
+
+  .events-table tbody tr {
+    display: block;
+    margin-bottom: 16px;
+    border: 1px solid #E8E8ED;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(15, 27, 76, 0.05);
+  }
+
+  .events-table tbody td {
+    display: block;
+    padding: 12px 16px;
+    border-bottom: 1px solid #F0EEEA;
+  }
+
+  .events-table tbody td:last-child {
+    border-bottom: none;
+  }
+
+  .mobile-label {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #C9A84C;
+    margin-bottom: 4px;
+  }
+
+  .search-container input {
+    width: 100% !important;
+  }
+
+  .category-navbar {
+    gap: 6px;
+  }
+
+  .nav-tab {
+    font-size: 0.78rem;
+    padding: 7px 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .popup-overlay,
+  .popup-content {
+    animation: none;
+  }
+
+  .nav-tab,
+  .view-desc-btn,
+  .page-btn {
+    transition: none;
+  }
 }

@@ -64,30 +64,30 @@ export class RegistrationFormComponent implements OnInit {
     this.loadConferences();
   }
 
-  initForms() {
-    this.regForm = this.fb.group({
-      fullName: ['', [Validators.required, Validators.minLength(5)]],
-      email: ['', [
-        Validators.required,
-        Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]{2,}\.[a-zA-Z]{2,}$/)
-      ]],
-      phone: ['', [
-        Validators.required,
-        Validators.pattern(/^0[0-9]{9,10}$|^\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}$/)
-      ]],
-      address: ['', Validators.required],
-      institution: [''],
-      conferenceId: ['', Validators.required]
-    });
+  // initForms() {
+  //   this.regForm = this.fb.group({
+  //     fullName: ['', [Validators.required, Validators.minLength(5)]],
+  //     email: ['', [
+  //       Validators.required,
+  //       Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]{2,}\.[a-zA-Z]{2,}$/)
+  //     ]],
+  //     phone: ['', [
+  //       Validators.required,
+  //       Validators.pattern(/^0[0-9]{9,10}$|^\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}$/)
+  //     ]],
+  //     address: ['', Validators.required],
+  //     institution: [''],
+  //     conferenceId: ['', Validators.required]
+  //   });
 
-    this.abstractForm = this.fb.group({
-      // כותרת עד 25 מילים
-      title: ['', [Validators.required, maxWords(25)]],
-      // גוף עד 250 מילים או 2500 תווים
-      body: ['', [Validators.required, abstractValidator(250, 2500)]],
-      notes: ['']
-    });
-  }
+  //   this.abstractForm = this.fb.group({
+  //     // כותרת עד 25 מילים
+  //     title: ['', [Validators.required, maxWords(25)]],
+  //     // גוף עד 250 מילים או 2500 תווים
+  //     body: ['', [Validators.required, abstractValidator(250, 2500)]],
+  //     notes: ['']
+  //   });
+  // }
 
   // ===== פופאפ בחירת כנס =====
   // loadConferences() {
@@ -113,6 +113,38 @@ export class RegistrationFormComponent implements OnInit {
   //     }
   //   });
   // }
+  // החלף את initForms() בזה:
+
+  initForms() {
+    this.regForm = this.fb.group({
+      fullName: ['', [
+        Validators.required,
+        Validators.minLength(5),
+        Validators.pattern(/^[\u0590-\u05FF\u05F0-\u05F4a-zA-Z'"-]+(?:\s[\u0590-\u05FF\u05F0-\u05F4a-zA-Z'"-]+)+$/)
+      ]],
+      email: ['', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]{2,}\.[a-zA-Z]{2,}$/)
+      ]],
+      phone: ['', [
+        Validators.required,
+        Validators.pattern(/^0[0-9]{9}$/)
+      ]],
+      address: ['', [
+        Validators.required,
+        Validators.minLength(5),
+        Validators.pattern(/^.+[\s,].+$/)
+      ]],
+      institution: [''],
+      conferenceId: ['', Validators.required]
+    });
+
+    this.abstractForm = this.fb.group({
+      title: ['', [Validators.required, maxWords(25)]],
+      body: ['', [Validators.required, abstractValidator(250, 2500)]],
+      notes: ['']
+    });
+  }
   loadConferences() {
     this.isLoading = true;
     this.apiService.getSurveys().subscribe({

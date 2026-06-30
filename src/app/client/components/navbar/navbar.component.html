@@ -1,4 +1,4 @@
-<div class="main-nav">
+<!-- <div class="main-nav">
   <nav class="science-navbar">
     <div class="nav-container">
 
@@ -11,7 +11,7 @@
         <a routerLink="/ConferenceEvents" class="nav-link" routerLinkActive="active">
           {{ 'Client_NAV.SURVEYS' | translate }}
         </a>
-        <a routerLink="/register/1" class="nav-link btn-register" routerLinkActive="active">
+        <a class="nav-link btn-register" (click)="openRegistration()">
           {{ 'Client_NAV.REGISTER_CONFERENCE' | translate }}
         </a>
       </div>
@@ -19,4 +19,55 @@
       <app-header-actions></app-header-actions>
     </div>
   </nav>
+</div>
+
+<div class="modal-overlay" *ngIf="showRegistrationModal" (click)="closeRegistration()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <button class="modal-close" (click)="closeRegistration()">✕</button>
+    <app-registration-form></app-registration-form>
+  </div>
+</div> -->
+<div class="main-nav">
+  <nav class="science-navbar">
+    <div class="nav-container">
+      <div class="brand-text-only" routerLink="/"></div>
+
+      <button class="hamburger-btn" (click)="toggleMobileMenu()" [class.open]="mobileMenuOpen"
+        aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <div class="links-section" [class.mobile-open]="mobileMenuOpen">
+        <a routerLink="/" class="nav-link" routerLinkActive="active"
+          [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileMenu()">
+          {{ 'Client_NAV.HOME' | translate }}
+        </a>
+        <a routerLink="/ConferenceEvents" class="nav-link" routerLinkActive="active"
+          (click)="closeMobileMenu()">
+          {{ 'Client_NAV.SURVEYS' | translate }}
+        </a>
+        <!-- <a class="nav-link btn-register" (click)="openRegistration(); closeMobileMenu()">
+          {{ 'Client_NAV.REGISTER_CONFERENCE' | translate }}
+        </a> -->
+        <div class="mobile-lang-wrapper">
+          <app-header-actions></app-header-actions>
+        </div>
+      </div>
+
+      <div class="desktop-actions">
+        <app-header-actions></app-header-actions>
+      </div>
+    </div>
+  </nav>
+
+  <div class="mobile-menu-backdrop" *ngIf="mobileMenuOpen" (click)="closeMobileMenu()"></div>
+</div>
+
+<div class="modal-overlay" *ngIf="showRegistrationModal" (click)="closeRegistration()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <button class="modal-close" (click)="closeRegistration()">✕</button>
+    <app-registration-form></app-registration-form>
+  </div>
 </div>

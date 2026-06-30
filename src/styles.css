@@ -1,48 +1,86 @@
+/* ── ייבוא חייב להיות ראשון ── */
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
-/* src/styles.css */
+/* ── פונטים מקומיים ── */
 @font-face {
-    font-family: 'Open Sans';
-    /* נקודה אחת בלבד! כי styles.css ו-assets נמצאים שניהם בתוך src */
-    src: url('./assets/Open_Sans/static/OpenSans-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
+  font-family: 'Open Sans';
+  src: url('./assets/Open_Sans/static/OpenSans-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: 'Open Sans';
-    /* אם יש לך קובץ Bold, וודא שזה השם שלו */
-    src: url('./assets/Open_Sans/static/OpenSans-Bold.ttf') format('truetype');
-    font-weight: bold;
-    font-style: normal;
+  font-family: 'Open Sans';
+  src: url('./assets/Open_Sans/static/OpenSans-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
 }
 
-body {
-    font-family: 'Open Sans', sans-serif !important;
-    overflow-x: hidden;
-    margin: 0 auto;
-}
-
-html {
-  height: 100%;
-}
-/* מצב בהיר (ברירת מחדל) */
+/* ── משתני צבע ── */
 :root {
   --bg-color: #ffffff;
   --text-color: #000000;
   --card-bg: #f4f4f4;
 }
 
-/* מצב כהה */
 .dark-mode {
   --bg-color: #121212;
   --text-color: #ffffff;
   --card-bg: #1e1e1e;
 }
 
-/* החלת המשתנים על כל האפליקציה */
-/* body {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  transition: background-color 0.3s, color 0.3s;
-} */
+/* ── אנימציות ── */
+@keyframes twinkle {
+
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+}
+
+/* ── בסיס ── */
+* {
+  font-family: Arial, sans-serif !important;
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+a,
+button,
+input,
+textarea,
+label,
+li,
+td,
+th {
+  font-family: Arial, sans-serif !important;
+}
+
+html {
+  height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding-top: 64px;
+  background: #F8F6F0;
+  overflow-x: hidden;
+  font-family: Arial, sans-serif;
+}

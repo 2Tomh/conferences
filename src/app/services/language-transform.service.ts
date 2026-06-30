@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
   providedIn: 'root'
 })
 export class LanguageTransformService {
-  private isEnglishSubject = new BehaviorSubject<boolean>(true); // ברירת מחדל אנגלית
+  private isEnglishSubject = new BehaviorSubject<boolean>(true);
   isEnglish$ = this.isEnglishSubject.asObservable();
 
   constructor(private translate: TranslateService) {
@@ -14,7 +14,11 @@ export class LanguageTransformService {
     this.translate.setDefaultLang('en');
   }
 
-  // פונקציית אתחול שתיקרא מתוך ה-AppComponent
+  // ── הוסף את זה ──
+  get currentLang(): string {
+    return this.translate.currentLang || 'en';
+  }
+
   init() {
     const savedLang = localStorage.getItem('lang') || 'en';
     this.useLanguage(savedLang);
@@ -29,8 +33,6 @@ export class LanguageTransformService {
     this.translate.use(lang);
     localStorage.setItem('lang', lang);
     this.isEnglishSubject.next(lang === 'en');
-    
-    // עדכון DOM
     document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
     document.documentElement.lang = lang;
   }

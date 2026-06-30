@@ -130,4 +130,54 @@ export class HomeComponent implements OnInit {
       });
     }
   }
+  ngAfterViewInit(): void {
+    this.generateStars();
+    this.initScrollSnap();
+  }
+
+  scrollTo(sectionId: string): void {
+    const el = document.getElementById(sectionId);
+    const wrapper = document.querySelector('.main-card-wrapper') as HTMLElement;
+    if (el && wrapper) {
+      wrapper.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
+    }
+  }
+
+  generateStars(): void {
+    const container = document.getElementById('stars');
+    if (!container) return;
+    for (let i = 0; i < 120; i++) {
+      const star = document.createElement('div');
+      star.style.cssText = `
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.6);
+      left: ${Math.random() * 100}%;
+      top: ${Math.random() * 100}%;
+      width: ${1 + Math.random() * 2}px;
+      height: ${1 + Math.random() * 2}px;
+      opacity: ${0.2 + Math.random() * 0.6};
+      animation: twinkle ${2 + Math.random() * 4}s ease-in-out infinite ${Math.random() * 4}s;
+    `;
+      container.appendChild(star);
+    }
+  }
+
+  initScrollSnap(): void {
+    const wrapper = document.querySelector('.main-card-wrapper') as HTMLElement;
+    const dots = document.querySelectorAll('.dot');
+    const sections = ['section-hero', 'section-about', 'section-partners'];
+
+    if (!wrapper) return;
+
+    wrapper.addEventListener('scroll', () => {
+      const scrollTop = wrapper.scrollTop;
+      const height = wrapper.clientHeight;
+      const index = Math.round(scrollTop / height);
+
+      dots.forEach((d, i) => {
+        d.classList.toggle('active', i === index);
+      });
+    });
+  }
 }

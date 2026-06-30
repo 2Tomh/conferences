@@ -8,6 +8,9 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class NavbarComponent {
   menuOpen = false;
+  showRegistrationModal = false;
+  mobileMenuOpen = false;
+
   constructor(private translate: TranslateService) { }
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
@@ -15,5 +18,20 @@ export class NavbarComponent {
   onToggleLanguage(): void {
     const nextLang = this.translate.currentLang === 'en' ? 'he' : 'en';
     this.translate.use(nextLang);
+  }
+
+  openRegistration() {
+    this.showRegistrationModal = true;
+  }
+
+  closeRegistration() {
+    this.showRegistrationModal = false;
+  }
+  toggleMobileMenu(): void {
+    this.mobileMenuOpen = !this.mobileMenuOpen;
+  }
+
+  closeMobileMenu(): void {
+    this.mobileMenuOpen = false;
   }
 }

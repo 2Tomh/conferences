@@ -7,9 +7,13 @@ import { LanguageTransformService } from '../../../services/language-transform.s
   styleUrls: ['./header-actions.component.css']
 })
 export class HeaderActionsComponent {
-@Output() toggleDarkMode = new EventEmitter<void>();
+  @Output() toggleDarkMode = new EventEmitter<void>();
 
   constructor(public langService: LanguageTransformService) { }
+
+  get currentLang(): string {
+    return this.langService.currentLang; // או איך שהשפה הנוכחית נשמרת בשירות
+  }
 
   onToggleLanguage(): void {
     this.langService.toggleLanguage();
