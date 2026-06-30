@@ -1,3 +1,4 @@
+
 * {
   font-family: Arial, sans-serif !important;
 }
@@ -476,4 +477,204 @@ textarea.form-control {
 @media (prefers-reduced-motion: reduce) {
   .popup-overlay, .popup-content { animation: none; }
   .btn-submit, .btn-sm, .form-control { transition: none; }
+}
+/* ══ STEP PROGRESS BAR ══ */
+.step-progress {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 28px 40px 8px;
+  gap: 0;
+}
+
+.step-dot-wrapper {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  max-width: 140px;
+  position: relative;
+}
+
+.step-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #E8E8ED;
+  background: #ffffff;
+  color: #aaa;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  z-index: 2;
+}
+
+.step-dot.active {
+  border-color: #C9A84C;
+  background: #C9A84C;
+  color: #0F1B4C;
+}
+
+.step-dot.done {
+  border-color: #0F1B4C;
+  background: #0F1B4C;
+  color: #C9A84C;
+}
+
+.step-label {
+  position: absolute;
+  top: 38px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #4a4a6a;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: #E8E8ED;
+  margin: 0 -4px;
+  position: relative;
+  top: -16px;
+}
+
+.step-dot-wrapper:has(.step-dot.done) + .step-dot-wrapper .step-line,
+.step-dot-wrapper .step-dot.done ~ .step-line {
+  background: #0F1B4C;
+}
+
+/* ══ STEP PANELS ══ */
+.step-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  animation: fadeInStep 0.25s ease;
+}
+
+@keyframes fadeInStep {
+  from { opacity: 0; transform: translateX(8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ══ STEP NAVIGATION ══ */
+.step-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.btn-back {
+  flex: 1;
+  padding: 14px;
+  background: transparent;
+  border: 1.5px solid #E8E8ED;
+  border-radius: 8px;
+  color: #4a4a6a;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-back:hover {
+  border-color: #0F1B4C;
+  color: #0F1B4C;
+}
+
+.btn-next {
+  flex: 2;
+  padding: 14px;
+  background: #C9A84C;
+  border: 2px solid #C9A84C;
+  border-radius: 8px;
+  color: #0F1B4C;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.btn-next:hover {
+  background: transparent;
+  color: #C9A84C;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(201, 168, 76, 0.25);
+}
+
+.step-actions .btn-submit {
+  flex: 2;
+  margin-top: 0;
+}
+
+@media (max-width: 640px) {
+  .step-progress { padding: 24px 20px 4px; }
+  .step-label { font-size: 0.58rem; top: 36px; }
+  .step-dot { width: 28px; height: 28px; font-size: 0.75rem; }
+}
+
+/* ══ PAYMENT MODAL ══ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 27, 76, 0.6);
+  backdrop-filter: blur(6px);
+  z-index: 5000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-container {
+  position: relative;
+  width: 100%;
+  max-width: 660px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 16px;
+  animation: slideUp 0.25s ease;
+  background: transparent;
+}
+
+.payment-modal-container {
+  max-width: 600px;
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  border: none;
+  color: #0F1B4C;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.modal-close:hover {
+  background: #ffffff;
+}
+
+@media (max-width: 640px) {
+  .modal-overlay { padding: 0; align-items: flex-end; }
+  .modal-container { max-width: 100%; max-height: 95vh; border-radius: 16px 16px 0 0; }
 }

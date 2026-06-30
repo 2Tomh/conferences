@@ -27,8 +27,6 @@ export class ConferenceEventsComponent implements OnInit {
   ngOnInit(): void {
     this.conferenceEventsService.getSurveys().subscribe({
       next: (data) => {
-        console.log('--- נתונים שהתקבלו מהשרת ---');
-        console.log(data); // בדוק את זה ב-Console (F12)
         this.conferences = data;
       },
       error: (err) => console.error('שגיאה בטעינת נתונים:', err)

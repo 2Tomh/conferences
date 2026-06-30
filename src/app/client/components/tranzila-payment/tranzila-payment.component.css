@@ -1,52 +1,179 @@
+* {
+  font-family: Arial, sans-serif !important;
+  box-sizing: border-box;
+}
+
+:host {
+  display: block;
+  background: #F8F6F0;
+  min-height: 100vh;
+}
+
 .payment-container {
+  min-height: 100vh;
   display: flex;
+  align-items: flex-start;
   justify-content: center;
-  align-items: center;
-  min-height: 80vh;
-  padding: 20px;
-  background-color: #f8f9fa; /* רקע עדין להבלטת ה-iframe */
+  padding: 48px 24px 80px;
 }
 
-/* עיצוב ה-iframe ככרטיס צף */
-.iframe-payment {
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  max-width: 600px;
-  border: 1px solid #e0e0e0;
-}
-
-/* עיצוב טעינה */
+/* ══ LOADER ══ */
 .loader {
-  font-size: 1.2rem;
-  color: #003d7a;
-  font-weight: 600;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 100px 24px;
+  width: 100%;
+  max-width: 620px;
 }
 
-/* עיצוב הודעת שגיאה */
+.spinner-ring {
+  width: 48px;
+  height: 48px;
+  border: 3px solid #E8E8ED;
+  border-top-color: #C9A84C;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loader-text {
+  font-size: 0.9rem;
+  color: #4a4a6a;
+  font-weight: 500;
+}
+
+/* ══ ERROR ══ */
 .error-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 80px 32px;
+  width: 100%;
+  max-width: 480px;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #E8E8ED;
+  box-shadow: 0 4px 32px rgba(15, 27, 76, 0.08);
   text-align: center;
-  padding: 40px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  max-width: 400px;
 }
 
-.error-message button {
-  background-color: #003d7a;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
+.error-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(231, 76, 60, 0.1);
+  color: #e74c3c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+}
+
+.error-message p {
+  color: #4a4a6a;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.btn-retry {
+  margin-top: 6px;
+  padding: 12px 32px;
+  background: #C9A84C;
+  color: #0F1B4C;
+  border: 2px solid #C9A84C;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   cursor: pointer;
-  font-weight: bold;
-  margin-top: 15px;
+  transition: all 0.25s;
 }
 
-.error-message button:hover {
-  background-color: #0056b3;
+.btn-retry:hover {
+  background: transparent;
+  color: #C9A84C;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(201, 168, 76, 0.25);
+}
+
+/* ══ PAYMENT FRAME WRAPPER ══ */
+.payment-frame-wrapper {
+  width: 100%;
+  max-width: 680px;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #E8E8ED;
+  box-shadow: 0 4px 32px rgba(15, 27, 76, 0.08);
+  overflow: hidden;
+  position: relative;
+}
+
+.payment-frame-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #C9A84C, #E8C97A, #C9A84C);
+}
+
+.payment-frame-wrapper.hidden {
+  display: none;
+}
+
+/* ══ HEADER ══ */
+.payment-header {
+  background: #0F1B4C;
+  padding: 32px 40px 28px;
+  text-align: center;
+}
+
+.payment-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #C9A84C;
+  border: 1px solid rgba(201, 168, 76, 0.4);
+  padding: 5px 16px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
+
+.payment-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+/* ══ IFRAME ══ */
+.tranzila-iframe {
+  width: 100%;
+  height: 600px;
+  border: none;
+  display: block;
+}
+
+/* ══ RESPONSIVE ══ */
+@media (max-width: 640px) {
+  .payment-container { padding: 24px 16px 60px; }
+  .payment-header { padding: 24px 24px 20px; }
+  .payment-header h2 { font-size: 1.2rem; }
+  .tranzila-iframe { height: 520px; }
+  .loader, .error-message { padding: 60px 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner-ring { animation: none; }
+  .btn-retry { transition: none; }
 }
