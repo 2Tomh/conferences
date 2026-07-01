@@ -44,7 +44,7 @@
           <th>{{ 'EVENTS.TABLE.NAME_FIELD' | translate }}</th>
           <th>{{ 'EVENTS.TABLE.ORGANIZERS' | translate }}</th>
           <th>{{ 'EVENTS.TABLE.DESCRIPTION_FIELD' | translate }}</th>
-          <th>{{ 'TABLE.ACTIONS' | translate }}</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -79,9 +79,9 @@
           <td class="text-center">
             <div class="survey-links-wrapper"
               style="display: flex; flex-direction: column; gap: 5px; align-items: center;">
+              <a *ngIf="conf.Links?.survey" [href]="conf.Links.survey" target="_blank" class="view-desc-btn">Express Interest</a>
               <a *ngIf="conf.Links?.website" [href]="conf.Links.website" target="_blank"
                 class="view-desc-btn">Website</a>
-              <a *ngIf="conf.Links?.survey" [href]="conf.Links.survey" target="_blank" class="view-desc-btn">Survey</a>
             </div>
           </td>
         </tr>

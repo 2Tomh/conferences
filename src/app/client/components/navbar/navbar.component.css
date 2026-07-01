@@ -193,7 +193,9 @@ app-header-actions {
 } */
 
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -271,6 +273,10 @@ app-header-actions {
   cursor: pointer;
 }
 
+.tab-icon {
+  width: 50px;
+}
+
 .nav-link:hover,
 .nav-link:focus-visible {
   color: #C9A84C;
@@ -303,8 +309,13 @@ app-header-actions {
   border-color: #C9A84C;
 }
 
-.desktop-actions { flex-shrink: 0; }
-.mobile-lang-wrapper { display: none; }
+.desktop-actions {
+  flex-shrink: 0;
+}
+
+.mobile-lang-wrapper {
+  display: none;
+}
 
 /* ══ HAMBURGER (hidden on desktop) ══ */
 .hamburger-btn {
@@ -334,9 +345,11 @@ app-header-actions {
 .hamburger-btn.open span:nth-child(1) {
   transform: translateY(7px) rotate(45deg);
 }
+
 .hamburger-btn.open span:nth-child(2) {
   opacity: 0;
 }
+
 .hamburger-btn.open span:nth-child(3) {
   transform: translateY(-7px) rotate(-45deg);
 }
@@ -373,7 +386,7 @@ app-header-actions {
     padding: 24px 28px;
     transition: right 0.3s ease;
     overflow-y: auto;
-    box-shadow: -8px 0 32px rgba(0,0,0,0.3);
+    box-shadow: -8px 0 32px rgba(0, 0, 0, 0.3);
   }
 
   .links-section.mobile-open {
@@ -384,11 +397,11 @@ app-header-actions {
     width: 100%;
     padding: 14px 0;
     font-size: 0.95rem;
-    border-bottom: 1px solid rgba(201,168,76,0.12);
+    border-bottom: 1px solid rgba(201, 168, 76, 0.12);
   }
 
   .nav-link.active {
-    border-bottom-color: rgba(201,168,76,0.12);
+    border-bottom-color: rgba(201, 168, 76, 0.12);
   }
 
   .btn-register {
@@ -403,7 +416,7 @@ app-header-actions {
     display: block;
     margin-top: 24px;
     padding-top: 20px;
-    border-top: 1px solid rgba(201,168,76,0.15);
+    border-top: 1px solid rgba(201, 168, 76, 0.15);
     width: 100%;
   }
 
@@ -412,19 +425,31 @@ app-header-actions {
     position: fixed;
     inset: 0;
     top: 64px;
-    background: rgba(0,0,0,0.4);
+    background: rgba(0, 0, 0, 0.4);
     z-index: 999;
   }
 }
 
 @media (max-width: 480px) {
-  .brand-text-only { font-size: 1.1rem; }
-  .links-section { width: 100vw; padding: 20px 22px; height: 100vw;}
+  .brand-text-only {
+    font-size: 1.1rem;
+  }
+
+  .links-section {
+    width: 100vw;
+    padding: 20px 22px;
+    height: 100vw;
+  }
 }
 
 @media (max-width: 360px) {
-  .brand-text-only { font-size: 1rem; }
-  .nav-container { padding: 0 12px; }
+  .brand-text-only {
+    font-size: 1rem;
+  }
+
+  .nav-container {
+    padding: 0 12px;
+  }
 }
 
 /* ══ REGISTRATION MODAL ══ */
@@ -483,19 +508,41 @@ app-header-actions {
   transition: background 0.2s;
 }
 
-.modal-close:hover { background: rgba(255, 255, 255, 0.3); }
+.modal-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
-  from { transform: translateY(24px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @media (max-width: 640px) {
-  .modal-overlay { padding: 0; align-items: flex-end; }
-  .modal-container { max-width: 100%; max-height: 95vh; border-radius: 16px 16px 0 0; }
+  .modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .modal-container {
+    max-width: 100%;
+    max-height: 95vh;
+    border-radius: 16px 16px 0 0;
+  }
 }

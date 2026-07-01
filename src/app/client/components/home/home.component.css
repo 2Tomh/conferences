@@ -32,7 +32,8 @@
   justify-content: center;
   position: relative;
   overflow: hidden;
-  height: calc(100vh - 64px); /* גובה קבוע, לא min-height */
+  height: calc(100vh - 64px);
+  /* גובה קבוע, לא min-height */
   padding: clamp(16px, 4vh, 60px) 40px;
 }
 
@@ -65,11 +66,12 @@
   position: relative;
   z-index: 2;
   text-align: center;
-  max-width: 780px;
+  max-width: 1200px;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 10%;
 }
 
 .hero-eyebrow {
@@ -90,8 +92,8 @@
 }
 
 .home-logo {
-  width: min(40%, 300px);
-  max-width: 50%;
+  width: min(40%, 50%);
+  max-width: 100%;
   border-radius: 12px;
   filter: drop-shadow(0 0 32px rgba(201, 168, 76, 0.25));
   transition: filter 0.3s;
@@ -564,4 +566,4 @@
   .partner-item {
     transition: none;
   }
-} 
+}

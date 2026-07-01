@@ -698,7 +698,6 @@
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.14em;
-  text-transform: uppercase;
   color: #C9A84C;
   white-space: nowrap;
   border: none;
@@ -978,7 +977,6 @@
     font-size: 0.68rem;
     font-weight: 700;
     letter-spacing: 0.14em;
-    text-transform: uppercase;
     color: #C9A84C;
     margin-bottom: 4px;
   }
