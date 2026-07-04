@@ -27,13 +27,13 @@
 //   private statusCheckInterval: any;
 //   private isCheckingStatus: boolean = false;
 //   private pollingStartTime: number = 0;
-//   private readonly POLLING_TIMEOUT_MS = 10 * 60 * 1000;
+//   private readonly POLLING_TIMEOUT_MS = 10 * 60 * 1000; // 10 דקות
 
 //   constructor(private paymentService: PaymentService, private router: Router) { }
 
 //   ngOnInit() {
 //     if (!this.paymentInputData) {
-//       this.paymentInputData = history.state?.data; // fallback אם מישהו עדיין מנווט ישירות
+//       this.paymentInputData = history.state?.data;
 //     }
 //     this.startPaymentFlow();
 //   }
@@ -55,13 +55,12 @@
 //     this.loading = true;
 //     this.error = null;
 
-//     const payload = { ...data, orderId: data.orderId };
-
-//     this.paymentService.preparePayment(payload).subscribe({
+//     this.paymentService.preparePayment(data).subscribe({
 //       next: (res) => {
-//         res.amount = res.amount || 1;
 //         this.paymentData = res;
 //         this.loading = false;
+        
+//         // הגשת הטופס לתוך ה-Iframe באופן אוטומטי
 //         setTimeout(() => {
 //           this.paymentForm?.nativeElement.submit();
 //           this.startPollingTransactionStatus();
@@ -78,40 +77,37 @@
 //   startPollingTransactionStatus() {
 //     this.pollingStartTime = Date.now();
 //     this.statusCheckInterval = setInterval(() => {
+//       // בדיקת Timeout
 //       if (Date.now() - this.pollingStartTime > this.POLLING_TIMEOUT_MS) {
 //         this.stopPolling();
 //         this.router.navigate(['/payment/failed'], { queryParams: { orderId: this.paymentData.orderId } });
 //         return;
 //       }
+
 //       if (this.isCheckingStatus) return;
 //       this.isCheckingStatus = true;
+
 //       this.paymentService.verifyPayment('', this.paymentData.orderId).subscribe({
 //         next: (res) => {
 //           this.isCheckingStatus = false;
-//           if (res) {
-//             if (res.status === 'success') {
-//               this.stopPolling();
-//               this.router.navigate(['/payment/success'], { queryParams: { orderId: this.paymentData.orderId } });
-//             } else if (res.status === 'failed') {
-//               this.stopPolling();
-//               this.router.navigate(['/payment/failed'], { queryParams: { orderId: this.paymentData.orderId } });
-//             }
+//           if (res?.status === 'success') {
+//             this.stopPolling();
+//             this.router.navigate(['/payment/success'], { queryParams: { orderId: this.paymentData.orderId } });
+//           } else if (res?.status === 'failed') {
+//             this.stopPolling();
+//             this.router.navigate(['/payment/failed'], { queryParams: { orderId: this.paymentData.orderId } });
 //           }
 //         },
 //         error: (err) => {
 //           this.isCheckingStatus = false;
 //           console.error('Polling error:', err);
-//           this.stopPolling();
-//           this.router.navigate(['/payment/failed'], { queryParams: { orderId: this.paymentData.orderId } });
 //         }
 //       });
 //     }, 1500);
 //   }
 
 //   stopPolling() {
-//     if (this.statusCheckInterval) {
-//       clearInterval(this.statusCheckInterval);
-//     }
+//     if (this.statusCheckInterval) clearInterval(this.statusCheckInterval);
 //   }
 
 //   ngOnDestroy() {
@@ -134,6 +130,7 @@ export class TranzilaPaymentComponent implements OnInit, OnChanges, OnDestroy {
 
   loading: boolean = true;
   error: string | null = null;
+
   paymentData: PaymentPreparationResponse = {
     terminal: '',
     orderId: '',
@@ -148,7 +145,7 @@ export class TranzilaPaymentComponent implements OnInit, OnChanges, OnDestroy {
   private statusCheckInterval: any;
   private isCheckingStatus: boolean = false;
   private pollingStartTime: number = 0;
-  private readonly POLLING_TIMEOUT_MS = 10 * 60 * 1000; // 10 דקות
+  private readonly POLLING_TIMEOUT_MS = 10 * 60 * 1000;
 
   constructor(private paymentService: PaymentService, private router: Router) { }
 
@@ -176,12 +173,27 @@ export class TranzilaPaymentComponent implements OnInit, OnChanges, OnDestroy {
     this.loading = true;
     this.error = null;
 
-    this.paymentService.preparePayment(data).subscribe({
+    const payload = {
+      orderId: data.orderId,
+      amount: data.amount || 1,
+      fullName: data.FullName || data.fullName || '',
+      email: data.Email || data.email || '',
+      phone: data.Phone || data.phone || '',
+      conferenceId: data.ConferenceId || data.conferenceId || null,
+      isLifetimeMember: data.IsLifetimeMember || false,
+      hasAbstract: data.HasAbstract || false,
+      abstractTitle: data.AbstractTitle || null,
+      abstractAuthors: data.FullName || data.fullName || null,
+      hasPoster: data.HasPoster || false,
+      posterTitle: data.PosterTitle || null,
+      posterAuthors: data.PosterAuthors || data.FullName || data.fullName || null
+    };
+
+    this.paymentService.preparePayment(payload).subscribe({
       next: (res) => {
+        res.amount = res.amount || 1;
         this.paymentData = res;
         this.loading = false;
-        
-        // הגשת הטופס לתוך ה-Iframe באופן אוטומטי
         setTimeout(() => {
           this.paymentForm?.nativeElement.submit();
           this.startPollingTransactionStatus();
@@ -198,10 +210,11 @@ export class TranzilaPaymentComponent implements OnInit, OnChanges, OnDestroy {
   startPollingTransactionStatus() {
     this.pollingStartTime = Date.now();
     this.statusCheckInterval = setInterval(() => {
-      // בדיקת Timeout
       if (Date.now() - this.pollingStartTime > this.POLLING_TIMEOUT_MS) {
         this.stopPolling();
-        this.router.navigate(['/payment/failed'], { queryParams: { orderId: this.paymentData.orderId } });
+        this.router.navigate(['/payment/failed'], {
+          queryParams: { orderId: this.paymentData.orderId }
+        });
         return;
       }
 
@@ -211,24 +224,36 @@ export class TranzilaPaymentComponent implements OnInit, OnChanges, OnDestroy {
       this.paymentService.verifyPayment('', this.paymentData.orderId).subscribe({
         next: (res) => {
           this.isCheckingStatus = false;
-          if (res?.status === 'success') {
-            this.stopPolling();
-            this.router.navigate(['/payment/success'], { queryParams: { orderId: this.paymentData.orderId } });
-          } else if (res?.status === 'failed') {
-            this.stopPolling();
-            this.router.navigate(['/payment/failed'], { queryParams: { orderId: this.paymentData.orderId } });
+          if (res) {
+            if (res.status === 'success') {
+              this.stopPolling();
+              this.router.navigate(['/payment/success'], {
+                queryParams: { orderId: this.paymentData.orderId }
+              });
+            } else if (res.status === 'failed') {
+              this.stopPolling();
+              this.router.navigate(['/payment/failed'], {
+                queryParams: { orderId: this.paymentData.orderId }
+              });
+            }
           }
         },
         error: (err) => {
           this.isCheckingStatus = false;
           console.error('Polling error:', err);
+          this.stopPolling();
+          this.router.navigate(['/payment/failed'], {
+            queryParams: { orderId: this.paymentData.orderId }
+          });
         }
       });
     }, 1500);
   }
 
   stopPolling() {
-    if (this.statusCheckInterval) clearInterval(this.statusCheckInterval);
+    if (this.statusCheckInterval) {
+      clearInterval(this.statusCheckInterval);
+    }
   }
 
   ngOnDestroy() {
