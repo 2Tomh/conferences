@@ -5,200 +5,6 @@
       <p>Enter your details to proceed with secure registration</p>
     </div>
 
-    <form [formGroup]="regForm" (ngSubmit)="onSubmit()" class="registration-form">
-
-      <div class="form-row">
-        <label>Conference</label>
-        <div class="selected-conf-box"
-          [ngClass]="{'invalid': f['conferenceId'].invalid && f['conferenceId'].touched}"
-          (click)="openConferencePopup()">
-          {{ selectedConference ? selectedConference.name : 'Click to select a conference...' }}
-        </div>
-        <div *ngIf="f['conferenceId'].invalid && f['conferenceId'].touched" class="error-text">
-          You must select a conference to continue
-        </div>
-      </div>
-
-      <div *ngIf="selectedConference" class="form-row">
-        <label>Would you like to submit an abstract?</label>
-        <div class="radio-group">
-          <button type="button" class="btn-sm" [class.active]="wantsAbstract === true"
-            (click)="onAbstractChoice(true)">Yes</button>
-          <button type="button" class="btn-sm" [class.active]="wantsAbstract === false"
-            (click)="onAbstractChoice(false)">No</button>
-        </div>
-      </div>
-
-      <div *ngIf="showAbstractNotice" class="notice-box">
-        <p>✅ Abstract saved successfully and will be attached to your registration.</p>
-        <button type="button" (click)="closeAbstractNotice()">Close</button>
-      </div>
-
-      <div class="form-row">
-        <label>Full Name</label>
-        <input type="text" formControlName="fullName" class="form-control"
-          placeholder="John Smith">
-        <div *ngIf="f['fullName'].touched">
-          <div *ngIf="f['fullName'].hasError('required')" class="error-text">
-            This field is required
-          </div>
-          <div *ngIf="f['fullName'].hasError('minlength')" class="error-text">
-            Full name must be at least 5 characters
-          </div>
-          <div *ngIf="f['fullName'].hasError('pattern') && !f['fullName'].hasError('minlength')" class="error-text">
-            Please enter your first and last name separated by a space (e.g. John Smith)
-          </div>
-        </div>
-        <div class="field-hint" *ngIf="!f['fullName'].touched || f['fullName'].valid">
-          Enter your first and last name
-        </div>
-      </div>
-
-      <div class="form-row">
-        <label>Home Address</label>
-        <input type="text" formControlName="address" class="form-control"
-          placeholder="123 Main St, Tel Aviv">
-        <div *ngIf="f['address'].touched">
-          <div *ngIf="f['address'].hasError('required')" class="error-text">
-            This field is required
-          </div>
-          <div *ngIf="f['address'].hasError('minlength')" class="error-text">
-            Please enter a full address
-          </div>
-          <div *ngIf="f['address'].hasError('pattern') && !f['address'].hasError('minlength')" class="error-text">
-            Please enter a full address including street and city (e.g. 123 Main St, Tel Aviv)
-          </div>
-        </div>
-        <div class="field-hint" *ngIf="!f['address'].touched || f['address'].valid">
-          e.g. 123 Main St, Tel Aviv
-        </div>
-      </div>
-
-      <div class="form-row">
-        <label>Email Address</label>
-        <input type="email" formControlName="email" class="form-control"
-          placeholder="name@domain.com">
-        <div *ngIf="f['email'].touched">
-          <div *ngIf="f['email'].hasError('required')" class="error-text">
-            This field is required
-          </div>
-          <div *ngIf="f['email'].hasError('pattern')" class="error-text">
-            Invalid email address — please use the format name@domain.com (at least 2 characters after @)
-          </div>
-        </div>
-        <div class="field-hint" *ngIf="!f['email'].touched || f['email'].valid">
-          e.g. john@example.com
-        </div>
-      </div>
-
-      <div class="form-row">
-        <label>Phone Number</label>
-        <input type="text" formControlName="phone" class="form-control"
-          placeholder="0501234567">
-        <div *ngIf="f['phone'].touched">
-          <div *ngIf="f['phone'].hasError('required')" class="error-text">
-            This field is required
-          </div>
-          <div *ngIf="f['phone'].hasError('pattern')" class="error-text">
-            Phone number must be exactly 10 digits and start with 0 (e.g. 0501234567)
-          </div>
-        </div>
-        <div class="field-hint" *ngIf="!f['phone'].touched || f['phone'].valid">
-          Exactly 10 digits, starting with 0 (e.g. 0501234567)
-        </div>
-      </div>
-
-      <div class="form-row">
-        <label>Institution / Organization <span class="optional-tag">Optional</span></label>
-        <input type="text" formControlName="institution" class="form-control"
-          placeholder="Tel Aviv University">
-      </div>
-
-      <button type="submit" [disabled]="regForm.invalid" class="btn-submit">
-        Proceed to Payment
-      </button>
-
-      <div *ngIf="regForm.invalid && regForm.touched" class="summary-errors">
-        <ul>
-          <li *ngIf="f['conferenceId'].invalid">Please select a conference from the list</li>
-          <li *ngIf="f['fullName'].invalid">Please enter your first and last name</li>
-          <li *ngIf="f['address'].invalid">Please enter a full home address</li>
-          <li *ngIf="f['email'].invalid">Please enter a valid email address</li>
-          <li *ngIf="f['phone'].invalid">Please enter a 10-digit phone number</li>
-        </ul>
-      </div>
-
-    </form>
-  </div>
-</div>
-
-<div *ngIf="showConferencePopup" class="popup-overlay">
-  <div class="popup-content">
-    <h3>Select a Conference</h3>
-    <input type="text" (input)="onConferenceSearch($event)" placeholder="Search conferences...">
-    <div class="conf-list">
-      <div *ngFor="let conf of filteredConferences" class="conf-item" (click)="selectConference(conf)">
-        {{ conf.Name || conf.name || 'Unnamed Conference' }}
-      </div>
-    </div>
-    <button (click)="closeConferencePopup()">Close</button>
-  </div>
-</div>
-
-<div *ngIf="showAbstractPopup" class="popup-overlay">
-  <div class="popup-content">
-    <h3>Submit Abstract</h3>
-
-    <div *ngIf="selectedConference?.abstractGuidelines" class="abstract-guidelines">
-      <strong>Submission Guidelines:</strong>
-      <p>{{ selectedConference.abstractGuidelines }}</p>
-    </div>
-
-    <form [formGroup]="abstractForm">
-      <div class="form-row">
-        <label>Abstract Title (up to 25 words)</label>
-        <input formControlName="title" placeholder="Abstract title" class="form-control">
-        <div *ngIf="af['title'].touched">
-          <div *ngIf="af['title'].hasError('required')" class="error-text">This field is required</div>
-          <div *ngIf="af['title'].hasError('maxWords')" class="error-text">Title is too long — maximum 25 words</div>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <label>Abstract Body (up to 250 words / 2500 characters)</label>
-        <textarea formControlName="body" placeholder="Abstract content..." class="form-control" rows="4"></textarea>
-        <div class="char-counter">{{ af['body'].value?.length || 0 }} / 2500 characters</div>
-        <div *ngIf="af['body'].touched">
-          <div *ngIf="af['body'].hasError('required')" class="error-text">This field is required</div>
-          <div *ngIf="af['body'].hasError('maxWords')" class="error-text">Abstract is too long — maximum 250 words</div>
-          <div *ngIf="af['body'].hasError('maxChars')" class="error-text">Abstract is too long — maximum 2500 characters</div>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <label>Additional Notes <span class="optional-tag">Optional</span></label>
-        <textarea formControlName="notes" placeholder="Additional notes or special requests..."
-          class="form-control" rows="2"></textarea>
-      </div>
-
-      <div class="abstract-actions">
-        <button type="button" class="btn-submit" (click)="saveAbstract()">Save Abstract</button>
-        <button type="button" class="btn-cancel" (click)="closeAbstractPopup()">Cancel</button>
-      </div>
-    </form>
-  </div>
-</div> -->
-
-
-
-<div class="registration-page">
-  <div class="registration-card">
-    <div class="card-header-custom">
-      <h2>Conference Registration</h2>
-      <p>Enter your details to proceed with secure registration</p>
-    </div>
-
-    <!-- ══ STEP PROGRESS BAR ══ -->
     <div class="step-progress">
       <div class="step-dot-wrapper" *ngFor="let s of [1,2,3]; let i = index">
         <button type="button" class="step-dot" [class.active]="currentStep === s"
@@ -219,7 +25,6 @@
 
     <form [formGroup]="regForm" (ngSubmit)="onSubmit()" class="registration-form">
 
-      <!-- ══ STEP 1: CONFERENCE + ABSTRACT ══ -->
       <div class="step-panel" *ngIf="currentStep === 1">
         <div class="form-row">
           <label>Conference</label>
@@ -249,7 +54,6 @@
         </div>
       </div>
 
-      <!-- ══ STEP 2: PERSONAL DETAILS ══ -->
       <div class="step-panel" *ngIf="currentStep === 2">
         <div class="form-row">
           <label>Full Name</label>
@@ -295,7 +99,6 @@
         </div>
       </div>
 
-      <!-- ══ STEP 3: ADDRESS + INSTITUTION ══ -->
       <div class="step-panel" *ngIf="currentStep === 3">
         <div class="form-row">
           <label>Home Address</label>
@@ -318,7 +121,6 @@
         </div>
       </div>
 
-      <!-- ══ STEP NAVIGATION BUTTONS ══ -->
       <div class="step-actions">
         <button type="button" class="btn-back" *ngIf="currentStep > 1" (click)="prevStep()">
           ← Back
@@ -345,7 +147,6 @@
   </div>
 </div>
 
-<!-- Conference Selection Popup -->
 <div *ngIf="showConferencePopup" class="popup-overlay">
   <div class="popup-content">
     <h3>Select a Conference</h3>
@@ -359,7 +160,6 @@
   </div>
 </div>
 
-<!-- Abstract Popup -->
 <div *ngIf="showAbstractPopup" class="popup-overlay">
   <div class="popup-content">
     <h3>Submit Abstract</h3>
@@ -404,7 +204,147 @@
   </div>
 </div>
 
-<!-- ══ PAYMENT MODAL ══ -->
+<div class="modal-overlay" *ngIf="showPaymentModal" (click)="closePaymentModal()">
+  <div class="modal-container payment-modal-container" (click)="$event.stopPropagation()">
+    <button class="modal-close" (click)="closePaymentModal()">✕</button>
+    <app-tranzila-payment [paymentInputData]="paymentInputData"></app-tranzila-payment>
+  </div>
+</div> -->
+
+<div class="registration-page">
+  <div class="registration-card">
+    <div class="card-header-custom">
+      <h2>Conference Registration</h2>
+      <p>Enter your details to proceed with secure registration</p>
+    </div>
+
+    <div class="step-progress">
+      <div class="step-dot-wrapper" *ngFor="let s of [1,2,3]; let i = index">
+        <button type="button" class="step-dot" [class.active]="currentStep === s"
+          [class.done]="currentStep > s" (click)="goToStep(s)">
+          <span *ngIf="currentStep <= s">{{ s }}</span>
+          <span *ngIf="currentStep > s">✓</span>
+        </button>
+        <span class="step-label">
+          <ng-container [ngSwitch]="s">
+            <ng-container *ngSwitchCase="1">Conference</ng-container>
+            <ng-container *ngSwitchCase="2">Your Details</ng-container>
+            <ng-container *ngSwitchCase="3">Address</ng-container>
+          </ng-container>
+        </span>
+        <div class="step-line" *ngIf="i < 2"></div>
+      </div>
+    </div>
+
+    <form [formGroup]="regForm" (ngSubmit)="onSubmit()" class="registration-form">
+
+      <div class="step-panel" *ngIf="currentStep === 1">
+        <div class="form-row">
+          <label>Conference</label>
+          <div class="selected-conf-box"
+            [ngClass]="{'invalid': f['conferenceId'].invalid && f['conferenceId'].touched}"
+            (click)="openConferencePopup()">
+            {{ selectedConference ? selectedConference.name : 'Click to select a conference...' }}
+          </div>
+          <div *ngIf="f['conferenceId'].invalid && f['conferenceId'].touched" class="error-text">
+            You must select a conference to continue
+          </div>
+        </div>
+
+        <div *ngIf="selectedConference" class="form-row">
+          <div class="form-row" style="margin: 15px 0;">
+            <label>
+              <input type="checkbox" [(ngModel)]="isLifetime" [ngModelOptions]="{standalone: true}">
+              <strong>Lifetime Membership ($250)</strong>
+            </label>
+          </div>
+
+          <label>Would you like to submit an abstract?</label>
+          <div class="radio-group">
+            <button type="button" class="btn-sm" [class.active]="wantsAbstract === true"
+              (click)="onAbstractChoice(true)">Yes</button>
+            <button type="button" class="btn-sm" [class.active]="wantsAbstract === false"
+              (click)="onAbstractChoice(false)">No</button>
+          </div>
+
+          <div *ngIf="selectedConference?.allowsPoster && !abstractSaved" class="form-row" style="margin-top: 15px;">
+            <label>Would you like to submit a poster?</label>
+            <button type="button" class="btn-sm" (click)="onPosterChoice(true)">Yes, submit poster</button>
+          </div>
+        </div>
+
+        <div *ngIf="showAbstractNotice" class="notice-box">
+          <p>✅ Abstract saved successfully and will be attached to your registration.</p>
+          <button type="button" (click)="closeAbstractNotice()">Close</button>
+        </div>
+      </div>
+
+      <div class="step-panel" *ngIf="currentStep === 2">
+        <div class="form-row">
+          <label>Full Name</label>
+          <input type="text" formControlName="fullName" class="form-control" placeholder="John Smith">
+        </div>
+        <div class="form-row">
+          <label>Email Address</label>
+          <input type="email" formControlName="email" class="form-control" placeholder="name@domain.com">
+        </div>
+        <div class="form-row">
+          <label>Phone Number</label>
+          <input type="text" formControlName="phone" class="form-control" placeholder="0501234567">
+        </div>
+      </div>
+
+      <div class="step-panel" *ngIf="currentStep === 3">
+        <div class="form-row">
+          <label>Home Address</label>
+          <input type="text" formControlName="address" class="form-control" placeholder="123 Main St, Tel Aviv">
+        </div>
+        <div class="form-row">
+          <label>Institution / Organization <span class="optional-tag">Optional</span></label>
+          <input type="text" formControlName="institution" class="form-control" placeholder="Tel Aviv University">
+        </div>
+      </div>
+
+      <div class="step-actions">
+        <button type="button" class="btn-back" *ngIf="currentStep > 1" (click)="prevStep()">← Back</button>
+        <button type="button" class="btn-next" *ngIf="currentStep < totalSteps" (click)="nextStep()">Next →</button>
+        <button type="submit" *ngIf="currentStep === totalSteps" [disabled]="regForm.invalid" class="btn-submit">Proceed to Payment</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div *ngIf="showConferencePopup" class="popup-overlay">
+  <div class="popup-content">
+    <h3>Select a Conference</h3>
+    <input type="text" (input)="onConferenceSearch($event)" placeholder="Search conferences...">
+    <div class="conf-list">
+      <div *ngFor="let conf of filteredConferences" class="conf-item" (click)="selectConference(conf)">
+        {{ conf.Name || conf.name || 'Unnamed Conference' }}
+      </div>
+    </div>
+    <button (click)="closeConferencePopup()">Close</button>
+  </div>
+</div>
+
+<div *ngIf="showAbstractPopup" class="popup-overlay">
+  </div>
+
+<div *ngIf="showPosterPopup" class="popup-overlay">
+  <div class="popup-content">
+    <form [formGroup]="posterForm">
+      <h3>Poster Submission</h3>
+      <p>{{ selectedConference?.posterGuidelines }}</p>
+      <input formControlName="title" placeholder="Poster Title" class="form-control">
+      <input formControlName="authors" placeholder="Authors" class="form-control">
+      <div class="abstract-actions">
+        <button type="button" class="btn-submit" (click)="savePoster()">Save</button>
+        <button type="button" class="btn-cancel" (click)="showPosterPopup = false">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <div class="modal-overlay" *ngIf="showPaymentModal" (click)="closePaymentModal()">
   <div class="modal-container payment-modal-container" (click)="$event.stopPropagation()">
     <button class="modal-close" (click)="closePaymentModal()">✕</button>
