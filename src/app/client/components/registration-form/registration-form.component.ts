@@ -58,8 +58,11 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
 
   isLifetimeMember = false;
 
-  readonly REGULAR_PRICE = 50;
-  readonly LIFETIME_PRICE = 250;
+  // readonly REGULAR_PRICE = 50;
+  readonly REGULAR_PRICE = 0.5;
+
+  // readonly LIFETIME_PRICE = 250;
+  readonly LIFETIME_PRICE = 1;
 
   get registrationAmount(): number {
     return this.isLifetimeMember ? this.LIFETIME_PRICE : this.REGULAR_PRICE;
@@ -237,7 +240,12 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
     }
   }
 
-  closeAbstractPopup() { this.showAbstractPopup = false; }
+  closeAbstractPopup() {
+    this.showAbstractPopup = false;
+    if (!this.abstractSaved) {
+      this.wantsAbstract = null;
+    }
+  }
 
   saveAbstract() {
     if (this.abstractForm.invalid) {
@@ -252,19 +260,33 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
   closeAbstractNotice() { this.showAbstractNotice = false; }
 
   // ══ POSTER ══
-  onPosterChoice(wants: boolean) {
-    this.wantsPoster = wants;
-    if (wants) {
-      this.posterForm.reset();
-      this.showPosterPopup = true;
-    } else {
-      this.showPosterPopup = false;
-      this.posterSaved = false;
-      this.showPosterNotice = false;
-    }
+  onPosterOnlyChoice() {
+    this.wantsAbstract = false;
+    this.wantsPoster = true;
+    this.posterForm.reset();
+    this.showPosterPopup = true;
+    this.abstractSaved = false;
+    this.showAbstractNotice = false;
+    this.showAbstractPopup = false;
   }
 
-  closePosterPopup() { this.showPosterPopup = false; }
+  onNoSubmission() {
+    this.wantsAbstract = false;
+    this.wantsPoster = false;
+    this.abstractSaved = false;
+    this.posterSaved = false;
+    this.showAbstractPopup = false;
+    this.showPosterPopup = false;
+    this.showAbstractNotice = false;
+    this.showPosterNotice = false;
+  }
+
+  closePosterPopup() {
+    this.showPosterPopup = false;
+    if (!this.posterSaved) {
+      this.wantsPoster = null;
+    }
+  }
 
   savePoster() {
     if (this.posterForm.invalid) {

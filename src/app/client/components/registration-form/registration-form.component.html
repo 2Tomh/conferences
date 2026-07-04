@@ -44,7 +44,6 @@
           </div>
         </div>
 
-        <!-- Options — only when conference is selected -->
         <ng-container *ngIf="selectedConference">
 
           <!-- Lifetime Membership -->
@@ -61,8 +60,8 @@
               Contribute to Mind-IL and support future events by registering as a lifetime member.
               Enjoy access to all conferences and help strengthen Israeli science and academia for years to come.
             </p>
-            <label class="membership-toggle" (click)="toggleLifetime()">
-              <input type="checkbox" [checked]="isLifetimeMember" (click)="$event.stopPropagation()">
+            <label class="membership-toggle">
+              <input type="checkbox" [checked]="isLifetimeMember" (change)="toggleLifetime()">
               <span class="toggle-track">
                 <span class="toggle-thumb"></span>
               </span>
@@ -72,43 +71,62 @@
             </label>
           </div>
 
-          <!-- Abstract — hidden when Lifetime is selected -->
-          <div class="form-row" *ngIf="!isLifetimeMember">
-            <label>Would you like to submit an abstract?</label>
-            <div class="radio-group">
-              <button type="button" class="btn-sm" [class.active]="wantsAbstract === true"
-                (click)="onAbstractChoice(true)">Yes</button>
-              <button type="button" class="btn-sm" [class.active]="wantsAbstract === false"
-                (click)="onAbstractChoice(false)">No</button>
+          <!-- Abstract / Poster / None — מוסתרים כש-Lifetime פעיל -->
+          <ng-container *ngIf="!isLifetimeMember">
+
+            <div class="form-row">
+              <label>Would you like to submit a presentation?</label>
+              <div class="radio-group">
+                <button type="button" class="btn-sm"
+                  [class.active]="wantsAbstract === true"
+                  (click)="onAbstractChoice(true)">
+                  Abstract
+                </button>
+                <button type="button" class="btn-sm"
+                  [class.active]="wantsPoster === true && wantsAbstract === false"
+                  (click)="onPosterOnlyChoice()">
+                  Poster
+                </button>
+                <button type="button" class="btn-sm"
+                  [class.active]="wantsAbstract === false && wantsPoster === false"
+                  (click)="onNoSubmission()">
+                  None
+                </button>
+              </div>
             </div>
-          </div>
 
-          <!-- Abstract notice -->
-          <div *ngIf="showAbstractNotice" class="notice-box">
-            <p>✅ Abstract saved successfully and will be attached to your registration.</p>
-            <button type="button" (click)="closeAbstractNotice()">Close</button>
-          </div>
-
-          <!-- Poster — only if conference allows it, no abstract submitted, not Lifetime -->
-          <div class="form-row" *ngIf="canSubmitPoster && wantsAbstract === false && !isLifetimeMember">
-            <label>Would you like to submit a poster?</label>
-            <p class="field-hint">
-              ⓘ A poster presentation means you bring a printed poster to the conference,
-              display it in the exhibition area, and present it to interested attendees.
-            </p>
-            <div class="radio-group">
-              <button type="button" class="btn-sm" [class.active]="wantsPoster === true"
-                (click)="onPosterChoice(true)">Yes</button>
-              <button type="button" class="btn-sm" [class.active]="wantsPoster === false"
-                (click)="onPosterChoice(false)">No</button>
+            <!-- Abstract notice -->
+            <div *ngIf="showAbstractNotice" class="notice-box">
+              <p>✅ Abstract saved successfully and will be attached to your registration.</p>
+              <button type="button" (click)="closeAbstractNotice()">Close</button>
             </div>
-          </div>
 
-          <!-- Poster notice -->
-          <div *ngIf="showPosterNotice" class="notice-box">
-            <p>🖼️ Poster submission saved successfully and will be attached to your registration.</p>
-            <button type="button" (click)="closePosterNotice()">Close</button>
-          </div>
+            <!-- Poster guidelines inline — מופיעות ברגע שבוחרים Poster -->
+            <ng-container *ngIf="wantsPoster === true && wantsAbstract === false">
+              <div class="poster-guidelines-inline">
+                <div class="poster-what">
+                  <strong>What is a poster presentation?</strong>
+                  <p>
+                    You bring a printed poster to the conference, display it in the designated
+                    exhibition area, and explain your work to interested attendees. It is an
+                    excellent opportunity for networking and receiving direct feedback in an
+                    informal setting.
+                  </p>
+                </div>
+                <div *ngIf="selectedConference?.posterGuidelines" class="poster-conf-guidelines">
+                  <strong>Conference Poster Guidelines:</strong>
+                  <p>{{ selectedConference.posterGuidelines }}</p>
+                </div>
+              </div>
+
+              <!-- Poster notice -->
+              <div *ngIf="showPosterNotice" class="notice-box">
+                <p>🖼️ Poster submission saved successfully and will be attached to your registration.</p>
+                <button type="button" (click)="closePosterNotice()">Close</button>
+              </div>
+            </ng-container>
+
+          </ng-container>
 
         </ng-container>
       </div>
@@ -275,7 +293,7 @@
     <h3>Submit Poster</h3>
 
     <div *ngIf="selectedConference?.posterGuidelines" class="abstract-guidelines">
-      <strong>Poster Guidelines:</strong>
+      <strong>Conference Poster Guidelines:</strong>
       <p>{{ selectedConference.posterGuidelines }}</p>
     </div>
 
@@ -284,7 +302,7 @@
       <p>
         You bring a printed poster to the conference, display it in the designated exhibition area,
         and explain your work to interested attendees. It is an excellent opportunity for networking
-        and receiving feedback in an informal setting.
+        and receiving direct feedback in an informal setting.
       </p>
     </div>
 
