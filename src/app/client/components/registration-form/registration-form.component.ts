@@ -1,210 +1,3 @@
-// import { Component, OnInit } from '@angular/core';
-// import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-// import { ApiService } from '../../../services/api.service';
-// import { Router } from '@angular/router';
-
-// export function abstractValidator(maxWordsLimit: number, maxCharsLimit: number) {
-//   return (control: AbstractControl): ValidationErrors | null => {
-//     if (!control.value) return null;
-//     const text = control.value;
-//     const wordCount = text.trim().split(/\s+/).filter((w: string) => w.length > 0).length;
-//     const charCount = text.length;
-//     if (wordCount > maxWordsLimit) return { maxWords: { limit: maxWordsLimit } };
-//     if (charCount > maxCharsLimit) return { maxChars: { limit: maxCharsLimit } };
-//     return null;
-//   };
-// }
-
-// export function maxWords(limit: number) {
-//   return (control: AbstractControl): ValidationErrors | null => {
-//     if (!control.value) return null;
-//     const wordCount = control.value.trim().split(/\s+/).length;
-//     return wordCount > limit ? { maxWords: { required: limit, actual: wordCount } } : null;
-//   };
-// }
-
-// @Component({
-//   selector: 'app-registration-form',
-//   templateUrl: './registration-form.component.html',
-//   styleUrls: ['./registration-form.component.css']
-// })
-// export class RegistrationFormComponent implements OnInit {
-//   regForm!: FormGroup;
-//   abstractForm!: FormGroup;
-//   posterForm!: FormGroup;
-
-//   allConferences: any[] = [];
-//   filteredConferences: any[] = [];
-//   selectedConference: any = null;
-
-//   isLoading = false;
-//   showConferencePopup = false;
-//   showAbstractPopup = false;
-//   showPosterPopup = false;
-//   showAbstractNotice = false;
-
-//   conferenceSearch = '';
-//   wantsAbstract: boolean | null = null;
-//   abstractSaved = false;
-  
-//   // תוספות חדשות
-//   wantsPoster: boolean | null = null;
-//   posterSaved = false;
-//   isLifetime: boolean = false;
-
-//   currentStep = 1;
-//   totalSteps = 3;
-
-//   showPaymentModal = false;
-//   paymentInputData: any = null;
-
-//   constructor(
-//     private fb: FormBuilder,
-//     private apiService: ApiService,
-//     private router: Router
-//   ) { }
-
-//   ngOnInit(): void {
-//     this.initForms();
-//     this.loadConferences();
-//   }
-
-//   initForms() {
-//     this.regForm = this.fb.group({
-//       fullName: ['', [Validators.required, Validators.minLength(5), Validators.pattern(/^[\u0590-\u05FF\u05F0-\u05F4a-zA-Z'"-]+(?:\s[\u0590-\u05FF\u05F0-\u05F4a-zA-Z'"-]+)+$/)]],
-//       email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]{2,}\.[a-zA-Z]{2,}$/)]],
-//       phone: ['', [Validators.required, Validators.pattern(/^0[0-9]{9}$/)]],
-//       address: ['', [Validators.required, Validators.minLength(5), Validators.pattern(/^.+[\s,].+$/)]],
-//       institution: [''],
-//       conferenceId: ['', Validators.required]
-//     });
-
-//     this.abstractForm = this.fb.group({
-//       title: ['', [Validators.required, maxWords(25)]],
-//       body: ['', [Validators.required, abstractValidator(250, 2500)]],
-//       notes: ['']
-//     });
-
-//     this.posterForm = this.fb.group({
-//       title: ['', Validators.required],
-//       authors: ['', Validators.required],
-//       notes: ['']
-//     });
-//   }
-
-//   loadConferences() {
-//     this.isLoading = true;
-//     this.apiService.getSurveys().subscribe({
-//       next: (data) => {
-//         this.allConferences = data.map(conf => ({
-//           ...conf,
-//           id: conf.Id || conf._id || conf.id,
-//           name: conf.Name || conf.name || conf.Conference || 'כנס ללא שם',
-//           location: conf.Location || conf.location || 'מיקום לא מוגדר',
-//           description: conf.Description || conf.description || '',
-//           abstractGuidelines: conf.AbstractGuidelines || '',
-//           allowsPoster: conf.AllowsPoster || false, // מוודא שקיים
-//           posterGuidelines: conf.PosterGuidelines || ''
-//         }));
-//         this.filteredConferences = [...this.allConferences];
-//         this.isLoading = false;
-//       },
-//       error: (err) => { console.error('שגיאה בטעינת כנסים', err); this.isLoading = false; }
-//     });
-//   }
-
-//   openConferencePopup() { this.showConferencePopup = true; }
-//   closeConferencePopup() { this.showConferencePopup = false; }
-  
-//   selectConference(conf: any) {
-//     this.selectedConference = conf;
-//     this.regForm.patchValue({ conferenceId: conf.id || conf._id });
-//     this.showConferencePopup = false;
-//   }
-
-//   onAbstractChoice(wants: boolean) {
-//     this.wantsAbstract = wants;
-//     if (wants) { this.abstractForm.reset(); this.showAbstractPopup = true; }
-//   }
-
-//   onPosterChoice(wants: boolean) {
-//     this.wantsPoster = wants;
-//     if (wants) { this.posterForm.reset(); this.showPosterPopup = true; }
-//   }
-
-//   saveAbstract() {
-//     if (this.abstractForm.invalid) return;
-//     this.abstractSaved = true;
-//     this.showAbstractPopup = false;
-//     this.showAbstractNotice = true;
-//   }
-
-//   savePoster() {
-//     if (this.posterForm.invalid) return;
-//     this.posterSaved = true;
-//     this.showPosterPopup = false;
-//   }
-
-//   // ══ STEP NAVIGATION ══
-//   private stepFields: { [key: number]: string[] } = {
-//     1: ['conferenceId'],
-//     2: ['fullName', 'email', 'phone'],
-//     3: ['address', 'institution']
-//   };
-
-//   isStepValid(step: number): boolean {
-//     return this.stepFields[step].every(field => this.regForm.get(field)?.valid);
-//   }
-
-//   nextStep(): void {
-//     if (!this.isStepValid(this.currentStep)) return;
-//     if (this.currentStep < this.totalSteps) this.currentStep++;
-//   }
-
-//   prevStep(): void { if (this.currentStep > 1) this.currentStep--; }
-
-//   goToStep(step: number): void {
-//     if (step < this.currentStep) { this.currentStep = step; return; }
-//     for (let i = 1; i < step; i++) { if (!this.isStepValid(i)) return; }
-//     this.currentStep = step;
-//   }
-
-//   onSubmit() {
-//     if (this.regForm.invalid) return;
-//     this.isLoading = true;
-    
-//     const formVal = this.regForm.value;
-//     const abstract = this.abstractSaved ? this.abstractForm.value : null;
-//     const poster = this.posterSaved ? this.posterForm.value : null;
-
-//     const payload = {
-//       ...formVal,
-//       HasAbstract: this.abstractSaved,
-//       AbstractTitle: abstract?.title,
-//       AbstractBody: abstract?.body,
-//       HasPoster: this.posterSaved,
-//       PosterTitle: poster?.title,
-//       PosterAuthors: poster?.authors,
-//       IsLifetimeMember: this.isLifetime
-//     };
-
-//     const finalAmount = this.isLifetime ? 1.1 : (this.selectedConference?.price || 0.7);
-
-//     this.apiService.registerAttendee(payload).subscribe({
-//       next: (res: any) => {
-//         this.isLoading = false;
-//         this.paymentInputData = { ...payload, orderId: res.orderId || res.OrderId, amount: finalAmount };
-//         this.showPaymentModal = true;
-//       },
-//       error: (err) => { this.isLoading = false; alert('Error'); }
-//     });
-//   }
-
-//   closePaymentModal(): void { this.showPaymentModal = false; }
-//   get f() { return this.regForm.controls; }
-//   get af() { return this.abstractForm.controls; }
-// }
-
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ApiService } from '../../../services/api.service';
@@ -409,6 +202,24 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
     this.showConferencePopup = false;
   }
 
+  // ══ LIFETIME ══
+  toggleLifetime(): void {
+    this.isLifetimeMember = !this.isLifetimeMember;
+    if (this.isLifetimeMember) {
+      // ביטול תקציר ופוסטר כשבוחרים Lifetime
+      this.wantsAbstract = null;
+      this.wantsPoster = null;
+      this.abstractSaved = false;
+      this.posterSaved = false;
+      this.showAbstractPopup = false;
+      this.showPosterPopup = false;
+      this.showAbstractNotice = false;
+      this.showPosterNotice = false;
+      this.abstractForm.reset();
+      this.posterForm.reset();
+    }
+  }
+
   // ══ ABSTRACT ══
   onAbstractChoice(wants: boolean) {
     this.wantsAbstract = wants;
@@ -418,6 +229,11 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
       this.wantsPoster = null;
       this.posterSaved = false;
       this.showPosterNotice = false;
+      this.showPosterPopup = false;
+    } else {
+      this.showAbstractPopup = false;
+      this.abstractSaved = false;
+      this.showAbstractNotice = false;
     }
   }
 
@@ -441,6 +257,10 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
     if (wants) {
       this.posterForm.reset();
       this.showPosterPopup = true;
+    } else {
+      this.showPosterPopup = false;
+      this.posterSaved = false;
+      this.showPosterNotice = false;
     }
   }
 
@@ -524,7 +344,6 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
       next: (res: any) => {
         this.isLoading = false;
         const orderId = res.orderId || res.OrderId;
-
         this.paymentInputData = {
           ...payload,
           orderId: orderId,
