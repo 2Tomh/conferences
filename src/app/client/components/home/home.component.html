@@ -62,9 +62,9 @@
   </section>
 
   <section class="partners-section snap-section" id="section-partners">
-    <p class="section-label">{{ 'PARTNERS.TITLE' | translate }}</p>
+    <!-- <p class="section-label">{{ 'PARTNERS.TITLE' | translate }}</p> -->
     <h2 class="partners-heading">Supported By</h2>
-    <p class="partners-subtitle">Leading academic and scientific institutions backing this initiative</p>
+    <!-- <p class="partners-subtitle">Leading academic and scientific institutions backing this initiative</p> -->
     <div class="partners-grid" *ngIf="partners.length > 0">
       <a *ngFor="let partner of partners" [href]="partner.Url" target="_blank" class="partner-item">
         <img [src]="partner.Logo" [alt]="partner.Name">

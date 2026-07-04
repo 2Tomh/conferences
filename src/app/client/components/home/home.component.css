@@ -425,8 +425,7 @@
   }
 
   .home-logo {
-    width: 140px;
-    max-width: 140px;
+    width: min(100%, 50%);
   }
 
   .partners-section {
@@ -481,8 +480,8 @@
   }
 
   .home-logo {
-    width: 130px;
-    max-width: 130px;
+    width: min(100%, 60%);
+    max-width: 50%;
   }
 
   .hero-title {
@@ -536,6 +535,11 @@
   .partners-section {
     padding: 32px 16px;
   }
+
+  .home-logo {
+    width: min(100%, 95%);
+    max-width: 80%;
+  }
 }
 
 @media (max-width: 360px) {
@@ -549,6 +553,11 @@
 
   .partners-heading {
     font-size: 1.2rem;
+  }
+
+  .home-logo {
+    width: min(100%, 100%);
+    max-width: 100%;
   }
 }
 
