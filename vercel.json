@@ -1,7 +1,9 @@
 {
-  "buildCommand": "export NODE_OPTIONS='--openssl-legacy-provider' && npm install --legacy-peer-deps && npm run build -- --verbose",
-  "outputDirectory": "dist/ConferenceUI",
+  "buildCommand": "export NODE_OPTIONS='--openssl-legacy-provider' && npm install --legacy-peer-deps && npm run build && ls -R dist/ConferenceUI""outputDirectory": "dist/ConferenceUI",
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
