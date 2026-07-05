@@ -12,16 +12,13 @@ export class AuthGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     // 1. בדיקה: האם אנחנו באזור ניהול?
     // אם הנתיב לא מתחיל ב-'/admin', אנחנו בדפי הלקוח - נאפשר גישה חופשית.
-    console.log('Guard checking route:', state.url); // הוסף את זה
     if (!state.url.startsWith('/admin')) {
-      console.log('Public route - allowing access');
       return true;
     }
 
     // 2. אם הגענו לכאן, אנחנו באזור הניהול. נבדוק אם יש טוקן.
     const token = this.authService.getToken();
     if (!token) {
-      console.log('Admin route without token - redirecting to login');
       this.router.navigate(['/admin/login']);
       return false;
     }

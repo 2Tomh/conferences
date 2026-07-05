@@ -46,43 +46,56 @@
 
         <ng-container *ngIf="selectedConference">
 
-          <!-- Lifetime Membership -->
-          <div class="membership-card">
-            <div class="membership-header">
-              <div class="membership-badge">⭐ Lifetime Member</div>
-              <div class="membership-price">
-                <span class="price-regular" [class.crossed]="isLifetimeMember">$50</span>
-                <span class="price-arrow" *ngIf="isLifetimeMember">→</span>
-                <span class="price-lifetime" *ngIf="isLifetimeMember">$250</span>
+          <!-- Registration Plan Selection -->
+          <div class="plan-options">
+
+            <div class="plan-card" [class.selected]="!isLifetimeMember" (click)="selectPlan(false)">
+              <span class="plan-radio" [class.checked]="!isLifetimeMember">
+                <span class="plan-radio-dot"></span>
+              </span>
+              <div class="plan-body">
+                <div class="plan-header">
+                  <h3 class="plan-title">Standard Registration</h3>
+                  <span class="plan-price">$50</span>
+                </div>
+                <p class="plan-desc">
+                  Admission to one conference of your choice plus Mind-IL's Grand Event, featuring the keynote lecture.
+                </p>
               </div>
             </div>
-            <p class="membership-desc">
-              Contribute to Mind-IL and support future events by registering as a lifetime member.
-              Enjoy access to all conferences and help strengthen Israeli science and academia for years to come.
-            </p>
-            <label class="membership-toggle">
-              <input type="checkbox" [checked]="isLifetimeMember" (change)="toggleLifetime()">
-              <span class="toggle-track">
-                <span class="toggle-thumb"></span>
+
+            <div class="plan-card plan-card-honored" [class.selected]="isLifetimeMember" (click)="selectPlan(true)">
+              <span class="plan-radio" [class.checked]="isLifetimeMember">
+                <span class="plan-radio-dot"></span>
               </span>
-              <span class="toggle-label">
-                {{ isLifetimeMember ? 'Lifetime membership included ($250)' : 'Add lifetime membership ($250)' }}
-              </span>
-            </label>
+              <div class="plan-body">
+                <div class="plan-header">
+                  <h3 class="plan-title">Mind-IL Honored Registration</h3>
+                  <span class="plan-price">$250</span>
+                </div>
+                <p class="plan-desc">
+                  Includes full access to all Mind-IL conferences and activities throughout the event.
+                </p>
+                <p class="plan-note">
+                  By choosing this option your registration will help support the long-term mission of Mind-IL to foster collaboration between Israeli researchers in Israel and around the world and to expand future scientific initiatives.
+                </p>
+              </div>
+            </div>
+
           </div>
 
-          <!-- Abstract / Poster / None — מוסתרים כש-Lifetime פעיל -->
-          <ng-container *ngIf="!isLifetimeMember">
+          <!-- Abstract / Poster / None — מוצג לפי הגדרות הכנס הנבחר, ללא קשר למסלול הרישום -->
+          <ng-container *ngIf="selectedConference?.allowsAbstract || selectedConference?.allowsPoster">
 
             <div class="form-row">
               <label>Would you like to submit a presentation?</label>
               <div class="radio-group">
-                <button type="button" class="btn-sm"
+                <button type="button" class="btn-sm" *ngIf="selectedConference?.allowsAbstract"
                   [class.active]="wantsAbstract === true"
                   (click)="onAbstractChoice(true)">
                   Abstract
                 </button>
-                <button type="button" class="btn-sm"
+                <button type="button" class="btn-sm" *ngIf="selectedConference?.allowsPoster"
                   [class.active]="wantsPoster === true && wantsAbstract === false"
                   (click)="onPosterOnlyChoice()">
                   Poster
@@ -102,7 +115,7 @@
             </div>
 
             <!-- Poster guidelines inline — מופיעות ברגע שבוחרים Poster -->
-            <ng-container *ngIf="wantsPoster === true && wantsAbstract === false">
+            <ng-container *ngIf="selectedConference?.allowsPoster && wantsPoster === true && wantsAbstract === false">
               <div class="poster-guidelines-inline">
                 <div class="poster-what">
                   <strong>What is a poster presentation?</strong>

@@ -1,92 +1,79 @@
-<!-- <div class="manage-container" dir="rtl">
-  <div class="form-card">
-    <form [formGroup]="conferenceForm" (ngSubmit)="saveConference()">
-<input type="hidden" formControlName="id">
-      <div *ngIf="currentStep === 1" class="step-content">
-        <h3>פרטי הכנס</h3>
-        <div class="form-group"><label>שם הכנס:</label><input formControlName="conference" class="form-control"></div>
-        <div class="form-group"><label>סוג:</label><input formControlName="type" class="form-control"></div>
-        <div class="form-group"><label>קטגוריה:</label><input formControlName="category" class="form-control"></div>
-        <div class="form-group"><label>תיאור:</label><textarea formControlName="description" class="form-control"></textarea></div>
-        <div class="form-group"><label>תאריך:</label><input formControlName="date" class="form-control"></div>
-        <div class="form-group"><label>מיקום:</label><input formControlName="location" class="form-control"></div>
-        <div class="form-group"><label>קהל יעד:</label><input formControlName="audience" class="form-control"></div>
-      </div>
-
-      <div *ngIf="currentStep === 2" class="step-content">
-        <h3>הנחיות ותאריכים</h3>
-        <div class="form-group checkbox-wrapper">
-          <label><input type="checkbox" formControlName="abstract_submission"> מאפשר הגשת תקצירים</label>
-        </div>
-        <div class="form-group"><label>הנחיות לתקציר:</label><textarea formControlName="abstractGuidelines" class="form-control"></textarea></div>
-        <div class="form-group"><label>מגבלת תווים:</label><input type="number" formControlName="abstractMaxLimit" class="form-control"></div>
-        <div class="form-group"><label>דד-ליין תקציר:</label><input formControlName="abstractDeadline" class="form-control"></div>
-        <div class="form-group"><label>דד-ליין הרשמה:</label><input formControlName="registrationDeadline" class="form-control"></div>
-        <div class="form-group"><label>איש קשר:</label><input formControlName="contactName" class="form-control"></div>
-        <div class="form-group"><label>אימייל קשר:</label><input formControlName="contactEmail" class="form-control"></div>
-      </div>
-
-      <div *ngIf="currentStep === 3" class="step-content">
-        <h3>מבנה ותוכן הכנס</h3>
-        
-        <div formGroupName="links" class="sub-section">
-          <label>קישורים:</label>
-          <input formControlName="survey" placeholder="לינק לסקר" class="form-control">
-          <input formControlName="website" placeholder="אתר הכנס" class="form-control">
-        </div>
-
-        <div formArrayName="organizers" class="sub-section">
-          <label>מארגנים:</label>
-          <div *ngFor="let org of organizers.controls; let i = index" class="row">
-            <input [formControlName]="i" class="form-control">
-          </div>
-          <button type="button" (click)="addOrganizer()">+ הוסף מארגן</button>
-        </div>
-
-        <div formArrayName="programBlocks" class="sub-section">
-          <label>בלוקים של תוכנית:</label>
-          <div *ngFor="let pb of program.controls; let i = index" [formGroupName]="i" class="row">
-            <input formControlName="startTime" placeholder="התחלה" class="form-control">
-            <input formControlName="endTime" placeholder="סיום" class="form-control">
-            <input formControlName="title" placeholder="כותרת" class="form-control">
-          </div>
-          <button type="button" (click)="addProgramBlock()">+ הוסף בלוק תוכנית</button>
-        </div>
-      </div>
-
-      <div class="actions">
-        <button type="button" *ngIf="currentStep > 1" (click)="prevStep()">קודם</button>
-        <button type="button" *ngIf="currentStep < 3" (click)="nextStep()">המשך</button>
-        <button type="submit" class="btn-save">שמור את כל הנתונים</button>
-      </div>
-    </form>
-  </div>
-</div> -->
 <div class="manage-container" dir="rtl">
   <div class="form-card">
     <form [formGroup]="conferenceForm" (ngSubmit)="saveConference()">
-      
+
       <input type="hidden" formControlName="id">
 
+      <!-- ══ STEP 1: פרטי בסיס ══ -->
       <div *ngIf="currentStep === 1" class="step-content">
         <h3>פרטי הכנס</h3>
         <div class="form-group"><label>שם הכנס:</label><input formControlName="conference" class="form-control"></div>
         <div class="form-group"><label>סוג:</label><input formControlName="type" class="form-control"></div>
         <div class="form-group"><label>קטגוריה:</label><input formControlName="category" class="form-control"></div>
         <div class="form-group"><label>תיאור:</label><textarea formControlName="description" class="form-control"></textarea></div>
+      </div>
+
+      <!-- ══ STEP 2: מיקום ותאריך ══ -->
+      <div *ngIf="currentStep === 2" class="step-content">
+        <h3>מיקום ותאריך</h3>
         <div class="form-group"><label>תאריך:</label><input formControlName="date" class="form-control"></div>
         <div class="form-group"><label>מיקום:</label><input formControlName="location" class="form-control"></div>
         <div class="form-group"><label>קהל יעד:</label><input formControlName="audience" class="form-control"></div>
       </div>
 
-      <div *ngIf="currentStep === 2" class="step-content">
-        <h3>הנחיות ותאריכים</h3>
-        <div class="form-group checkbox-wrapper">
-          <label><input type="checkbox" formControlName="abstract_submission"> מאפשר הגשת תקצירים</label>
+      <!-- ══ STEP 3: הגשת תקצירים ══ -->
+      <div *ngIf="currentStep === 3" class="step-content">
+        <h3>הגשת תקצירים</h3>
+
+        <div class="form-group">
+          <label>מה מותר להגיש לכנס הזה?</label>
+          <div class="submission-options">
+            <label class="submission-option" [class.active]="conferenceForm.get('submissionType')?.value === 'abstract'">
+              <span class="submission-checkbox">
+                <span class="submission-checkmark">✓</span>
+              </span>
+              <input type="radio" class="submission-radio-input" name="submissionType"
+                [checked]="conferenceForm.get('submissionType')?.value === 'abstract'"
+                (change)="setSubmissionType('abstract')">
+              רק תקציר
+            </label>
+
+            <label class="submission-option" [class.active]="conferenceForm.get('submissionType')?.value === 'abstractOrPoster'">
+              <span class="submission-checkbox">
+                <span class="submission-checkmark">✓</span>
+              </span>
+              <input type="radio" class="submission-radio-input" name="submissionType"
+                [checked]="conferenceForm.get('submissionType')?.value === 'abstractOrPoster'"
+                (change)="setSubmissionType('abstractOrPoster')">
+              תקציר או פוסטר
+            </label>
+
+            <label class="submission-option" [class.active]="conferenceForm.get('submissionType')?.value === 'none'">
+              <span class="submission-checkbox">
+                <span class="submission-checkmark">✓</span>
+              </span>
+              <input type="radio" class="submission-radio-input" name="submissionType"
+                [checked]="conferenceForm.get('submissionType')?.value === 'none'"
+                (change)="setSubmissionType('none')">
+              לא לשלוח כלום
+            </label>
+          </div>
         </div>
-        <div class="form-group"><label>הנחיות לתקציר:</label><textarea formControlName="abstractGuidelines" class="form-control"></textarea></div>
-        <div class="form-group"><label>מגבלת תווים:</label><input type="number" formControlName="abstractMaxLimit" class="form-control"></div>
-        <div class="form-group"><label>דד-ליין תקציר:</label><input formControlName="abstractDeadline" class="form-control"></div>
+
+        <ng-container *ngIf="conferenceForm.get('submissionType')?.value !== 'none'">
+          <div class="form-group"><label>הנחיות לתקציר:</label><textarea formControlName="abstractGuidelines" class="form-control"></textarea></div>
+          <div class="form-group"><label>מגבלת תווים לתקציר:</label><input type="number" formControlName="abstractMaxLimit" class="form-control"></div>
+          <div class="form-group"><label>דד-ליין תקציר:</label><input formControlName="abstractDeadline" class="form-control"></div>
+        </ng-container>
+
+        <ng-container *ngIf="conferenceForm.get('submissionType')?.value === 'abstractOrPoster'">
+          <div class="form-group"><label>הנחיות לפוסטר:</label><textarea formControlName="posterGuidelines" class="form-control"></textarea></div>
+        </ng-container>
+      </div>
+
+      <!-- ══ STEP 4: הרשמה ואנשי קשר ══ -->
+      <div *ngIf="currentStep === 4" class="step-content">
+        <h3>הרשמה ואנשי קשר</h3>
         <div class="form-group"><label>דד-ליין הרשמה:</label><input formControlName="registrationDeadline" class="form-control"></div>
         <div class="form-group"><label>איש קשר:</label><input formControlName="contactName" class="form-control"></div>
         <div class="form-group">
@@ -95,9 +82,10 @@
         </div>
       </div>
 
-      <div *ngIf="currentStep === 3" class="step-content">
+      <!-- ══ STEP 5: מבנה ותוכן הכנס ══ -->
+      <div *ngIf="currentStep === 5" class="step-content">
         <h3>מבנה ותוכן הכנס</h3>
-        
+
         <div formGroupName="links" class="sub-section">
           <label>קישורים:</label>
           <input formControlName="survey" placeholder="לינק לסקר" class="form-control">
@@ -123,10 +111,18 @@
         </div>
       </div>
 
+      <!-- ══ STEP INDICATOR (5 שלבים) ══ -->
+      <div class="step-indicator">
+        <ng-container *ngFor="let s of [1,2,3,4,5]; let last = last">
+          <span class="step-dot" [class.active]="currentStep === s" [class.done]="currentStep > s">{{ s }}</span>
+          <span class="step-connector" *ngIf="!last" [class.filled]="currentStep > s"></span>
+        </ng-container>
+      </div>
+
       <div class="actions">
         <button type="button" *ngIf="currentStep > 1" (click)="prevStep()">קודם</button>
-        <button type="button" *ngIf="currentStep < 3" (click)="nextStep()">המשך</button>
-        <button type="submit" class="btn-save">שמור את כל הנתונים</button>
+        <button type="button" *ngIf="currentStep < totalSteps" (click)="nextStep()">המשך</button>
+        <button type="submit" *ngIf="currentStep === totalSteps" class="btn-save">שמור את כל הנתונים</button>
       </div>
     </form>
   </div>

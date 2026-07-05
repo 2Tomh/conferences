@@ -170,11 +170,6 @@ ngOnInit(): void {
     this.apiService.getSurveys().subscribe({  // אותו endpoint רגיל
       next: (data) => {
         const allData = Array.isArray(data) ? data : [data];
-        console.log('--- ALL DATA ---', allData);
-        console.log('userRole:', this.userRole);
-        console.log('userScope:', this.userScope);
-        console.log('managedConferenceId:', this.managedConferenceId);
-
         if (this.userRole === 'Admin') {
           // אדמין רואה הכל – אבל זה לא אמור לקרות כאן
           this.conferences = allData;

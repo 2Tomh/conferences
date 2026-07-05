@@ -172,7 +172,6 @@ export class ManageConferenceComponent implements OnInit {
     formData.Name = formData.Conference;
     // --- התיקון נגמר כאן ---
 
-    console.log('שולח נתונים לשרת:', formData);
 
     if (this.isEditMode) {
       this.apiService.updateSurvey(this.conferenceId!, formData).subscribe({

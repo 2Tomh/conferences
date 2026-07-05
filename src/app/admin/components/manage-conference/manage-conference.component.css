@@ -1,318 +1,336 @@
+:host {
+  display: block;
+}
+
+* {
+  font-family: Arial, sans-serif !important;
+  box-sizing: border-box;
+}
+
+/* ══ CONTAINER ══ */
 .manage-container {
-  min-height: 100vh;
-  padding: 60px 20px;
-  background-color: #0b1120;
+  min-height: calc(100vh - 64px);
   display: flex;
-  justify-content: center;
   align-items: flex-start;
-  color: white;
-  font-family: 'Open Sans', sans-serif;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: #0F1B4C;
+  padding: 48px 20px;
 }
 
-/* הכרטיס המרכזי */
+.manage-container::before,
+.manage-container::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+}
+
+.manage-container::before {
+  width: 460px;
+  height: 460px;
+  top: -160px;
+  left: -150px;
+}
+
+.manage-container::after {
+  width: 320px;
+  height: 320px;
+  bottom: -110px;
+  right: -110px;
+}
+
+/* ══ FORM CARD ══ */
 .form-card {
+  position: relative;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 40px 44px 0;
   width: 100%;
-  max-width: 650px;
-  background: #111827;
-  padding: 40px;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-  border: 1px solid #1f2937;
-}
-
-/* כותרת הטופס */
-.form-header {
-  text-align: center;
-  margin-bottom: 35px;
-}
-.form-header .icon {
-  font-size: 3rem;
-  margin-bottom: 12px;
-}
-.form-header h1 {
-  font-size: 2rem;
-  margin: 0;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
-.form-header p {
-  color: #9ca3af;
-  margin-top: 8px;
-  font-size: 0.95rem;
-}
-
-/* מבנה קופסאות הקלט */
-.form-group {
-  margin-bottom: 24px;
+  max-width: 720px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
-label {
-  font-size: 0.9rem;
-  margin-bottom: 8px;
-  color: #9ca3af;
-  font-weight: 500;
+.form-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #C9A84C, #E8C97A, #C9A84C);
+}
+
+.form-card form {
+  display: flex;
+  flex-direction: column;
+}
+
+.step-content {
+  padding-bottom: 4px;
+}
+
+.step-content h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #0F1B4C;
+  margin: 6px 0 26px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #EFEFF3;
+}
+
+/* ══ FIELDS ══ */
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #4A4A5E;
+  margin-bottom: 7px;
 }
 
 .form-control {
-  background: #1f2937;
-  border: 1px solid #374151;
-  border-radius: 8px;
-  padding: 14px 16px;
-  color: white;
   width: 100%;
-  box-sizing: border-box;
-  font-size: 0.95rem;
-  transition: all 0.2s ease-in-out;
-}
-
-.form-control:focus {
+  padding: 11px 14px;
+  font-size: 0.9rem;
+  color: #0F1B4C;
+  background: #FAFAFC;
+  border: 1.5px solid #E4E4EC;
+  border-radius: 8px;
   outline: none;
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
 }
 
 .form-control::placeholder {
-  color: #4b5563;
+  color: #ABABC0;
+}
+
+.form-control:hover {
+  border-color: #C9C9DA;
+}
+
+.form-control:focus {
+  background: #ffffff;
+  border-color: #C9A84C;
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.18);
 }
 
 textarea.form-control {
+  min-height: 90px;
   resize: vertical;
 }
 
-/* קופסאות קטגוריות משנה (מארגנים וקישורים) */
-.links-card-section, .organizers-card-section {
-  background: #131b2e;
-  border: 1px solid #22304e;
-  padding: 24px;
-  margin-bottom: 28px;
-  border-radius: 12px;
-}
-
-.links-card-section h4, .organizers-card-section h4 {
-  margin-top: 0;
-  margin-bottom: 20px;
-  font-size: 1.1rem;
-  color: #e5e7eb;
-  border-bottom: 1px solid #22304e;
-  padding-bottom: 10px;
-}
-
-/* גריד מארגנים משופר בתצורת שורות חצי-חצי */
-.organizers-grid {
+/* ══ CHECKBOX ══ */
+.checkbox-wrapper label {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.organizer-row {
-  display: flex;
-  gap: 10px;
   align-items: center;
+  gap: 8px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: #0F1B4C;
+  cursor: pointer;
 }
 
-.btn-remove-org {
-  background: #271c1c;
-  border: 1px solid #7f1d1d;
-  color: #f87171;
-  padding: 12px;
-  border-radius: 8px;
+.checkbox-wrapper input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  accent-color: #C9A84C;
   cursor: pointer;
-  transition: 0.2s;
+}
+
+/* ══ SUB SECTIONS (links / organizers / program blocks) ══ */
+.sub-section {
+  margin-bottom: 26px;
+  padding: 18px 18px 16px;
+  background: #FAFAFC;
+  border: 1px solid #EFEFF3;
+  border-radius: 10px;
+}
+
+.sub-section > label {
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #C9A84C;
+  margin-bottom: 12px;
+}
+
+.sub-section .form-control {
+  margin-bottom: 10px;
+}
+
+.sub-section .form-control:last-of-type {
+  margin-bottom: 0;
+}
+
+.sub-section .row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.sub-section .row .form-control {
+  margin-bottom: 0;
+}
+
+.sub-section > button {
+  margin-top: 4px;
+  background: none;
+  border: none;
+  color: #0F1B4C;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 6px 2px;
+  transition: color 0.2s;
+}
+
+.sub-section > button:hover {
+  color: #C9A84C;
+}
+
+/* ══ STEP INDICATOR ══ */
+.step-indicator {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0;
+  padding: 4px 0 20px;
+  flex-shrink: 0;
 }
 
-.btn-remove-org:hover {
-  background: #7f1d1d;
-  color: white;
-}
-
-.btn-add-org {
-  background: transparent;
-  border: 2px dashed #374151;
-  color: #9ca3af;
-  padding: 12px;
-  border-radius: 8px;
-  width: 100%;
-  cursor: pointer;
-  font-weight: 500;
-  transition: 0.2s;
-}
-
-.btn-add-org:hover {
-  border-color: #4f46e5;
-  color: white;
-  background: rgba(79, 70, 229, 0.05);
-}
-
-/* צ'קבוקס מעוצב */
-.checkbox-wrapper {
-  margin-top: 10px;
-  margin-bottom: 30px;
-}
-
-.checkbox-label {
+.step-dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  color: #e5e7eb;
-  font-size: 0.95rem;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #A0A0B4;
+  background: #EFEFF3;
+  transition: background 0.25s, color 0.25s;
 }
 
-.custom-checkbox {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-  accent-color: #4f46e5;
+.step-dot.active {
+  background: #0F1B4C;
+  color: #ffffff;
 }
 
-/* כפתורי שמירה וביטול תחתונים */
+.step-dot.done {
+  background: #C9A84C;
+  color: #0F1B4C;
+}
+
+.step-connector {
+  width: 44px;
+  height: 2px;
+  background: #EFEFF3;
+  transition: background 0.25s;
+}
+
+.step-connector.filled {
+  background: #C9A84C;
+}
+
+/* ══ ACTIONS ══ */
 .actions {
   display: flex;
-  gap: 16px;
-  margin-top: 10px;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-top: 0;
+  padding: 18px 0 22px;
+  border-top: 1px solid #EFEFF3;
+  flex-shrink: 0;
+  background: #ffffff;
 }
 
 .actions button {
-  padding: 14px;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.86rem;
+  font-weight: 700;
+  padding: 11px 22px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: background 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.actions button[type="button"]:not(.btn-save) {
+  background: #EEF1FB;
+  color: #0F1B4C;
+  border: none;
+}
+
+.actions button[type="button"]:not(.btn-save):hover {
+  filter: brightness(0.96);
 }
 
 .btn-save {
-  background: #4f46e5;
-  color: white;
-  flex: 2; /* נותן לכפתור השמירה נפח משמעותי יותר */
+  background: #C9A84C;
+  color: #0F1B4C;
+  border: 2px solid #C9A84C;
+  margin-right: auto;
 }
 
-.btn-save:hover:not(:disabled) {
-  background: #4338ca;
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+.btn-save:hover {
+  background: transparent;
+  color: #C9A84C;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px rgba(201, 168, 76, 0.22);
 }
 
-.btn-save:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
+/* ══ MOBILE ══ */
+@media (max-width: 600px) {
+  .manage-container {
+    padding: 28px 14px;
+  }
+
+  .manage-container::before,
+  .manage-container::after {
+    display: none;
+  }
+
+  .form-card {
+    padding: 28px 22px 0;
+  }
+
+  .actions {
+    padding: 14px 0 18px;
+  }
+
+  .step-content h3 {
+    font-size: 1.05rem;
+  }
+
+  .sub-section .row {
+    flex-direction: column;
+  }
+
+  .actions {
+    flex-wrap: wrap;
+  }
+
+  .btn-save {
+    margin-right: 0;
+    width: 100%;
+  }
 }
 
-.btn-cancel {
-  background: #374151;
-  color: #d1d5db;
-  flex: 1;
+@media (prefers-reduced-motion: reduce) {
+  .form-control,
+  .actions button,
+  .sub-section > button {
+    transition: none;
+  }
 }
-
-.btn-cancel:hover {
-  background: #4b5563;
-  color: white;
-}
-
-/* --- עיצוב ה-Stepper החדש --- */
-.stepper {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 40px;
-  background: #131b2e;
-  padding: 16px 24px;
-  border-radius: 12px;
-  border: 1px solid #1f2937;
-}
-
-.step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  flex: 1;
-  position: relative;
-  transition: all 0.3s ease;
-}
-
-.step-number {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #1f2937;
-  border: 2px solid #374151;
-  color: #9ca3af;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-}
-
-.step-label {
-  font-size: 0.8rem;
-  color: #6b7280;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-/* שלב פעיל */
-.step.active .step-number {
-  background: #4f46e5;
-  border-color: #6366f1;
-  color: white;
-  box-shadow: 0 0 12px rgba(79, 70, 229, 0.4);
-}
-
-.step.active .step-label {
-  color: white;
-  font-weight: 600;
-}
-
-/* שלב שהושלם */
-.step.completed .step-number {
-  background: #10b981;
-  border-color: #10b981;
-  color: white;
-}
-
-.step.completed .step-label {
-  color: #10b981;
-}
-
-/* קווי החיבור בין השלבים */
-.step-line {
-  flex: 1;
-  height: 2px;
-  background: #374151;
-  margin: 0 10px;
-  margin-bottom: 22px; /* יישור עם העיגולים */
-  transition: all 0.3s ease;
-}
-
-.step-line.active {
-  background: #4f46e5;
-}
-
-/* אפקט כניסה קל לתוכן השלב */
-.step-content {
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.final-submit {
-  background: #10b981 !important;
-}
-.final-submit:hover {
-  background: #059669 !important;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
-}
-
-/* --- שאר ה-CSS שנתתי לך קודם נשאר אותו דבר ומולבש פה פיקס --- */

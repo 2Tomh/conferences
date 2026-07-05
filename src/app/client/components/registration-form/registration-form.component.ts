@@ -58,11 +58,8 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
 
   isLifetimeMember = false;
 
-  // readonly REGULAR_PRICE = 50;
-  readonly REGULAR_PRICE = 0.5;
-
-  // readonly LIFETIME_PRICE = 250;
-  readonly LIFETIME_PRICE = 1;
+  readonly REGULAR_PRICE = 50;
+  readonly LIFETIME_PRICE = 250;
 
   get registrationAmount(): number {
     return this.isLifetimeMember ? this.LIFETIME_PRICE : this.REGULAR_PRICE;
@@ -143,6 +140,7 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
           location: conf.Location || conf.location || '',
           description: conf.Description || conf.description || '',
           abstractGuidelines: conf.AbstractGuidelines || conf.abstractGuidelines || '',
+          allowsAbstract: conf.AbstractSubmission || conf.Abstract_submission || conf.abstract_submission || false,
           allowsPoster: conf.AllowsPoster || conf.allowsPoster || false,
           posterGuidelines: conf.PosterGuidelines || conf.posterGuidelines || ''
         }));
@@ -205,22 +203,11 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
     this.showConferencePopup = false;
   }
 
-  // ══ LIFETIME ══
-  toggleLifetime(): void {
-    this.isLifetimeMember = !this.isLifetimeMember;
-    if (this.isLifetimeMember) {
-      // ביטול תקציר ופוסטר כשבוחרים Lifetime
-      this.wantsAbstract = null;
-      this.wantsPoster = null;
-      this.abstractSaved = false;
-      this.posterSaved = false;
-      this.showAbstractPopup = false;
-      this.showPosterPopup = false;
-      this.showAbstractNotice = false;
-      this.showPosterNotice = false;
-      this.abstractForm.reset();
-      this.posterForm.reset();
-    }
+  // ══ PLAN SELECTION (Standard / Mind-IL Honored) ══
+  selectPlan(isLifetime: boolean): void {
+    this.isLifetimeMember = isLifetime;
+    // הערה: אין יותר איפוס של wantsAbstract/wantsPoster כאן —
+    // הגשת תקציר/פוסטר תלויה עכשיו בכנס הנבחר בלבד, לא במסלול הרישום
   }
 
   // ══ ABSTRACT ══

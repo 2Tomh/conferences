@@ -17,6 +17,7 @@
 .nav-container {
   max-width: 1200px;
   margin: auto;
+  width: 100%;
 }
 
 .nav-brand {
@@ -38,7 +39,16 @@
 
 .nav-links {
   display: flex;
+  align-items: center;
   gap: 15px;
+  width: 100%;
+}
+
+/* כפתור השפה תמיד בקצה הקבוע (תחילת הכיוון) — 
+   ה-margin-inline-end:auto דוחף את כל שאר הפריטים לצד השני,
+   כך שהמיקום נשאר יציב בין אם המשתמש מחובר (הרבה קישורים) ובין אם לא (ריק) */
+.lang-switch {
+  margin-inline-end: auto;
 }
 
 .nav-links a {

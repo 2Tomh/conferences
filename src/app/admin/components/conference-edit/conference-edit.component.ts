@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { ApiService } from 'src/app/services/api.service';
+import { ApiService } from '../../../services/api.service';
+
+export type SubmissionType = 'abstract' | 'abstractOrPoster' | 'none';
 
 @Component({
   selector: 'app-conference-edit',
@@ -11,6 +13,7 @@ import { ApiService } from 'src/app/services/api.service';
 export class ConferenceEditComponent implements OnInit {
   conferenceForm: FormGroup;
   currentStep = 1;
+  totalSteps = 5;
   isEditMode = false;
 
   constructor(
@@ -32,9 +35,11 @@ export class ConferenceEditComponent implements OnInit {
       registrationDeadline: [''],
       contactName: [''],
       contactEmail: [''],
+      // ══ הגשת תקצירים/פוסטרים ══
+      submissionType: ['none' as SubmissionType], // 'abstract' | 'abstractOrPoster' | 'none'
       abstractGuidelines: [''],
       abstractMaxLimit: [2500],
-      abstract_submission: [false],
+      posterGuidelines: [''],
       organizers: this.fb.array([]),
       programBlocks: this.fb.array([]),
       links: this.fb.group({
@@ -54,6 +59,16 @@ export class ConferenceEditComponent implements OnInit {
         next: (data) => {
           if (!data) return;
 
+          // גזירת submissionType מהשדות הישנים (תאימות לאחור עם רשומות קיימות)
+          const abstractOn = !!(data.Abstract_submission || data.abstract_submission);
+          const posterOn = !!(data.AllowsPoster || data.allowsPoster);
+          let submissionType: SubmissionType = 'none';
+          if (abstractOn && posterOn) {
+            submissionType = 'abstractOrPoster';
+          } else if (abstractOn) {
+            submissionType = 'abstract';
+          }
+
           // 1. מיפוי שדות פשוטים וקישורים (Links)
           this.conferenceForm.patchValue({
             id: data.Id || data._id || data.id,
@@ -69,9 +84,10 @@ export class ConferenceEditComponent implements OnInit {
             registrationDeadline: data.RegistrationDeadline || data.registrationDeadline,
             contactName: data.ContactName || data.contactName,
             contactEmail: data.ContactEmail || data.contactEmail,
+            submissionType,
             abstractGuidelines: data.AbstractGuidelines || data.abstractGuidelines,
             abstractMaxLimit: data.AbstractMaxLimit || data.abstractMaxLimit || 2500,
-            abstract_submission: data.Abstract_submission || data.abstract_submission || false,
+            posterGuidelines: data.PosterGuidelines || data.posterGuidelines || '',
             links: data.Links || data.links || { survey: '', website: '' }
           });
 
@@ -110,19 +126,28 @@ export class ConferenceEditComponent implements OnInit {
   addOrganizer(val = '') { this.organizers.push(this.fb.control(val)); }
   addProgramBlock() { this.program.push(this.fb.group({ startTime: '', endTime: '', title: '' })); }
 
-  nextStep() { if (this.currentStep < 3) this.currentStep++; }
+  nextStep() { if (this.currentStep < this.totalSteps) this.currentStep++; }
   prevStep() { if (this.currentStep > 1) this.currentStep--; }
+
+  setSubmissionType(type: SubmissionType): void {
+    this.conferenceForm.get('submissionType')?.setValue(type);
+  }
 
   saveConference() {
     if (this.conferenceForm.valid) {
       const rawValue = this.conferenceForm.value;
+      const submissionType: SubmissionType = rawValue.submissionType;
 
-      // מכין את ה-payload - שימוש בערכים נקיים
+      // גוזרים את השדות הישנים (Abstract_submission / AllowsPoster) מתוך submissionType,
+      // כדי לשמור תאימות עם שאר המערכת (registration-form) שעדיין קוראת אותם
       const payload = {
         ...this.conferenceForm.value,
-        Name: this.conferenceForm.value.conference // זה המפתח להחזרת השם ל-DB
+        Name: this.conferenceForm.value.conference, // זה המפתח להחזרת השם ל-DB
+        Abstract_submission: submissionType === 'abstract' || submissionType === 'abstractOrPoster',
+        AllowsPoster: submissionType === 'abstractOrPoster'
       };
       delete payload.conference; // מנקה את השם הישן
+      delete payload.submissionType; // שדה עזר בלבד בצד הלקוח, לא נשמר כמו שהוא
 
       // מוודא שאין null ב-ID
       const idToUse = rawValue.id;
