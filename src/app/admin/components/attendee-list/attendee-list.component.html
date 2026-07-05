@@ -1,4 +1,4 @@
-<div class="attendee-page" dir="rtl">
+<!-- <div class="attendee-page" dir="rtl">
     <button class="btn-export" (click)="exportToCSV()">ייצוא לאקסל</button>
     <div class="page-header">
         <h2>נרשמים</h2>
@@ -129,6 +129,163 @@
             <div class="detail-row" style="margin-top: 10px;" *ngIf="selectedAttendee.AbstractNotes">
                 <span class="label">הערות</span>
                 <span>{{ selectedAttendee.AbstractNotes }}</span>
+            </div>
+        </div>
+    </div>
+</div> -->
+<div class="attendee-page" dir="rtl">
+    <button class="btn-export" (click)="exportToCSV()">ייצוא לאקסל</button>
+    <div class="page-header">
+        <h2>נרשמים</h2>
+        <div class="stats-row">
+            <div class="stat-chip">סה"כ {{ totalCount }}</div>
+            <div class="stat-chip paid">שילמו {{ paidCount }}</div>
+            <div class="stat-chip pending">ממתינים {{ pendingCount }}</div>
+            <div class="stat-chip failed">נכשלו {{ failedCount }}</div>
+            <div class="stat-chip abstract">תקצירים {{ withAbstractCount }}</div>
+            <div class="stat-chip poster">פוסטרים {{ withPosterCount }}</div>
+        </div>
+    </div>
+
+    <div class="filters-bar">
+        <input class="search-input" type="text" placeholder="חיפוש לפי שם, אימייל, מוסד..."
+            [(ngModel)]="searchTerm" (input)="onSearch()" />
+
+        <select [(ngModel)]="selectedConferenceId" (change)="onFilterChange()">
+            <option value="">כל הכנסים</option>
+            <option *ngFor="let c of allConferences" [value]="c.id || c._id">{{ c.name }}</option>
+        </select>
+
+        <select [(ngModel)]="selectedPaymentStatus" (change)="onFilterChange()">
+            <option value="">כל הסטטוסים</option>
+            <option value="success">שולם</option>
+            <option value="pending">ממתין</option>
+            <option value="failed">נכשל</option>
+        </select>
+    </div>
+
+    <div class="loading" *ngIf="isLoading">טוען נרשמים...</div>
+    <div class="error-msg" *ngIf="error">{{ error }}</div>
+
+    <div class="table-wrap" *ngIf="!isLoading && !error">
+        <table class="attendee-table">
+            <thead>
+                <tr>
+                    <th (click)="sortBy('FullName')" class="sortable">שם מלא</th>
+                    <th (click)="sortBy('Email')" class="sortable">אימייל</th>
+                    <th>טלפון</th>
+                    <th>מוסד</th>
+                    <th (click)="sortBy('ConferenceName')" class="sortable">כנס</th>
+                    <th>תקציר</th>
+                    <th>פוסטר</th>
+                    <th (click)="sortBy('PaymentStatus')" class="sortable">תשלום</th>
+                    <th (click)="sortBy('RegisteredAt')" class="sortable">תאריך הרשמה</th>
+                    <th>פרטים</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let a of filteredAttendees">
+                    <td>{{ a.FullName }}</td>
+                    <td>{{ a.Email }}</td>
+                    <td>{{ a.Phone }}</td>
+                    <td>{{ a.Institution || '—' }}</td>
+                    <td>{{ a.ConferenceName }}</td>
+                    <td>
+                        <span class="badge abstract" *ngIf="a.HasAbstract">✓ כן</span>
+                        <span class="badge no-abstract" *ngIf="!a.HasAbstract">לא</span>
+                    </td>
+                    <td>
+                        <span class="badge poster" *ngIf="a.HasPoster">✓ כן</span>
+                        <span class="badge no-poster" *ngIf="!a.HasPoster">לא</span>
+                    </td>
+                    <td>
+                        <span class="badge" [ngClass]="a.PaymentStatus">
+                            {{ a.DisplayStatus }}
+                        </span>
+                    </td>
+                    <td>{{ a.RegisteredAt | date:'dd/MM/yy HH:mm' }}</td>
+                    <td>
+                        <button class="btn-details" (click)="openDetails(a)">צפה</button>
+                    </td>
+                </tr>
+                <tr *ngIf="filteredAttendees.length === 0">
+                    <td colspan="10" class="no-data">לא נמצאו נרשמים</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="popup-overlay" *ngIf="selectedAttendee" (click)="closeDetails()">
+    <div class="popup-box details-popup" (click)="$event.stopPropagation()" dir="rtl">
+        <div class="popup-header">
+            <h3>{{ selectedAttendee.FullName }}</h3>
+            <button class="btn-close" (click)="closeDetails()">✕</button>
+        </div>
+
+        <div class="details-grid">
+            <div class="detail-row">
+                <span class="label">אימייל</span>
+                <span>{{ selectedAttendee.Email }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">כתובת</span>
+                <span>{{ selectedAttendee.Address }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">טלפון</span>
+                <span>{{ selectedAttendee.Phone }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">מוסד</span>
+                <span>{{ selectedAttendee.Institution || '—' }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">כנס</span>
+                <span>{{ selectedAttendee.ConferenceName }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">סטטוס תשלום</span>
+                <span class="badge" [ngClass]="selectedAttendee.PaymentStatus">
+                    {{ selectedAttendee.DisplayStatus }}
+                </span>
+            </div>
+            <div class="detail-row">
+                <span class="label">תאריך הרשמה</span>
+                <span>{{ selectedAttendee.RegisteredAt | date:'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+        </div>
+
+        <div class="abstract-section" *ngIf="selectedAttendee.HasAbstract">
+            <hr>
+            <h4>תקציר שהוגש</h4>
+            <div class="detail-row">
+                <span class="label">כותרת</span>
+                <span>{{ selectedAttendee.AbstractTitle }}</span>
+            </div>
+            <div class="abstract-body">
+                {{ selectedAttendee.AbstractBody }}
+            </div>
+            <div class="detail-row" style="margin-top: 10px;" *ngIf="selectedAttendee.AbstractNotes">
+                <span class="label">הערות</span>
+                <span>{{ selectedAttendee.AbstractNotes }}</span>
+            </div>
+        </div>
+
+        <div class="poster-section" *ngIf="selectedAttendee.HasPoster">
+            <hr>
+            <h4>פוסטר שהוגש</h4>
+            <div class="detail-row">
+                <span class="label">כותרת</span>
+                <span>{{ selectedAttendee.PosterTitle }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">מחברים</span>
+                <span>{{ selectedAttendee.PosterAuthors }}</span>
+            </div>
+            <div class="detail-row" style="margin-top: 10px;" *ngIf="selectedAttendee.PosterNotes">
+                <span class="label">הערות</span>
+                <span>{{ selectedAttendee.PosterNotes }}</span>
             </div>
         </div>
     </div>

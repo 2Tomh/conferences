@@ -33,6 +33,7 @@
 .stat-chip.paid    { background: #d4edda; color: #276749; }
 .stat-chip.pending { background: #fff3cd; color: #856404; }
 .stat-chip.abstract{ background: #cfe2ff; color: #084298; }
+.stat-chip.poster  { background: #e6e0f8; color: #4b2e83; }
 
 /* ===== פילטרים ===== */
 .filters-bar {
@@ -114,6 +115,8 @@
 .badge.failed      { background: #f8d7da; color: #842029; }
 .badge.abstract    { background: #cfe2ff; color: #084298; }
 .badge.no-abstract { background: #f0f0f0; color: #888; }
+.badge.poster      { background: #e6e0f8; color: #4b2e83; }
+.badge.no-poster   { background: #f0f0f0; color: #888; }
 
 /* ===== כפתור פרטים ===== */
 .btn-details {
@@ -211,6 +214,20 @@
   color: #333;
   margin: 8px 0;
   white-space: pre-wrap;
+}
+
+/* ===== פוסטר - עקבי לתקציר, גוון סגלגל להבחנה ===== */
+.poster-section {
+  margin-top: 20px;
+  background: #f8f6fd;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.poster-section h4 {
+  color: #4b2e83;
+  margin: 0 0 12px;
+  font-size: 1rem;
 }
 
 .loading { text-align: center; padding: 40px; color: #666; }

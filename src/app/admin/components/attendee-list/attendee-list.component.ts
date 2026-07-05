@@ -15,16 +15,13 @@
 //   isLoading = false;
 //   error = '';
 
-//   // פילטרים
 //   searchTerm = '';
 //   selectedConferenceId = '';
 //   selectedPaymentStatus = '';
 
-//   // מיון
-//   sortField = 'registeredAt';
+//   sortField = 'RegisteredAt';
 //   sortDir: 'asc' | 'desc' = 'desc';
 
-//   // פרטי נרשם נבחר
 //   selectedAttendee: any = null;
 
 //   constructor(private apiService: ApiService) { }
@@ -33,29 +30,26 @@
 //     this.loadAttendees();
 //     this.loadConferences();
 //   }
-//   // בקובץ ה-TS
+
 //   exportToCSV() {
 //     if (!this.filteredAttendees || this.filteredAttendees.length === 0) {
 //       alert("אין נתונים לייצוא");
 //       return;
 //     }
 
-//     // 1. הגדרת כותרות העמודות (אפשר להוסיף כאן את כל השדות)
 //     const header = "שם מלא,אימייל,טלפון,מוסד,סטטוס תשלום,תאריך הרשמה\n";
 
-//     // 2. מיפוי הנתונים - כאן הקסם: שימוש בשמות עם אותיות גדולות בדיוק כפי שהם ב-DB
 //     const rows = this.filteredAttendees.map(a => {
 //       return [
 //         a.FullName,
 //         a.Email,
 //         a.Phone,
 //         a.Institution || '—',
-//         a.PaymentStatus === 'paid' ? 'שולם' : (a.PaymentStatus === 'pending' ? 'ממתין' : 'נכשל'),
+//         a.DisplayStatus || a.PaymentStatus,
 //         a.RegisteredAt ? new Date(a.RegisteredAt).toLocaleString('he-IL') : ''
-//       ].map(value => `"${value}"`).join(","); // הוספת גרשיים כדי למנוע בעיות עם פסיקים בטקסט
+//       ].map(value => `"${value}"`).join(",");
 //     }).join("\n");
 
-//     // 3. יצירת הקובץ עם תמיכה בעברית (UTF-8 BOM)
 //     const csvContent = "\uFEFF" + header + rows;
 //     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
 
@@ -67,27 +61,7 @@
 //     link.click();
 //     document.body.removeChild(link);
 //   }
-//   // loadAttendees() {
-//   //   this.isLoading = true;
-//   //   this.error = '';
 
-//   //   this.apiService.getAllAttendees({
-//   //     conferenceId: this.selectedConferenceId,
-//   //     paymentStatus: this.selectedPaymentStatus,
-//   //     search: this.searchTerm
-//   //   }).subscribe({
-//   //     next: (data) => {
-//   //       this.attendees = data;
-//   //       this.applyFilters();
-//   //       this.isLoading = false;
-//   //     },
-//   //     error: (err) => {
-//   //       this.error = 'שגיאה בטעינת נרשמים';
-//   //       console.error(err);
-//   //       this.isLoading = false;
-//   //     }
-//   //   });
-//   // }
 //   loadAttendees() {
 //     this.isLoading = true;
 //     this.error = '';
@@ -109,6 +83,7 @@
 //       }
 //     });
 //   }
+
 //   loadConferences() {
 //     this.apiService.getAllConferences().subscribe({
 //       next: (data) => this.allConferences = data,
@@ -145,14 +120,6 @@
 //     this.filteredAttendees = list;
 //   }
 
-//   get paidCount() {
-//     return this.filteredAttendees.filter(a => a.PaymentStatus === 'success').length;
-//   }
-
-//   get pendingCount() {
-//     return this.filteredAttendees.filter(a => a.PaymentStatus === 'pending').length;
-//   }
-
 //   onSearch() { this.applyFilters(); }
 
 //   onFilterChange() { this.loadAttendees(); }
@@ -174,13 +141,20 @@
 //     return this.filteredAttendees.length;
 //   }
 
-//   get withAbstractCount() {
-//     const count = this.filteredAttendees.filter(a => {
-//       const hasAbs = a.HasAbstract || a.hasAbstract;
-//       return hasAbs === true;
-//     }).length;
+//   get paidCount() {
+//     return this.filteredAttendees.filter(a => a.PaymentStatus === 'success').length;
+//   }
 
-//     return count;
+//   get pendingCount() {
+//     return this.filteredAttendees.filter(a => a.PaymentStatus === 'pending').length;
+//   }
+
+//   get failedCount() {
+//     return this.filteredAttendees.filter(a => a.PaymentStatus === 'failed').length;
+//   }
+
+//   get withAbstractCount() {
+//     return this.filteredAttendees.filter(a => a.HasAbstract === true || a.hasAbstract === true).length;
 //   }
 // }
 import { Component, OnInit } from '@angular/core';
@@ -340,5 +314,9 @@ export class AttendeeListComponent implements OnInit {
 
   get withAbstractCount() {
     return this.filteredAttendees.filter(a => a.HasAbstract === true || a.hasAbstract === true).length;
+  }
+
+  get withPosterCount() {
+    return this.filteredAttendees.filter(a => a.HasPoster === true || a.hasPoster === true).length;
   }
 }
