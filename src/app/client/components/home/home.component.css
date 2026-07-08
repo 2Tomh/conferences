@@ -320,7 +320,7 @@
   font-size: 1.8rem;
   font-weight: 700;
   color: #0F1B4C;
-  margin-bottom: 8px;
+  margin-bottom: 5%;
 }
 
 .partners-heading::after {
@@ -351,7 +351,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px 32px;
   background: #ffffff;
   border: 1px solid #E8E8ED;
   border-radius: 8px;
@@ -524,7 +523,7 @@
   }
 
   .partner-item {
-    min-width: 130px;
+    min-width: 180px;
     padding: 14px 18px;
   }
 

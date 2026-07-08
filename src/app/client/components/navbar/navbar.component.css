@@ -215,7 +215,7 @@ app-header-actions {
   left: 0;
   right: 0;
   width: 100%;
-  min-height: 64px;
+  min-height: 75px;
   background: rgba(15, 27, 76, 0.97) !important;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -275,6 +275,7 @@ app-header-actions {
 
 .tab-icon {
   width: 50px;
+  display: flex;
 }
 
 .nav-link:hover,
