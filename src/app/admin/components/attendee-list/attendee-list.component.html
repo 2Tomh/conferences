@@ -203,7 +203,6 @@
                     <td>{{ a.Affiliation || a.affiliation || '—' }}</td>
                     <td>{{ a.ConferenceName }}</td>
                     <td>
-                        <span class="badge abstract" *ngIf="a.HasAbstract || a.hasAbstract">✓ כן</span>
                         <span class="badge no-abstract" *ngIf="!a.HasAbstract && !a.hasAbstract">לא</span>
                         <button class="btn-details" *ngIf="a.HasAbstract || a.hasAbstract" (click)="openAbstractDetails(a)">צפה</button>
                     </td>
