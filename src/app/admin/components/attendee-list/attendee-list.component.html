@@ -54,7 +54,8 @@
                     <td>
                         <span class="badge abstract" *ngIf="a.HasAbstract || a.hasAbstract">✓ כן</span>
                         <span class="badge no-abstract" *ngIf="!a.HasAbstract && !a.hasAbstract">לא</span>
-                        <button class="btn-details" *ngIf="a.HasAbstract || a.hasAbstract" (click)="openAbstractDetails(a)">צפה</button>
+                        <button class="btn-details" *ngIf="a.HasAbstract || a.hasAbstract"
+                            (click)="openAbstractDetails(a)">צפה</button>
                     </td>
                     <td>
                         <span class="badge" [ngClass]="a.PaymentStatus">
@@ -109,45 +110,40 @@
                 <span>{{ selectedAttendee.RegisteredAt | date:'dd/MM/yyyy HH:mm' }}</span>
             </div>
         </div>
-
-        <div class="abstract-section" *ngIf="selectedAttendee.HasAbstract || selectedAttendee.hasAbstract">
-            <hr>
-            <h4>תקציר שהוגש</h4>
-            <div class="detail-row">
-                <span class="label">כותרת</span>
-                <span>{{ selectedAttendee.AbstractTitle || selectedAttendee.abstractTitle }}</span>
-            </div>
-            <div class="abstract-body">
-                {{ selectedAttendee.AbstractBody || selectedAttendee.abstractBody }}
-            </div>
-            <div class="detail-row" style="margin-top: 10px;" *ngIf="selectedAttendee.AbstractNotes || selectedAttendee.abstractNotes">
-                <span class="label">הערות</span>
-                <span>{{ selectedAttendee.AbstractNotes || selectedAttendee.abstractNotes }}</span>
-            </div>
-        </div>
     </div>
 </div>
 
 <div class="popup-overlay" *ngIf="selectedAbstractAttendee" (click)="closeAbstractDetails()">
-    <div class="popup-box details-popup" (click)="$event.stopPropagation()" dir="rtl">
-        <div class="popup-header">
-            <h3>תקציר — {{ selectedAbstractAttendee.FullName }}</h3>
+    <div class="popup-box abstract-view-popup" (click)="$event.stopPropagation()" dir="rtl">
+        <div class="popup-header abstract-view-header">
+            <div class="abstract-view-header-text">
+                <span class="abstract-view-eyebrow">תקציר שהוגש</span>
+                <h3>{{ selectedAbstractAttendee.FullName }}</h3>
+            </div>
             <button class="btn-close" (click)="closeAbstractDetails()">✕</button>
         </div>
 
-        <div class="abstract-section">
-            <div class="detail-row">
-                <span class="label">כותרת</span>
-                <span>{{ selectedAbstractAttendee.AbstractTitle || selectedAbstractAttendee.abstractTitle }}</span>
-            </div>
-            <div class="abstract-body">
-                {{ selectedAbstractAttendee.AbstractBody || selectedAbstractAttendee.abstractBody }}
-            </div>
-            <div class="detail-row" style="margin-top: 10px;"
-                *ngIf="selectedAbstractAttendee.AbstractNotes || selectedAbstractAttendee.abstractNotes">
-                <span class="label">הערות</span>
-                <span>{{ selectedAbstractAttendee.AbstractNotes || selectedAbstractAttendee.abstractNotes }}</span>
-            </div>
+        <div class="abstract-view-block">
+            <span class="abstract-view-label">כותרת</span>
+            <p class="abstract-view-title">{{ selectedAbstractAttendee.AbstractTitle ||
+                selectedAbstractAttendee.abstractTitle }}</p>
+        </div>
+
+        <div class="abstract-view-block">
+            <span class="abstract-view-label">תוכן התקציר</span>
+            <div class="abstract-body abstract-view-body">{{ selectedAbstractAttendee.AbstractBody ||
+                selectedAbstractAttendee.abstractBody }}</div>
+        </div>
+
+        <div class="abstract-view-block"
+            *ngIf="selectedAbstractAttendee.AbstractNotes || selectedAbstractAttendee.abstractNotes">
+            <span class="abstract-view-label">הערות נוספות</span>
+            <p class="abstract-view-notes">{{ selectedAbstractAttendee.AbstractNotes ||
+                selectedAbstractAttendee.abstractNotes }}</p>
+        </div>
+
+        <div class="abstract-view-footer">
+            <button class="btn-close-wide" (click)="closeAbstractDetails()">סגור</button>
         </div>
     </div>
 </div> -->
@@ -195,6 +191,7 @@
                     <th (click)="sortBy('ConferenceName')" class="sortable">כנס</th>
                     <th>תקציר</th>
                     <th (click)="sortBy('PaymentStatus')" class="sortable">תשלום</th>
+                    <th (click)="sortBy('Amount')" class="sortable">סכום ששולם</th>
                     <th (click)="sortBy('RegisteredAt')" class="sortable">תאריך הרשמה</th>
                     <th>פרטים</th>
                 </tr>
@@ -215,13 +212,14 @@
                             {{ a.DisplayStatus }}
                         </span>
                     </td>
+                    <td>{{ (a.Amount || a.amount) | number }} ₪</td>
                     <td>{{ a.RegisteredAt | date:'dd/MM/yy HH:mm' }}</td>
                     <td>
                         <button class="btn-details" (click)="openDetails(a)">צפה</button>
                     </td>
                 </tr>
                 <tr *ngIf="filteredAttendees.length === 0">
-                    <td colspan="8" class="no-data">לא נמצאו נרשמים</td>
+                    <td colspan="9" class="no-data">לא נמצאו נרשמים</td>
                 </tr>
             </tbody>
         </table>
@@ -259,12 +257,16 @@
                 </span>
             </div>
             <div class="detail-row">
+                <span class="label">סכום ששולם</span>
+                <span>{{ (selectedAttendee.Amount || selectedAttendee.amount) | number }} ₪</span>
+            </div>
+            <div class="detail-row">
                 <span class="label">תאריך הרשמה</span>
                 <span>{{ selectedAttendee.RegisteredAt | date:'dd/MM/yyyy HH:mm' }}</span>
             </div>
         </div>
 
-        <div class="abstract-section" *ngIf="selectedAttendee.HasAbstract || selectedAttendee.hasAbstract">
+        <!-- <div class="abstract-section" *ngIf="selectedAttendee.HasAbstract || selectedAttendee.hasAbstract">
             <hr>
             <h4>תקציר שהוגש</h4>
             <div class="detail-row">
@@ -278,7 +280,7 @@
                 <span class="label">הערות</span>
                 <span>{{ selectedAttendee.AbstractNotes || selectedAttendee.abstractNotes }}</span>
             </div>
-        </div>
+        </div> -->
     </div>
 </div>
 
