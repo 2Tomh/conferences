@@ -74,25 +74,20 @@
               </div>
             </div>
           </div>
-          <!-- Abstract / Poster / None — מוצג לפי הגדרות הכנס הנבחר, ללא קשר למסלול הרישום -->
-          <ng-container *ngIf="selectedConference?.allowsAbstract || selectedConference?.allowsPoster">
+          <!-- Abstract Yes/No — מוצג רק אם הכנס הנבחר מאפשר הגשת תקצירים -->
+          <ng-container *ngIf="selectedConference?.allowsAbstract">
             <div class="form-row">
-              <label>Would you like to submit a presentation?</label>
+              <label>Would you like to submit an abstract for this conference?</label>
               <div class="radio-group">
-                <button type="button" class="btn-sm" *ngIf="selectedConference?.allowsAbstract"
+                <button type="button" class="btn-sm"
                   [class.active]="wantsAbstract === true"
                   (click)="onAbstractChoice(true)">
-                  Abstract
-                </button>
-                <button type="button" class="btn-sm" *ngIf="selectedConference?.allowsPoster"
-                  [class.active]="wantsPoster === true && wantsAbstract === false"
-                  (click)="onPosterOnlyChoice()">
-                  Poster
+                  Yes
                 </button>
                 <button type="button" class="btn-sm"
-                  [class.active]="wantsAbstract === false && wantsPoster === false"
+                  [class.active]="wantsAbstract === false"
                   (click)="onNoSubmission()">
-                  None
+                  No
                 </button>
               </div>
             </div>
@@ -101,29 +96,6 @@
               <p>✅ Abstract saved successfully and will be attached to your registration.</p>
               <button type="button" (click)="closeAbstractNotice()">Close</button>
             </div>
-            <!-- Poster guidelines inline — מופיעות ברגע שבוחרים Poster -->
-            <ng-container *ngIf="selectedConference?.allowsPoster && wantsPoster === true && wantsAbstract === false">
-              <div class="poster-guidelines-inline">
-                <div class="poster-what">
-                  <strong>What is a poster presentation?</strong>
-                  <p>
-                    You bring a printed poster to the conference, display it in the designated
-                    exhibition area, and explain your work to interested attendees. It is an
-                    excellent opportunity for networking and receiving direct feedback in an
-                    informal setting.
-                  </p>
-                </div>
-                <div *ngIf="selectedConference?.posterGuidelines" class="poster-conf-guidelines">
-                  <strong>Conference Poster Guidelines:</strong>
-                  <p>{{ selectedConference.posterGuidelines }}</p>
-                </div>
-              </div>
-              <!-- Poster notice -->
-              <div *ngIf="showPosterNotice" class="notice-box">
-                <p>🖼️ Poster submission saved successfully and will be attached to your registration.</p>
-                <button type="button" (click)="closePosterNotice()">Close</button>
-              </div>
-            </ng-container>
           </ng-container>
         </ng-container>
       </div>
@@ -278,59 +250,9 @@
         Please note: the abstract is subject to approval, and it is possible that it will
         <strong>not be accepted</strong> as a lecture at the conference.
       </p>
-      <p>
-        If you would like your work to be presented as a <strong>poster</strong> in case the
-        abstract is not approved, please state this in the
-        <strong>"Additional Notes"</strong> field of the abstract form.
-      </p>
     </div>
     <button type="button" class="btn-submit pending-approval-confirm" (click)="closeAbstractPendingPopup()">
       Got it
     </button>
-  </div>
-</div>
-
-<!-- ══ POSTER POPUP ══ -->
-<div *ngIf="showPosterPopup" class="popup-overlay">
-  <div class="popup-content">
-    <h3>Submit Poster</h3>
-    <div *ngIf="selectedConference?.posterGuidelines" class="abstract-guidelines">
-      <strong>Conference Poster Guidelines:</strong>
-      <p>{{ selectedConference.posterGuidelines }}</p>
-    </div>
-    <div class="abstract-guidelines">
-      <strong>What is a poster presentation?</strong>
-      <p>
-        You bring a printed poster to the conference, display it in the designated exhibition area,
-        and explain your work to interested attendees. It is an excellent opportunity for networking
-        and receiving direct feedback in an informal setting.
-      </p>
-    </div>
-    <form [formGroup]="posterForm">
-      <div class="form-row">
-        <label>Poster Title (up to 25 words)</label>
-        <input formControlName="title" placeholder="Poster title" class="form-control">
-        <div *ngIf="pf['title'].touched">
-          <div *ngIf="pf['title'].hasError('required')" class="error-text">This field is required</div>
-          <div *ngIf="pf['title'].hasError('maxWords')" class="error-text">Title is too long — maximum 25 words</div>
-        </div>
-      </div>
-      <div class="form-row">
-        <label>Authors</label>
-        <input formControlName="authors" placeholder="e.g. John Smith, Jane Doe" class="form-control">
-        <div *ngIf="pf['authors'].touched">
-          <div *ngIf="pf['authors'].hasError('required')" class="error-text">This field is required</div>
-        </div>
-      </div>
-      <div class="form-row">
-        <label>Additional Notes <span class="optional-tag">Optional</span></label>
-        <textarea formControlName="notes" placeholder="Additional notes or special requests..."
-          class="form-control" rows="2"></textarea>
-      </div>
-      <div class="abstract-actions">
-        <button type="button" class="btn-submit" (click)="savePoster()">Save Poster Submission</button>
-        <button type="button" class="btn-cancel" (click)="closePosterPopup()">Cancel</button>
-      </div>
-    </form>
   </div>
 </div>

@@ -156,7 +156,12 @@
 //   get withAbstractCount() {
 //     return this.filteredAttendees.filter(a => a.HasAbstract === true || a.hasAbstract === true).length;
 //   }
+
+//   get withPosterCount() {
+//     return this.filteredAttendees.filter(a => a.HasPoster === true || a.hasPoster === true).length;
+//   }
 // }
+
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../services/api.service';
 
@@ -196,14 +201,14 @@ export class AttendeeListComponent implements OnInit {
       return;
     }
 
-    const header = "שם מלא,אימייל,טלפון,מוסד,סטטוס תשלום,תאריך הרשמה\n";
+    const header = "שם מלא,אימייל,שיוך מוסדי,כתובת,סטטוס תשלום,תאריך הרשמה\n";
 
     const rows = this.filteredAttendees.map(a => {
       return [
         a.FullName,
         a.Email,
-        a.Phone,
-        a.Institution || '—',
+        a.Affiliation || '—',
+        a.Address || '—',
         a.DisplayStatus || a.PaymentStatus,
         a.RegisteredAt ? new Date(a.RegisteredAt).toLocaleString('he-IL') : ''
       ].map(value => `"${value}"`).join(",");
@@ -258,7 +263,7 @@ export class AttendeeListComponent implements OnInit {
       list = list.filter(a =>
         a.FullName?.toLowerCase().includes(t) ||
         a.Email?.toLowerCase().includes(t) ||
-        a.Institution?.toLowerCase().includes(t)
+        a.Affiliation?.toLowerCase().includes(t)
       );
     }
 
@@ -314,9 +319,5 @@ export class AttendeeListComponent implements OnInit {
 
   get withAbstractCount() {
     return this.filteredAttendees.filter(a => a.HasAbstract === true || a.hasAbstract === true).length;
-  }
-
-  get withPosterCount() {
-    return this.filteredAttendees.filter(a => a.HasPoster === true || a.hasPoster === true).length;
   }
 }
