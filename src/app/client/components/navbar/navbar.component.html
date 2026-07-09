@@ -1,37 +1,35 @@
 <div class="main-nav">
   <nav class="science-navbar">
     <div class="nav-container">
-      <div  routerLink="/">
+      <div routerLink="/">
         <img class="tab-icon" src="../../../../assets/tab-icon2.jpeg" alt="">
       </div>
 
-      <button class="hamburger-btn" (click)="toggleMobileMenu()" [class.open]="mobileMenuOpen"
-        aria-label="Toggle menu">
+      <button class="hamburger-btn" (click)="toggleMobileMenu()" [class.open]="mobileMenuOpen" aria-label="Toggle menu">
         <span></span>
         <span></span>
         <span></span>
       </button>
 
       <div class="links-section" [class.mobile-open]="mobileMenuOpen">
-        <a routerLink="/" class="nav-link" routerLinkActive="active"
-          [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileMenu()">
+        <a routerLink="/" class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+          (click)="closeMobileMenu()">
           {{ 'Client_NAV.HOME' | translate }}
         </a>
-        <a routerLink="/ConferenceEvents" class="nav-link" routerLinkActive="active"
-          (click)="closeMobileMenu()">
+        <a routerLink="/ConferenceEvents" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">
           {{ 'Client_NAV.SURVEYS' | translate }}
         </a>
         <!-- <a class="nav-link btn-register" (click)="openRegistration(); closeMobileMenu()">
           {{ 'Client_NAV.REGISTER_CONFERENCE' | translate }}
         </a> -->
         <div class="mobile-lang-wrapper">
-          <app-header-actions></app-header-actions>
+          <!-- <app-header-actions></app-header-actions> -->
         </div>
       </div>
-
-      <div class="desktop-actions">
+      
+      <!-- <div class="desktop-actions">
         <app-header-actions></app-header-actions>
-      </div>
+      </div> -->
     </div>
   </nav>
 
