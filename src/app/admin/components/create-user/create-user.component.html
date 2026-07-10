@@ -1,49 +1,25 @@
-<!-- <div class="create-user-container">
-  <h2>{{ 'CREATE_USER.TITLE' | translate }}</h2>
-  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-  <input formControlName="fullName" placeholder="שם מלא">
-  <input formControlName="email" placeholder="אימייל">
-  <input type="password" formControlName="password" placeholder="סיסמה">
-  
-  <select formControlName="role">
-    <option value="Admin">Admin</option>
-    <option value="FacultyManager">FacultyManager</option>
-  </select>
-
-  <select *ngIf="userForm.value.role === 'FacultyManager'" formControlName="departmentName">
-    <option value="" disabled selected>-- בחר מחלקה --</option>
-    <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
-  </select>
-
-  <button type="submit" [disabled]="userForm.invalid">יצירת משתמש</button>
-</form>
-</div> -->
-
 <div class="create-user-container">
-  <h2>יצירת משתמש חדש</h2>
+  <h2>Create New User</h2>
   <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
     
-    <input formControlName="fullName" placeholder="שם מלא">
-    <input formControlName="email" placeholder="אימייל">
-    <input type="password" formControlName="password" placeholder="סיסמה">
+    <input formControlName="fullName" placeholder="Full Name">
+    <input formControlName="email" placeholder="Email">
+    <input type="password" formControlName="password" placeholder="Password">
   
     <select formControlName="role">
       <option value="Admin">Admin</option>
       <option value="FacultyManager">FacultyManager</option>
     </select>
-
     <select *ngIf="userForm.value.role === 'FacultyManager'" formControlName="departmentName">
-      <option value="" disabled selected>-- בחר מחלקה --</option>
+      <option value="" disabled selected>-- Select Department --</option>
       <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
     </select>
-
     <select formControlName="conferenceId">
-      <option value="" disabled selected>-- בחר כנס לשיוך --</option>
+      <option value="" disabled selected>-- Select Conference to Assign --</option>
       <option *ngFor="let conf of filteredConferences" [value]="conf.Id">
         {{ conf.Name || conf.name }}
       </option>
     </select>
-
-    <button type="submit" [disabled]="userForm.invalid">יצירת משתמש</button>
+    <button type="submit" [disabled]="userForm.invalid">Create User</button>
   </form>
 </div>

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { ApiService } from '../../../services/api.service';
-
 @Component({
   selector: 'app-user-management',
   templateUrl: './user-management.component.html',
@@ -15,13 +14,11 @@ export class UserManagementComponent implements OnInit {
   isCreateModalOpen = false;
   faculties: string[] = [];
   roles = ['Admin', 'FacultyManager', 'Lecturer'];
-
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
     private apiService: ApiService,
   ) { }
-
   ngOnInit(): void {
     this.loadUsers();
     this.loadFaculties();
@@ -31,7 +28,7 @@ export class UserManagementComponent implements OnInit {
       next: (data) => {
         this.users = data;
       },
-      error: (err) => console.error('שגיאה:', err)
+      error: (err) => console.error('Error:', err)
     });
   }
   startEdit(user: any): void {
@@ -49,37 +46,34 @@ export class UserManagementComponent implements OnInit {
   }
   saveEdit(): void {
     if (!this.editingUser) {
-      console.error('אין משתמש בעריכה!');
+      console.error('No user is being edited!');
       return;
     }
     const userId = this.editingUser.Id || this.editingUser.id || this.editingUser.ID;
-
     if (!userId) {
-      alert('שגיאה: המערכת לא מצאה את ה-ID של המשתמש. תסתכל ב-Console ותראה איך קוראים לשדה באובייקט!');
+      alert('Error: could not find the user ID. Check the Console to see how the field is named on the object!');
       return;
     }
-
     if (this.editForm.invalid) {
-      alert('הטופס אינו תקין');
+      alert('The form is invalid');
       return;
     }
-
     this.authService.updateUser(userId, this.editForm.value).subscribe({
       next: () => {
-        alert('המשתמש עודכן בהצלחה');
+        alert('User updated successfully');
         this.editingUser = null;
         this.loadUsers();
       },
       error: (err) => {
-        console.error('שגיאת עדכון:', err);
+        console.error('Update error:', err);
       }
     });
   }
   deleteUser(id: string): void {
-    if (!confirm('האם אתה בטוח שברצונך למחוק משתמש זה?')) { return; }
+    if (!confirm('Are you sure you want to delete this user?')) { return; }
     this.authService.deleteUser(id).subscribe({
       next: () => this.loadUsers(),
-      error: (err) => alert('שגיאה במחיקה: ' + err.error)
+      error: (err) => alert('Error deleting: ' + err.error)
     });
   }
   openCreateModal() {
@@ -91,10 +85,10 @@ export class UserManagementComponent implements OnInit {
   loadFaculties(): void {
     this.apiService.getFaculties().subscribe({
       next: (data) => {
-        // מניחים ש-data הוא אובייקט שבו המפתחות הם שמות הפקולטות
+        // Assuming data is an object whose keys are the faculty names
         this.faculties = Object.keys(data);
       },
-      error: (err) => console.error('שגיאה בטעינת פקולטות:', err)
+      error: (err) => console.error('Error loading faculties:', err)
     });
   }
 }

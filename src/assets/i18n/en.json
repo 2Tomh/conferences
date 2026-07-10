@@ -14,7 +14,7 @@
   },
   "ROLES": {
     "ADMIN": "Admin",
-    "FACULTY_MANAGER": "Faculty Manager",
+    "FACULTYMANAGER": "Faculty Manager",
     "LECTURER": "Lecturer"
   },
   "DASHBOARD_PAGE": {

@@ -67,8 +67,6 @@ export class ConferenceEventsComponent implements OnInit {
   }
 
   // ה-Getter של הסינון שתומך גם בטאבים וגם בחיפוש חופשי
-
-
   get filteredConferences(): any[] {
     let list = this.conferences;
 
@@ -85,20 +83,19 @@ export class ConferenceEventsComponent implements OnInit {
     const term = this.searchText.toLowerCase().trim();
 
     return list.filter(c => {
-      // א. נרמול שמות ושדות טקסט (שימוש ב-|| כדי לתפוס את כל הווריאציות)
+      // א. נרמול שם הכנס בלבד (שימוש ב-|| כדי לתפוס את כל הווריאציות)
+      // הוסר: התאמה לפי Description — היא גרמה להצגת כנסים לא-קשורים
+      // (למשל חיפוש "behav" הציג גם כנסים שרק בתיאור המלא שלהם
+      // מוזכרת המילה "behavior", בלי שום קשר לשם הכנס עצמו).
       const name = (c.Conference || c.conference || c.Name || c.name || '').toLowerCase();
-      const description = (c.Description || c.description || '').toLowerCase();
 
-      // ב. טיפול ב-TranslateService:
-      // נבדוק אם התרגום אכן קיים ולא מחזיר את ה-Key עצמו
+      // ב. טיפול ב-TranslateService — עדיין נחשב "שם הכנס", רק בשפה המתורגמת
       const translationKey = 'CONFERENCES_NAMES.' + (c.Conference || c.conference);
       const translated = this.translate.instant(translationKey);
       const confNameTranslated = (translated !== translationKey ? translated : '').toLowerCase();
 
-      // ג. בדיקת התאמה (חיפוש גמיש)
-      const matchText = name.includes(term) ||
-        confNameTranslated.includes(term) ||
-        description.includes(term);
+      // ג. בדיקת התאמה — רק שם הכנס (גולמי או מתורגם)
+      const matchText = name.includes(term) || confNameTranslated.includes(term);
 
       // ד. בדיקת מארגנים (טיפול גם באובייקטים וגם במערך מחרוזות)
       const organizers = c.Organizers || c.organizers || [];

@@ -13,7 +13,7 @@
     "SUBMIT": "צור משתמש"
   },
   "ROLES": {
-    "ADMIN": "מנהל מערכת",
+    "ADMIN": "Admin",
     "FACULTY_MANAGER": "מנהל פקולטה",
     "LECTURER": "מרצה"
   },

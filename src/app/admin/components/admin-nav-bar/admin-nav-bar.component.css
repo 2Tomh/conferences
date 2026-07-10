@@ -13,42 +13,52 @@
   display: flex;
   align-items: center;
 }
-
 .nav-container {
   max-width: 1200px;
   margin: auto;
   width: 100%;
 }
-
 .nav-brand {
   display: flex;
   align-items: center;
   gap: 15px;
   cursor: pointer;
 }
-
 .nav-logo {
   height: 40px;
 }
-
 .brand-text {
   font-size: 1.3rem;
   font-weight: 700;
   color: #ffffff;
 }
 
+/* התיקון המרכזי: space-between (במקום center) דוחף את קבוצת הקישורים לצד אחד
+   ואת nav-actions (כפתור ה-LogOut) לצד השני, שניהם באותה שורה */
 .nav-links {
   display: flex;
   align-items: center;
   gap: 15px;
   width: 100%;
+  justify-content: space-between;
 }
 
-/* כפתור השפה תמיד בקצה הקבוע (תחילת הכיוון) — 
-   ה-margin-inline-end:auto דוחף את כל שאר הפריטים לצד השני,
-   כך שהמיקום נשאר יציב בין אם המשתמש מחובר (הרבה קישורים) ובין אם לא (ריק) */
-.lang-switch {
-  margin-inline-end: auto;
+/* קבוצת קישורי הניווט (Dashboard / Attendees / User Management) —
+   פריט flex אחד מתוך שניים בתוך .nav-links */
+.nav-links-group {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: auto;
+}
+
+/* עוטף את כפתור ה-LogOut — פריט flex שני מתוך שניים בתוך .nav-links.
+   בעבר הבעיה הייתה ש-.btn-logout עצמו (display:flex) היה יושב ישירות
+   כפריט flex בתוך .nav-links, וה-display:flex שלו הפך אותו לבלוק
+   שגרם לו "לשבור שורה" מעל הקישורים. עכשיו הוא עטוף ב-div רגיל. */
+.nav-actions {
+  display: flex;
+  align-items: center;
 }
 
 .nav-links a {
@@ -59,16 +69,13 @@
   border-radius: 8px;
   transition: 0.3s;
 }
-
 .nav-links a:hover {
   background: rgba(255, 255, 255, 0.1);
 }
-
 .nav-links a.active {
   color: #3498db;
   background: rgba(52, 152, 219, 0.15);
 }
-
 .btn-logout {
   display: flex;
   align-items: center;
@@ -82,7 +89,6 @@
   cursor: pointer;
   transition: 0.3s;
 }
-
 .btn-logout:hover {
   background: #e74c3c;
   color: white;

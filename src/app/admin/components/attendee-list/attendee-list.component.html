@@ -1,48 +1,44 @@
-<!-- <div class="attendee-page" dir="rtl">
-    <button class="btn-export" (click)="exportToCSV()">ייצוא לאקסל</button>
+<div class="attendee-page" dir="ltr">
+    <button class="btn-export" (click)="exportToCSV()">Export to Excel</button>
     <div class="page-header">
-        <h2>נרשמים</h2>
+        <h2>Attendees</h2>
         <div class="stats-row">
-            <div class="stat-chip">סה"כ {{ totalCount }}</div>
-            <div class="stat-chip paid">שילמו {{ paidCount }}</div>
-            <div class="stat-chip pending">ממתינים {{ pendingCount }}</div>
-            <div class="stat-chip failed">נכשלו {{ failedCount }}</div>
-            <div class="stat-chip abstract">תקצירים {{ withAbstractCount }}</div>
+            <div class="stat-chip">Total {{ totalCount }}</div>
+            <div class="stat-chip paid">Paid {{ paidCount }}</div>
+            <div class="stat-chip pending">Pending {{ pendingCount }}</div>
+            <div class="stat-chip failed">Failed {{ failedCount }}</div>
+            <div class="stat-chip abstract">Abstracts {{ withAbstractCount }}</div>
         </div>
     </div>
-
     <div class="filters-bar">
-        <input class="search-input" type="text" placeholder="חיפוש לפי שם, אימייל, שיוך מוסדי..."
+        <input class="search-input" type="text" placeholder="Search by name, email, affiliation..."
             [(ngModel)]="searchTerm" (input)="onSearch()" />
-
-        <select [(ngModel)]="selectedConferenceId" (change)="onFilterChange()">
-            <option value="">כל הכנסים</option>
+        <!-- <select [(ngModel)]="selectedConferenceId" (change)="onFilterChange()">
+            <option value="">All Conferences</option>
             <option *ngFor="let c of allConferences" [value]="c.id || c._id">{{ c.name }}</option>
-        </select>
-
+        </select> -->
         <select [(ngModel)]="selectedPaymentStatus" (change)="onFilterChange()">
-            <option value="">כל הסטטוסים</option>
-            <option value="success">שולם</option>
-            <option value="pending">ממתין</option>
-            <option value="failed">נכשל</option>
+            <option value="">All Statuses</option>
+            <option value="success">Paid</option>
+            <option value="pending">Pending</option>
+            <option value="failed">Failed</option>
         </select>
     </div>
-
-    <div class="loading" *ngIf="isLoading">טוען נרשמים...</div>
+    <div class="loading" *ngIf="isLoading">Loading attendees...</div>
     <div class="error-msg" *ngIf="error">{{ error }}</div>
-
     <div class="table-wrap" *ngIf="!isLoading && !error">
         <table class="attendee-table">
             <thead>
                 <tr>
-                    <th (click)="sortBy('FullName')" class="sortable">שם מלא</th>
-                    <th (click)="sortBy('Email')" class="sortable">אימייל</th>
-                    <th>שיוך מוסדי</th>
-                    <th (click)="sortBy('ConferenceName')" class="sortable">כנס</th>
-                    <th>תקציר</th>
-                    <th (click)="sortBy('PaymentStatus')" class="sortable">תשלום</th>
-                    <th (click)="sortBy('RegisteredAt')" class="sortable">תאריך הרשמה</th>
-                    <th>פרטים</th>
+                    <th (click)="sortBy('FullName')" class="sortable">Full Name</th>
+                    <th (click)="sortBy('Email')" class="sortable">Email</th>
+                    <th>Affiliation</th>
+                    <th (click)="sortBy('ConferenceName')" class="sortable">Conference</th>
+                    <th>Abstract</th>
+                    <th (click)="sortBy('PaymentStatus')" class="sortable">Payment</th>
+                    <th (click)="sortBy('Amount')" class="sortable">Amount Paid</th>
+                    <th (click)="sortBy('RegisteredAt')" class="sortable">Registration Date</th>
+                    <th>Details</th>
                 </tr>
             </thead>
             <tbody>
@@ -52,159 +48,8 @@
                     <td>{{ a.Affiliation || a.affiliation || '—' }}</td>
                     <td>{{ a.ConferenceName }}</td>
                     <td>
-                        <span class="badge abstract" *ngIf="a.HasAbstract || a.hasAbstract">✓ כן</span>
-                        <span class="badge no-abstract" *ngIf="!a.HasAbstract && !a.hasAbstract">לא</span>
-                        <button class="btn-details" *ngIf="a.HasAbstract || a.hasAbstract"
-                            (click)="openAbstractDetails(a)">צפה</button>
-                    </td>
-                    <td>
-                        <span class="badge" [ngClass]="a.PaymentStatus">
-                            {{ a.DisplayStatus }}
-                        </span>
-                    </td>
-                    <td>{{ a.RegisteredAt | date:'dd/MM/yy HH:mm' }}</td>
-                    <td>
-                        <button class="btn-details" (click)="openDetails(a)">צפה</button>
-                    </td>
-                </tr>
-                <tr *ngIf="filteredAttendees.length === 0">
-                    <td colspan="8" class="no-data">לא נמצאו נרשמים</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<div class="popup-overlay" *ngIf="selectedAttendee" (click)="closeDetails()">
-    <div class="popup-box details-popup" (click)="$event.stopPropagation()" dir="rtl">
-        <div class="popup-header">
-            <h3>{{ selectedAttendee.FullName }}</h3>
-            <button class="btn-close" (click)="closeDetails()">✕</button>
-        </div>
-
-        <div class="details-grid">
-            <div class="detail-row">
-                <span class="label">אימייל</span>
-                <span>{{ selectedAttendee.Email }}</span>
-            </div>
-            <div class="detail-row">
-                <span class="label">כתובת</span>
-                <span>{{ selectedAttendee.Address }}</span>
-            </div>
-            <div class="detail-row">
-                <span class="label">שיוך מוסדי</span>
-                <span>{{ selectedAttendee.Affiliation || selectedAttendee.affiliation || '—' }}</span>
-            </div>
-            <div class="detail-row">
-                <span class="label">כנס</span>
-                <span>{{ selectedAttendee.ConferenceName }}</span>
-            </div>
-            <div class="detail-row">
-                <span class="label">סטטוס תשלום</span>
-                <span class="badge" [ngClass]="selectedAttendee.PaymentStatus">
-                    {{ selectedAttendee.DisplayStatus }}
-                </span>
-            </div>
-            <div class="detail-row">
-                <span class="label">תאריך הרשמה</span>
-                <span>{{ selectedAttendee.RegisteredAt | date:'dd/MM/yyyy HH:mm' }}</span>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="popup-overlay" *ngIf="selectedAbstractAttendee" (click)="closeAbstractDetails()">
-    <div class="popup-box abstract-view-popup" (click)="$event.stopPropagation()" dir="rtl">
-        <div class="popup-header abstract-view-header">
-            <div class="abstract-view-header-text">
-                <span class="abstract-view-eyebrow">תקציר שהוגש</span>
-                <h3>{{ selectedAbstractAttendee.FullName }}</h3>
-            </div>
-            <button class="btn-close" (click)="closeAbstractDetails()">✕</button>
-        </div>
-
-        <div class="abstract-view-block">
-            <span class="abstract-view-label">כותרת</span>
-            <p class="abstract-view-title">{{ selectedAbstractAttendee.AbstractTitle ||
-                selectedAbstractAttendee.abstractTitle }}</p>
-        </div>
-
-        <div class="abstract-view-block">
-            <span class="abstract-view-label">תוכן התקציר</span>
-            <div class="abstract-body abstract-view-body">{{ selectedAbstractAttendee.AbstractBody ||
-                selectedAbstractAttendee.abstractBody }}</div>
-        </div>
-
-        <div class="abstract-view-block"
-            *ngIf="selectedAbstractAttendee.AbstractNotes || selectedAbstractAttendee.abstractNotes">
-            <span class="abstract-view-label">הערות נוספות</span>
-            <p class="abstract-view-notes">{{ selectedAbstractAttendee.AbstractNotes ||
-                selectedAbstractAttendee.abstractNotes }}</p>
-        </div>
-
-        <div class="abstract-view-footer">
-            <button class="btn-close-wide" (click)="closeAbstractDetails()">סגור</button>
-        </div>
-    </div>
-</div> -->
-
-<div class="attendee-page" dir="rtl">
-    <button class="btn-export" (click)="exportToCSV()">ייצוא לאקסל</button>
-    <div class="page-header">
-        <h2>נרשמים</h2>
-        <div class="stats-row">
-            <div class="stat-chip">סה"כ {{ totalCount }}</div>
-            <div class="stat-chip paid">שילמו {{ paidCount }}</div>
-            <div class="stat-chip pending">ממתינים {{ pendingCount }}</div>
-            <div class="stat-chip failed">נכשלו {{ failedCount }}</div>
-            <div class="stat-chip abstract">תקצירים {{ withAbstractCount }}</div>
-        </div>
-    </div>
-
-    <div class="filters-bar">
-        <input class="search-input" type="text" placeholder="חיפוש לפי שם, אימייל, שיוך מוסדי..."
-            [(ngModel)]="searchTerm" (input)="onSearch()" />
-
-        <select [(ngModel)]="selectedConferenceId" (change)="onFilterChange()">
-            <option value="">כל הכנסים</option>
-            <option *ngFor="let c of allConferences" [value]="c.id || c._id">{{ c.name }}</option>
-        </select>
-
-        <select [(ngModel)]="selectedPaymentStatus" (change)="onFilterChange()">
-            <option value="">כל הסטטוסים</option>
-            <option value="success">שולם</option>
-            <option value="pending">ממתין</option>
-            <option value="failed">נכשל</option>
-        </select>
-    </div>
-
-    <div class="loading" *ngIf="isLoading">טוען נרשמים...</div>
-    <div class="error-msg" *ngIf="error">{{ error }}</div>
-
-    <div class="table-wrap" *ngIf="!isLoading && !error">
-        <table class="attendee-table">
-            <thead>
-                <tr>
-                    <th (click)="sortBy('FullName')" class="sortable">שם מלא</th>
-                    <th (click)="sortBy('Email')" class="sortable">אימייל</th>
-                    <th>שיוך מוסדי</th>
-                    <th (click)="sortBy('ConferenceName')" class="sortable">כנס</th>
-                    <th>תקציר</th>
-                    <th (click)="sortBy('PaymentStatus')" class="sortable">תשלום</th>
-                    <th (click)="sortBy('Amount')" class="sortable">סכום ששולם</th>
-                    <th (click)="sortBy('RegisteredAt')" class="sortable">תאריך הרשמה</th>
-                    <th>פרטים</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let a of filteredAttendees">
-                    <td>{{ a.FullName }}</td>
-                    <td>{{ a.Email }}</td>
-                    <td>{{ a.Affiliation || a.affiliation || '—' }}</td>
-                    <td>{{ a.ConferenceName }}</td>
-                    <td>
-                        <span class="badge no-abstract" *ngIf="!a.HasAbstract && !a.hasAbstract">לא</span>
-                        <button class="btn-details" *ngIf="a.HasAbstract || a.hasAbstract" (click)="openAbstractDetails(a)">צפה</button>
+                        <span class="badge no-abstract" *ngIf="!a.HasAbstract && !a.hasAbstract">No</span>
+                        <button class="btn-details" *ngIf="a.HasAbstract || a.hasAbstract" (click)="openAbstractDetails(a)">View</button>
                     </td>
                     <td>
                         <span class="badge" [ngClass]="a.PaymentStatus">
@@ -214,103 +59,95 @@
                     <td>{{ (a.Amount || a.amount) | number }} ₪</td>
                     <td>{{ a.RegisteredAt | date:'dd/MM/yy HH:mm' }}</td>
                     <td>
-                        <button class="btn-details" (click)="openDetails(a)">צפה</button>
+                        <button class="btn-details" (click)="openDetails(a)">View</button>
                     </td>
                 </tr>
                 <tr *ngIf="filteredAttendees.length === 0">
-                    <td colspan="9" class="no-data">לא נמצאו נרשמים</td>
+                    <td colspan="9" class="no-data">No attendees found</td>
                 </tr>
             </tbody>
         </table>
     </div>
 </div>
-
 <div class="popup-overlay" *ngIf="selectedAttendee" (click)="closeDetails()">
-    <div class="popup-box details-popup" (click)="$event.stopPropagation()" dir="rtl">
+    <div class="popup-box details-popup" (click)="$event.stopPropagation()" dir="ltr">
         <div class="popup-header">
             <h3>{{ selectedAttendee.FullName }}</h3>
             <button class="btn-close" (click)="closeDetails()">✕</button>
         </div>
-
         <div class="details-grid">
             <div class="detail-row">
-                <span class="label">אימייל</span>
+                <span class="label">Email</span>
                 <span>{{ selectedAttendee.Email }}</span>
             </div>
             <div class="detail-row">
-                <span class="label">כתובת</span>
+                <span class="label">Address</span>
                 <span>{{ selectedAttendee.Address }}</span>
             </div>
             <div class="detail-row">
-                <span class="label">שיוך מוסדי</span>
+                <span class="label">Affiliation</span>
                 <span>{{ selectedAttendee.Affiliation || selectedAttendee.affiliation || '—' }}</span>
             </div>
             <div class="detail-row">
-                <span class="label">כנס</span>
+                <span class="label">Conference</span>
                 <span>{{ selectedAttendee.ConferenceName }}</span>
             </div>
             <div class="detail-row">
-                <span class="label">סטטוס תשלום</span>
+                <span class="label">Payment Status</span>
                 <span class="badge" [ngClass]="selectedAttendee.PaymentStatus">
                     {{ selectedAttendee.DisplayStatus }}
                 </span>
             </div>
             <div class="detail-row">
-                <span class="label">סכום ששולם</span>
+                <span class="label">Amount Paid</span>
                 <span>{{ (selectedAttendee.Amount || selectedAttendee.amount) | number }} ₪</span>
             </div>
             <div class="detail-row">
-                <span class="label">תאריך הרשמה</span>
+                <span class="label">Registration Date</span>
                 <span>{{ selectedAttendee.RegisteredAt | date:'dd/MM/yyyy HH:mm' }}</span>
             </div>
         </div>
-
         <!-- <div class="abstract-section" *ngIf="selectedAttendee.HasAbstract || selectedAttendee.hasAbstract">
             <hr>
-            <h4>תקציר שהוגש</h4>
+            <h4>Submitted Abstract</h4>
             <div class="detail-row">
-                <span class="label">כותרת</span>
+                <span class="label">Title</span>
                 <span>{{ selectedAttendee.AbstractTitle || selectedAttendee.abstractTitle }}</span>
             </div>
             <div class="abstract-body">
                 {{ selectedAttendee.AbstractBody || selectedAttendee.abstractBody }}
             </div>
             <div class="detail-row" style="margin-top: 10px;" *ngIf="selectedAttendee.AbstractNotes || selectedAttendee.abstractNotes">
-                <span class="label">הערות</span>
+                <span class="label">Notes</span>
                 <span>{{ selectedAttendee.AbstractNotes || selectedAttendee.abstractNotes }}</span>
             </div>
         </div> -->
     </div>
 </div>
-
-<!-- ══ ABSTRACT-ONLY POPUP — נפתח מכפתור "צפה" בעמודת תקציר בטבלה ══ -->
+<!-- ══ ABSTRACT-ONLY POPUP — opened from the "View" button in the Abstract column ══ -->
 <div class="popup-overlay" *ngIf="selectedAbstractAttendee" (click)="closeAbstractDetails()">
-    <div class="popup-box abstract-view-popup" (click)="$event.stopPropagation()" dir="rtl">
+    <div class="popup-box abstract-view-popup" (click)="$event.stopPropagation()" dir="ltr">
         <div class="popup-header abstract-view-header">
             <div class="abstract-view-header-text">
-                <span class="abstract-view-eyebrow">תקציר שהוגש</span>
+                <span class="abstract-view-eyebrow">Submitted Abstract</span>
                 <h3>{{ selectedAbstractAttendee.FullName }}</h3>
             </div>
             <button class="btn-close" (click)="closeAbstractDetails()">✕</button>
         </div>
-
         <div class="abstract-view-block">
-            <span class="abstract-view-label">כותרת</span>
+            <span class="abstract-view-label">Title</span>
             <p class="abstract-view-title">{{ selectedAbstractAttendee.AbstractTitle || selectedAbstractAttendee.abstractTitle }}</p>
         </div>
-
         <div class="abstract-view-block">
-            <span class="abstract-view-label">תוכן התקציר</span>
+            <span class="abstract-view-label">Abstract Content</span>
             <div class="abstract-body abstract-view-body">{{ selectedAbstractAttendee.AbstractBody || selectedAbstractAttendee.abstractBody }}</div>
         </div>
-
         <div class="abstract-view-block" *ngIf="selectedAbstractAttendee.AbstractNotes || selectedAbstractAttendee.abstractNotes">
-            <span class="abstract-view-label">הערות נוספות</span>
+            <span class="abstract-view-label">Additional Notes</span>
             <p class="abstract-view-notes">{{ selectedAbstractAttendee.AbstractNotes || selectedAbstractAttendee.abstractNotes }}</p>
         </div>
-
         <div class="abstract-view-footer">
-            <button class="btn-close-wide" (click)="closeAbstractDetails()">סגור</button>
+            <button class="btn-close-wide" (click)="closeAbstractDetails()">Close</button>
         </div>
     </div>
 </div>
