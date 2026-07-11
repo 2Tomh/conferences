@@ -1,84 +1,3 @@
-<!-- <div class="manage-container" dir="rtl">
-  <div class="form-card">
-    <form [formGroup]="conferenceForm" (ngSubmit)="saveConference()">
-      <input type="hidden" formControlName="id">
-
-      <div *ngIf="currentStep === 1" class="step-content">
-        <h3>פרטי הכנס</h3>
-        <div class="form-group"><label>שם הכנס:</label><input formControlName="conference" class="form-control"></div>
-        <div class="form-group"><label>סוג:</label><input formControlName="type" class="form-control"></div>
-        <div class="form-group"><label>קטגוריה:</label><input formControlName="category" class="form-control"></div>
-        <div class="form-group"><label>תיאור:</label><textarea formControlName="description" class="form-control"></textarea></div>
-      </div>
-
-      <div *ngIf="currentStep === 2" class="step-content">
-        <h3>מיקום ותאריך</h3>
-        <div class="form-group"><label>תאריך:</label><input formControlName="date" class="form-control"></div>
-        <div class="form-group"><label>מיקום:</label><input formControlName="location" class="form-control"></div>
-        <div class="form-group"><label>קהל יעד:</label><input formControlName="audience" class="form-control"></div>
-      </div>
-
-      <div *ngIf="currentStep === 3" class="step-content">
-        <h3>הגשת תקצירים</h3>
-        <div class="form-group">
-          <label>אפשרויות הגשה:</label>
-          <div class="submission-options">
-            <label class="submission-option" [class.active]="conferenceForm.get('submissionType')?.value !== 'none'">
-              <input type="radio" name="submissionType" (change)="setSubmissionType('abstract')"> אשר
-            </label>
-            <label class="submission-option" [class.active]="conferenceForm.get('submissionType')?.value === 'none'">
-              <input type="radio" name="submissionType" (change)="setSubmissionType('none')"> בטל
-            </label>
-          </div>
-        </div>
-        <ng-container *ngIf="conferenceForm.get('submissionType')?.value !== 'none'">
-          <div class="form-group"><label>הנחיות:</label><textarea formControlName="abstractGuidelines" class="form-control"></textarea></div>
-          <div class="form-group"><label>מגבלת תווים:</label><input type="number" formControlName="abstractMaxLimit" class="form-control"></div>
-          <div class="form-group"><label>דד-ליין:</label><input formControlName="abstractDeadline" class="form-control"></div>
-        </ng-container>
-      </div>
-
-      <div *ngIf="currentStep === 4" class="step-content">
-        <h3>הרשמה ואנשי קשר</h3>
-        <div class="form-group"><label>דד-ליין הרשמה:</label><input formControlName="registrationDeadline" class="form-control"></div>
-        <div class="form-group"><label>איש קשר:</label><input formControlName="contactName" class="form-control"></div>
-        <div class="form-group"><label>אימייל קשר:</label><input formControlName="contactEmail" class="form-control"></div>
-      </div>
-
-      <div *ngIf="currentStep === 5" class="step-content">
-        <h3>מבנה ותוכן הכנס</h3>
-        <div formGroupName="links" class="sub-section">
-          <label>קישורים:</label>
-          <input formControlName="survey" placeholder="לינק לסקר" class="form-control">
-          <input formControlName="website" placeholder="אתר הכנס" class="form-control">
-        </div>
-        <div formArrayName="organizers" class="sub-section">
-          <label>מארגנים:</label>
-          <div *ngFor="let org of organizers.controls; let i = index" class="row">
-            <input [formControlName]="i" class="form-control">
-          </div>
-          <button type="button" (click)="addOrganizer()">+ הוסף מארגן</button>
-        </div>
-        <div formArrayName="programBlocks" class="sub-section">
-          <label>בלוקים של תוכנית:</label>
-          <div *ngFor="let pb of program.controls; let i = index" [formGroupName]="i" class="row">
-            <input formControlName="startTime" placeholder="התחלה" class="form-control">
-            <input formControlName="endTime" placeholder="סיום" class="form-control">
-            <input formControlName="title" placeholder="כותרת" class="form-control">
-          </div>
-          <button type="button" (click)="addProgramBlock()">+ הוסף בלוק תוכנית</button>
-        </div>
-      </div>
-
-      <div class="actions">
-        <button type="button" *ngIf="currentStep > 1" (click)="prevStep()">קודם</button>
-        <button type="button" *ngIf="currentStep < totalSteps" (click)="nextStep()">המשך</button>
-        <button type="submit" *ngIf="currentStep === totalSteps" class="btn-save">שמור הכל</button>
-      </div>
-    </form>
-  </div>
-</div> -->
-
 <div class="manage-container" dir="rtl">
   <div class="form-card">
     <form [formGroup]="conferenceForm" (ngSubmit)="saveConference()">
@@ -89,8 +8,16 @@
       <div *ngIf="currentStep === 1" class="step-content">
         <h3>פרטי הכנס</h3>
         <div class="form-group"><label>שם הכנס:</label><input formControlName="conference" class="form-control"></div>
-        <!-- <div class="form-group"><label>סוג:</label><input formControlName="type" class="form-control"></div> -->
-        <div class="form-group"><label>קטגוריה:</label><input formControlName="category" class="form-control"></div>
+        <div class="form-group"><label>סוג:</label><input formControlName="type" class="form-control"></div>
+        <div class="form-group">
+          <label>קטגוריות (ניתן לבחור יותר מאחת):</label>
+          <div class="category-checkboxes">
+            <label class="category-checkbox" *ngFor="let cat of availableCategories">
+              <input type="checkbox" [checked]="isCategorySelected(cat)" (change)="toggleCategory(cat)">
+              {{ cat }}
+            </label>
+          </div>
+        </div>
         <div class="form-group"><label>תיאור:</label><textarea formControlName="description" class="form-control"></textarea></div>
       </div>
 
