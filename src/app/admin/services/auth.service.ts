@@ -1,3 +1,100 @@
+// import { Injectable } from '@angular/core';
+// import { HttpClient } from '@angular/common/http';
+// import { Observable, BehaviorSubject } from 'rxjs';
+// import { tap } from 'rxjs/operators';
+// import { Router } from '@angular/router';
+
+// @Injectable({
+//   providedIn: 'root'
+// })
+// export class AuthService {
+//   private apiUrl = 'https://conference-backend-8339.onrender.com/api';
+//   // private apiUrl = 'https://localhost:7222/api';
+//   private loggedin = new BehaviorSubject<boolean>(this.hasToken());
+
+//   constructor(private http: HttpClient, private router: Router) { }
+
+//   private hasToken(): boolean {
+//     return !!localStorage.getItem('token');
+//   }
+
+//   login(credentials: any): Observable<any> {
+//     return this.http.post(`${this.apiUrl}/Auth/login`, credentials).pipe(
+//       tap((response: any) => {
+//         if (response && response.token) {
+//           localStorage.setItem('token', response.token);
+//           localStorage.setItem('role', response.role);
+//           this.loggedin.next(true);
+//         }
+//       })
+//     );
+//   }
+
+//   logOut() {
+//     localStorage.removeItem('token');
+//     localStorage.removeItem('role');
+//     this.loggedin.next(false);
+//     this.router.navigate(['/admin/login']);
+//   }
+
+//   isLoggedIn(): Observable<boolean> {
+//     return this.loggedin.asObservable();
+//   }
+
+//   getToken(): string | null {
+//     return localStorage.getItem('token');
+//   }
+
+//   getRole(): string | null {
+//     return localStorage.getItem('role');
+//   }
+
+
+//   isAdmin(): boolean {
+//     return this.getRole() === 'Admin';
+//   }
+
+//   isFacultyManager(): boolean {
+//     return this.getRole() === 'FacultyManager';
+//   }
+
+//   isAnyManager(): boolean {
+//     return this.isAdmin() || this.isFacultyManager();
+//   }
+//   // בתוך auth.service.ts
+// getCurrentUser(): any {
+//   const token = localStorage.getItem('token');
+//   if (!token) return null;
+//   try {
+//     const payload = JSON.parse(atob(token.split('.')[1]));
+//     return {
+//       role: payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'],
+//       scope: payload['ScopeId'],
+//       managedConferenceId: payload['ManagedConferenceId'] || ''
+//     };
+//   } catch (e) {
+//     return null;
+//   }
+// }
+//   // --- מתודות ה-API ---
+
+//   createUser(userData: any): Observable<any> {
+//     return this.http.post(`${this.apiUrl}/Admin/create-user`, userData);
+//   }
+
+//   getAllUsers(): Observable<any[]> {
+//     return this.http.get<any[]>(`${this.apiUrl}/Admin/all-users`);
+//   }
+
+//   updateUser(userId: string | number, userData: any): Observable<any> {
+//     return this.http.put(`${this.apiUrl}/Admin/update-user/${userId}`, userData);
+//   }
+
+//   deleteUser(id: string | number): Observable<any> {
+//     return this.http.delete(`${this.apiUrl}/Admin/delete-user/${id}`);
+//   }
+// }
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -62,21 +159,45 @@ export class AuthService {
   isAnyManager(): boolean {
     return this.isAdmin() || this.isFacultyManager();
   }
+
   // בתוך auth.service.ts
-getCurrentUser(): any {
-  const token = localStorage.getItem('token');
-  if (!token) return null;
-  try {
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    return {
-      role: payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'],
-      scope: payload['ScopeId'],
-      managedConferenceId: payload['ManagedConferenceId'] || ''
-    };
-  } catch (e) {
-    return null;
+  getCurrentUser(): any {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+
+      // ⭐ קריאת ה-Assignment claims החדשים (JSON string לכל שיוך).
+      // כשיש claim יחיד מגיע כ-string בודד, כשיש כמה מגיע כמערך - מטפלים בשני המקרים.
+      let assignments: { facultyName: string; conferenceId: string }[] = [];
+      const rawAssignments = payload['Assignment'];
+      if (rawAssignments) {
+        const rawArray = Array.isArray(rawAssignments) ? rawAssignments : [rawAssignments];
+        assignments = rawArray.map((raw: string) => {
+          try {
+            const parsed = JSON.parse(raw);
+            return {
+              facultyName: parsed.FacultyName || parsed.facultyName || '',
+              conferenceId: parsed.ConferenceId || parsed.conferenceId || ''
+            };
+          } catch {
+            return null;
+          }
+        }).filter((a: any) => !!a);
+      }
+
+      return {
+        role: payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'],
+        scope: payload['ScopeId'],
+        managedConferenceId: payload['ManagedConferenceId'] || '',
+        // ⭐ החדש: מערך מלא של כל השיוכים (פקולטה + כנס)
+        assignments
+      };
+    } catch (e) {
+      return null;
+    }
   }
-}
+
   // --- מתודות ה-API ---
 
   createUser(userData: any): Observable<any> {
