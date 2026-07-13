@@ -1,4 +1,4 @@
-<div class="attendee-page" dir="ltr">
+<!-- <div class="attendee-page" dir="ltr">
     <button class="btn-export" (click)="exportToCSV()">Export to CSV</button>
     <div class="page-header">
         <div class="page-header-text">
@@ -25,6 +25,163 @@
             <div class="stat-chip abstract">
                 <span class="stat-count">{{ withAbstractCount }}</span>
                 <span class="stat-label">Abstracts</span>
+            </div>
+        </div>
+    </div>
+    <div class="filters-bar">
+        <input class="search-input" type="text" placeholder="Search by name, email, affiliation..."
+            [(ngModel)]="searchTerm" (input)="onSearch()" />
+        <select [(ngModel)]="selectedPaymentStatus" (change)="onFilterChange()">
+            <option value="">All Statuses</option>
+            <option value="success">Paid</option>
+            <option value="pending">Pending</option>
+            <option value="failed">Failed</option>
+        </select>
+    </div>
+    <div class="loading" *ngIf="isLoading">Loading attendees...</div>
+    <div class="error-msg" *ngIf="error">{{ error }}</div>
+    <div class="table-wrap" *ngIf="!isLoading && !error">
+        <table class="attendee-table">
+            <thead>
+                <tr>
+                    <th (click)="sortBy('FullName')" class="sortable">Full Name</th>
+                    <th (click)="sortBy('Email')" class="sortable">Email</th>
+                    <th>Affiliation</th>
+                    <th (click)="sortBy('ConferenceName')" class="sortable">Conference</th>
+                    <th>Abstract</th>
+                    <th (click)="sortBy('PaymentStatus')" class="sortable">Payment</th>
+                    <th (click)="sortBy('Amount')" class="sortable">Amount Paid</th>
+                    <th (click)="sortBy('RegisteredAt')" class="sortable">Registration Date</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let a of filteredAttendees">
+                    <td>{{ a.FullName }}</td>
+                    <td>{{ a.Email }}</td>
+                    <td>{{ a.Affiliation || a.affiliation || '—' }}</td>
+                    <td>{{ a.ConferenceName }}</td>
+                    <td>
+                        <span class="badge no-abstract" *ngIf="!a.HasAbstract && !a.hasAbstract">No</span>
+                        <button class="btn-details" *ngIf="a.HasAbstract || a.hasAbstract" (click)="openAbstractDetails(a)">View</button>
+                    </td>
+                    <td>
+                        <span class="badge" [ngClass]="a.PaymentStatus">
+                            {{ a.DisplayStatus }}
+                        </span>
+                    </td>
+                    <td>{{ (a.Amount || a.amount) | number }} ₪</td>
+                    <td>{{ a.RegisteredAt | date:'dd/MM/yy HH:mm' }}</td>
+                    <td>
+                        <button class="btn-details" (click)="openDetails(a)">View</button>
+                    </td>
+                </tr>
+                <tr *ngIf="filteredAttendees.length === 0">
+                    <td colspan="9" class="no-data">No attendees found</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="popup-overlay" *ngIf="selectedAttendee" (click)="closeDetails()">
+    <div class="popup-box details-popup" (click)="$event.stopPropagation()" dir="ltr">
+        <div class="popup-header">
+            <h3>{{ selectedAttendee.FullName }}</h3>
+            <button class="btn-close" (click)="closeDetails()">✕</button>
+        </div>
+        <div class="details-grid">
+            <div class="detail-row">
+                <span class="label">Email</span>
+                <span>{{ selectedAttendee.Email }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Address</span>
+                <span>{{ selectedAttendee.Address }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Affiliation</span>
+                <span>{{ selectedAttendee.Affiliation || selectedAttendee.affiliation || '—' }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Conference</span>
+                <span>{{ selectedAttendee.ConferenceName }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Payment Status</span>
+                <span class="badge" [ngClass]="selectedAttendee.PaymentStatus">
+                    {{ selectedAttendee.DisplayStatus }}
+                </span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Amount Paid</span>
+                <span>{{ (selectedAttendee.Amount || selectedAttendee.amount) | number }} ₪</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Registration Date</span>
+                <span>{{ selectedAttendee.RegisteredAt | date:'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="popup-overlay" *ngIf="selectedAbstractAttendee" (click)="closeAbstractDetails()">
+    <div class="popup-box abstract-view-popup" (click)="$event.stopPropagation()" dir="ltr">
+        <div class="popup-header abstract-view-header">
+            <div class="abstract-view-header-text">
+                <span class="abstract-view-eyebrow">Submitted Abstract</span>
+                <h3>{{ selectedAbstractAttendee.FullName }}</h3>
+            </div>
+            <button class="btn-close" (click)="closeAbstractDetails()">✕</button>
+        </div>
+        <div class="abstract-view-block">
+            <span class="abstract-view-label">Title</span>
+            <p class="abstract-view-title">{{ selectedAbstractAttendee.AbstractTitle || selectedAbstractAttendee.abstractTitle }}</p>
+        </div>
+        <div class="abstract-view-block">
+            <span class="abstract-view-label">Abstract Content</span>
+            <div class="abstract-body abstract-view-body">{{ selectedAbstractAttendee.AbstractBody || selectedAbstractAttendee.abstractBody }}</div>
+        </div>
+        <div class="abstract-view-block" *ngIf="selectedAbstractAttendee.AbstractNotes || selectedAbstractAttendee.abstractNotes">
+            <span class="abstract-view-label">Additional Notes</span>
+            <p class="abstract-view-notes">{{ selectedAbstractAttendee.AbstractNotes || selectedAbstractAttendee.abstractNotes }}</p>
+        </div>
+        <div class="abstract-view-footer">
+            <button class="btn-close-wide" (click)="closeAbstractDetails()">Close</button>
+        </div>
+    </div>
+</div> -->
+
+<div class="attendee-page" dir="ltr">
+    <div class="page-header">
+        <div class="page-header-text">
+            <span class="page-eyebrow">Mind-IL · Registration Desk</span>
+            <h2>Attendees</h2>
+        </div>
+        <div class="header-actions">
+            <div class="export-buttons">
+                <button class="btn-export" (click)="exportToCSV()">Export to CSV</button>
+                <button class="btn-export" (click)="exportAbstractsToCSV()">Export Abstracts Only</button>
+            </div>
+            <div class="stats-row">
+                <div class="stat-chip">
+                    <span class="stat-count">{{ totalCount }}</span>
+                    <span class="stat-label">Total</span>
+                </div>
+                <div class="stat-chip paid">
+                    <span class="stat-count">{{ paidCount }}</span>
+                    <span class="stat-label">Paid</span>
+                </div>
+                <div class="stat-chip pending">
+                    <span class="stat-count">{{ pendingCount }}</span>
+                    <span class="stat-label">Pending</span>
+                </div>
+                <div class="stat-chip failed">
+                    <span class="stat-count">{{ failedCount }}</span>
+                    <span class="stat-label">Failed</span>
+                </div>
+                <div class="stat-chip abstract">
+                    <span class="stat-count">{{ withAbstractCount }}</span>
+                    <span class="stat-label">Abstracts</span>
+                </div>
             </div>
         </div>
     </div>

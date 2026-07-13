@@ -79,7 +79,7 @@ html {
 
 body {
   margin: 0;
-  padding-top: 64px;
+  /* padding-top: 64px; */
   background: #F8F6F0;
   overflow-x: hidden;
   font-family: Arial, sans-serif;

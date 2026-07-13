@@ -68,6 +68,14 @@
   margin: 0;
 }
 
+/* ⭐ חדש: מכיל את כפתורי הייצוא ואת שורת הסטטיסטיקה יחד, באותה שורה */
+.header-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
 /* ===== Tally strip (stat row) ===== */
 .stats-row {
   display: flex;
@@ -141,6 +149,12 @@
 }
 
 /* ===== Export ===== */
+/* ⭐ עודכן: הכפתורים כבר לא בשורה נפרדת מעל, אלא זה-לצד-זה בתוך header-actions */
+.export-buttons {
+  display: flex;
+  gap: 10px;
+}
+
 .btn-export {
   font-family: 'IBM Plex Mono', monospace;
   background: transparent;
@@ -153,10 +167,7 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   cursor: pointer;
-  display: block;
-  width: fit-content;
-  margin-left: auto;
-  margin-bottom: 18px;
+  white-space: nowrap;
   transition: all 0.15s ease;
 }
 
@@ -650,9 +661,19 @@
     padding: 20px;
   }
 
+  /* ⭐ עודכן: במובייל header-actions נשבר לעמודה, הכפתורים ברוחב מלא */
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .export-buttons {
+    flex-direction: column;
+  }
+
   .btn-export {
     width: 100%;
-    margin-left: 0;
   }
 
   .stats-row {

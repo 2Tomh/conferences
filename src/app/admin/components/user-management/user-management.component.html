@@ -1,4 +1,4 @@
-<div class="user-management-container">
+<!-- <div class="user-management-container">
     <div class="header-section">
         <h2>{{ 'USER_MGMT.TITLE' | translate }}</h2>
         <button class="btn-primary" [routerLink]="['/admin/create-user']">
@@ -35,6 +35,101 @@
     <div class="edit-card" *ngIf="editingUser">
         <div class="edit-header">
             
+            <h3>{{ 'USER_MGMT.EDIT.TITLE' | translate: {name: editingUser.FullName} }}</h3>
+        </div>
+        <form [formGroup]="editForm" (ngSubmit)="saveEdit()">
+            <div>
+                <label>Name</label>
+                <input formControlName="fullName" type="text">
+            </div>
+            
+            <div>
+                <label>E-mail</label>
+                <input formControlName="email" type="email">
+            </div>
+            
+            <div>
+                <label>Role</label>
+                <select formControlName="role">
+                    <option *ngFor="let role of roles" [value]="role">'{{ 'ROLES.' + role.toUpperCase() | translate }}'</option>
+                </select>
+            </div>
+            <div>
+                <label>Faculty</label>
+                <select formControlName="facultyName">
+                    <option value="">-- Select Faculty --</option>
+                    <option *ngFor="let f of faculties" [value]="f">{{ f }}</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-save">Update</button>
+                <button type="button" class="btn-cancel" (click)="cancelEdit()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div> -->
+<div class="user-management-container">
+    <div class="header-section">
+        <h2>{{ 'USER_MGMT.TITLE' | translate }}</h2>
+        <button class="btn-primary" [routerLink]="['/admin/create-user']">
+            + {{ 'USER_MGMT.ADD_USER' | translate }}
+        </button>
+    </div>
+
+    <!-- ⭐ חדש: שורת חיפוש -->
+    <div class="search-bar" *ngIf="!editingUser">
+        <input
+            type="text"
+            class="search-input"
+            placeholder="Search by name..."
+            [(ngModel)]="searchTerm"
+            (input)="onSearch()"
+        />
+    </div>
+
+    <div class="table-wrapper" *ngIf="!editingUser">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>E-mail</th>
+                    <th>Role</th>
+                    <th>Faculty</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of pagedUsers">
+                    <td>{{ user.FullName }}</td>
+                    <td>{{ user.Email }}</td>
+                    <td>
+                        <span class="badge" [ngClass]="user.Role">{{ 'ROLES.' + user.Role.toUpperCase() | translate }}</span>
+                    </td>
+                    <td>{{ user.FacultyName || '—' }}</td>
+                    <td class="actions">
+                        <button class="btn-edit" (click)="startEdit(user)">Edit</button>
+                        <button class="btn-delete" (click)="deleteUser(user.Id)">Delete</button>
+                    </td>
+                </tr>
+                <tr *ngIf="pagedUsers.length === 0">
+                    <td colspan="5" class="no-data">No users found</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ⭐ חדש: פסי ניווט בין עמודים -->
+    <div class="pagination" *ngIf="!editingUser && filteredUsers.length > pageSize">
+        <button class="page-btn" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">&#8249;</button>
+        <button *ngFor="let p of pages" class="page-btn" [class.active]="p === currentPage" (click)="goToPage(p)">
+            {{ p }}
+        </button>
+        <button class="page-btn" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">&#8250;</button>
+        <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
+    </div>
+
+    <div class="edit-card" *ngIf="editingUser">
+        <div class="edit-header">
             <h3>{{ 'USER_MGMT.EDIT.TITLE' | translate: {name: editingUser.FullName} }}</h3>
         </div>
         <form [formGroup]="editForm" (ngSubmit)="saveEdit()">

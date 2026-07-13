@@ -254,6 +254,7 @@
         Contact
       </h2>
       <p class="body-text">For questions about the conference, please contact:</p>
+      <p class="contact-name" *ngIf="conference.contactName"><strong>{{ conference.contactName }}</strong></p>
       <a class="contact-link" href="mailto:{{conference.contactEmail}}">{{conference.contactEmail}}</a>
     </div>
   </section>

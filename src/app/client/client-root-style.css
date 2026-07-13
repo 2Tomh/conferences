@@ -8,3 +8,7 @@
 app-navbar {
     display: block;
 }
+:host {
+  display: block;
+  padding-top: 64px;
+}
