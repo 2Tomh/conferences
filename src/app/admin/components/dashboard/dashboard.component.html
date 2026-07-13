@@ -61,34 +61,26 @@
           <td>{{ conf.Category }}</td>
 
           <td>
-            <div *ngIf="conf.Links?.survey || conf.Links?.Survey || conf.survey || conf.Survey" class="text-success"
-              style="font-weight: 500;">
+            <div *ngIf="conf.Links?.survey || conf.Links?.Survey || conf.survey || conf.Survey" class="text-success">
               ✅ Active survey
             </div>
             <div *ngIf="!(conf.Links?.survey || conf.Links?.Survey || conf.survey || conf.Survey)" class="text-muted">
               ❌ No survey link
             </div>
 
-            <div *ngIf="conf.Links?.website || conf.website" class="text-info"
-              style="font-size: 0.85rem; margin-top: 2px;">
+            <div *ngIf="conf.Links?.website || conf.website" class="text-info">
               🌐 Has website
             </div>
           </td>
 
           <td>
-            <span [style.color]="(conf.AbstractSubmission || conf.Abstract_submission) ? '#2ecc71' : '#e74c3c'"
-              style="font-weight: 500;">
+            <span class="abstract-flag" [ngClass]="(conf.AbstractSubmission || conf.Abstract_submission) ? 'yes' : 'no'">
               {{ (conf.AbstractSubmission || conf.Abstract_submission) ? 'Yes' : 'No' }}
             </span>
           </td>
           <td>
-            <div style="display: flex; gap: 5px; align-items: center;">
-              <!-- <button class="btn-edit" (click)="onEdit(conf.Id || conf._id)">
-                {{ 'COMMON_ACTIONS.EDIT' | translate }}
-              </button> -->
-
-              <button class="btn-edit" [routerLink]="['/admin/edit-conference', conf.Id || conf._id]"
-                style="background-color: #f39c12; color: white; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer;">
+            <div class="actions">
+              <button class="btn-edit" [routerLink]="['/admin/edit-conference', conf.Id || conf._id]">
                 Edit
               </button>
 

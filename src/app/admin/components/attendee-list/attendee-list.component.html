@@ -1,22 +1,36 @@
 <div class="attendee-page" dir="ltr">
-    <button class="btn-export" (click)="exportToCSV()">Export to Excel</button>
+    <button class="btn-export" (click)="exportToCSV()">Export to CSV</button>
     <div class="page-header">
-        <h2>Attendees</h2>
+        <div class="page-header-text">
+            <span class="page-eyebrow">Mind-IL · Registration Desk</span>
+            <h2>Attendees</h2>
+        </div>
         <div class="stats-row">
-            <div class="stat-chip">Total {{ totalCount }}</div>
-            <div class="stat-chip paid">Paid {{ paidCount }}</div>
-            <div class="stat-chip pending">Pending {{ pendingCount }}</div>
-            <div class="stat-chip failed">Failed {{ failedCount }}</div>
-            <div class="stat-chip abstract">Abstracts {{ withAbstractCount }}</div>
+            <div class="stat-chip">
+                <span class="stat-count">{{ totalCount }}</span>
+                <span class="stat-label">Total</span>
+            </div>
+            <div class="stat-chip paid">
+                <span class="stat-count">{{ paidCount }}</span>
+                <span class="stat-label">Paid</span>
+            </div>
+            <div class="stat-chip pending">
+                <span class="stat-count">{{ pendingCount }}</span>
+                <span class="stat-label">Pending</span>
+            </div>
+            <div class="stat-chip failed">
+                <span class="stat-count">{{ failedCount }}</span>
+                <span class="stat-label">Failed</span>
+            </div>
+            <div class="stat-chip abstract">
+                <span class="stat-count">{{ withAbstractCount }}</span>
+                <span class="stat-label">Abstracts</span>
+            </div>
         </div>
     </div>
     <div class="filters-bar">
         <input class="search-input" type="text" placeholder="Search by name, email, affiliation..."
             [(ngModel)]="searchTerm" (input)="onSearch()" />
-        <!-- <select [(ngModel)]="selectedConferenceId" (change)="onFilterChange()">
-            <option value="">All Conferences</option>
-            <option *ngFor="let c of allConferences" [value]="c.id || c._id">{{ c.name }}</option>
-        </select> -->
         <select [(ngModel)]="selectedPaymentStatus" (change)="onFilterChange()">
             <option value="">All Statuses</option>
             <option value="success">Paid</option>
@@ -107,24 +121,8 @@
                 <span>{{ selectedAttendee.RegisteredAt | date:'dd/MM/yyyy HH:mm' }}</span>
             </div>
         </div>
-        <!-- <div class="abstract-section" *ngIf="selectedAttendee.HasAbstract || selectedAttendee.hasAbstract">
-            <hr>
-            <h4>Submitted Abstract</h4>
-            <div class="detail-row">
-                <span class="label">Title</span>
-                <span>{{ selectedAttendee.AbstractTitle || selectedAttendee.abstractTitle }}</span>
-            </div>
-            <div class="abstract-body">
-                {{ selectedAttendee.AbstractBody || selectedAttendee.abstractBody }}
-            </div>
-            <div class="detail-row" style="margin-top: 10px;" *ngIf="selectedAttendee.AbstractNotes || selectedAttendee.abstractNotes">
-                <span class="label">Notes</span>
-                <span>{{ selectedAttendee.AbstractNotes || selectedAttendee.abstractNotes }}</span>
-            </div>
-        </div> -->
     </div>
 </div>
-<!-- ══ ABSTRACT-ONLY POPUP — opened from the "View" button in the Abstract column ══ -->
 <div class="popup-overlay" *ngIf="selectedAbstractAttendee" (click)="closeAbstractDetails()">
     <div class="popup-box abstract-view-popup" (click)="$event.stopPropagation()" dir="ltr">
         <div class="popup-header abstract-view-header">
