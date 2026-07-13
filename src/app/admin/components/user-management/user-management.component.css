@@ -1,206 +1,383 @@
-/* רקע כללי של אזור הניהול */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+:host {
+  --bg: #0a0a18;
+  --surface: #13142b;
+  --surface-2: #1c1e3d;
+  --border: #2a2c52;
+  --paper: #f1f0f5;
+  --muted: #8b8ca8;
+  --brass: #e8b34d;
+  --brass-dim: #6b5527;
+  --info: #6ea8fe;
+  --info-dim: #274069;
+  --failed: #f2545b;
+  --failed-dim: #6b2429;
+  display: block;
+}
+
 .user-management-container {
-    padding: 40px 20px;
-    background-color: #0b1120;
-    min-height: 100vh;
-    color: #e2e8f0;
-    font-family: sans-serif;
+  font-family: 'Inter', sans-serif;
+  color: var(--paper);
+  background: var(--bg);
+  padding: 32px 32px 70px;
+  margin-top: 50px;
+  min-height: 100vh;
 }
 
-/* כותרת */
+.user-management-container * { box-sizing: border-box; }
+
+/* ===== Header ===== */
 .header-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-    max-width: 1000px;
-    margin-left: auto;
-    margin-right: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 22px;
+  border-bottom: 1px dashed var(--border);
+  margin-bottom: 24px;
 }
 
-/* טבלה מעוצבת בסגנון כהה */
-.table-wrapper {
-    max-width: 1000px;
-    margin: 0 auto;
-    background: #1e293b;
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid #334155;
+.header-section h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--paper);
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    direction: ltr;
-}
-
-thead {
-    background: #0f172a;
-    color: #94a3b8;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-}
-
-th,
-td {
-    padding: 18px;
-    text-align: left;
-    border-bottom: 1px solid #334155;
-    width: 150px;
-}
-
-tr:hover {
-    background: #2d3748;
-}
-
-/* תגית תפקיד */
-.badge {
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    background: #334155;
-    color: #cbd5e1;
-}
-
-/* כרטיס עריכה */
-.edit-card {
-    max-width: 700px;
-    margin: 0 auto;
-    background: #1e293b;
-    padding: 30px;
-    border-radius: 12px;
-    border: 1px solid #334155;
-}
-
-.edit-header h3 {
-    margin-bottom: 25px;
-    color: white;
-}
-
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.full-width {
-    grid-column: span 2;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-label {
-    font-size: 0.9rem;
-    color: #a0aec0;
-}
-
-input,
-select {
-    padding: 12px;
-    background: #0f172a;
-    border: 1px solid #334155;
-    border-radius: 8px;
-    color: white;
-    width: 100%;
-    box-sizing: border-box;
-    height: 42px;
-}
-
-/* כפתורים */
 .btn-primary {
-    background: #4f46e5;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 500;
+  font-family: 'IBM Plex Mono', monospace;
+  background: var(--brass);
+  color: #14152b;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.btn-primary:hover { background: #f2c169; }
+.btn-primary:active { transform: translateY(1px); }
+
+/* ===== Table ===== */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+
+th, td {
+  padding: 13px 16px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+th {
+  background: var(--surface-2);
+  color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 600;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid var(--border);
+}
+
+td {
+  color: var(--paper);
+  border-bottom: 1px dashed var(--border);
+}
+
+tbody tr:last-child td { border-bottom: none; }
+tbody tr { transition: background 0.12s ease; }
+tbody tr:hover { background: rgba(232, 179, 77, 0.05); }
+
+/* ===== Role badge (stamp style, consistent with attendee status) ===== */
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 3px;
+  border: 1.5px solid currentColor;
+  color: var(--brass);
+  transform: rotate(-2deg);
+}
+
+.badge.admin, .badge.Admin {
+  color: var(--failed);
+  box-shadow: inset 0 0 0 1px rgba(242, 84, 91, 0.25);
+}
+
+.badge.manager, .badge.Manager,
+.badge.facultyManager, .badge.FacultyManager {
+  color: var(--info);
+  box-shadow: inset 0 0 0 1px rgba(110, 168, 254, 0.25);
+  transform: rotate(1.5deg);
+}
+
+/* ===== Action buttons ===== */
+.actions { display: flex; gap: 8px; }
+
+.btn-edit, .btn-delete {
+  font-family: 'Inter', sans-serif;
+  background: none;
+  border-radius: 6px;
+  padding: 5px 13px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
 }
 
 .btn-edit {
-    background: #334155;
-    color: #818cf8;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    margin-right: 8px;
-    cursor: pointer;
+  border: 1px solid var(--border);
+  color: var(--brass);
+}
+
+.btn-edit:hover {
+  background: var(--brass);
+  border-color: var(--brass);
+  color: #14152b;
 }
 
 .btn-delete {
-    background: #7f1d1d;
-    color: #fca5a5;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
+  border: 1px solid var(--failed-dim);
+  color: var(--failed);
+}
+
+.btn-delete:hover {
+  background: var(--failed);
+  border-color: var(--failed);
+  color: #14152b;
+}
+
+/* ===== Edit card ===== */
+.edit-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 26px 28px 28px;
+  max-width: 560px;
+}
+
+.edit-header { margin-bottom: 22px; padding-bottom: 18px; border-bottom: 1px dashed var(--border); }
+
+.edit-header h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--paper);
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.edit-card form { display: flex; flex-direction: column; gap: 16px; }
+
+.edit-card form > div { display: flex; flex-direction: column; gap: 7px; }
+
+.edit-card label {
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.edit-card input,
+.edit-card select {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  color: var(--paper);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.edit-card select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238b8ca8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 15px;
+  padding-right: 34px;
+  cursor: pointer;
+}
+
+.edit-card input:focus,
+.edit-card select:focus {
+  border-color: var(--brass);
+  box-shadow: 0 0 0 3px rgba(232, 179, 77, 0.15);
+}
+
+.form-actions {
+  flex-direction: row !important;
+  justify-content: flex-end;
+  gap: 10px !important;
+  margin-top: 6px;
 }
 
 .btn-save {
-    background: #4f46e5;
-    color: white;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace;
+  background: var(--brass);
+  color: #14152b;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background 0.15s ease;
 }
+
+.btn-save:hover { background: #f2c169; }
 
 .btn-cancel {
-    background: #334155;
-    color: white;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
 }
 
-/* מודל (Modal) */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.btn-cancel:hover { background: var(--surface-2); color: var(--paper); }
+
+/* ===== Faculty & conference assignments ===== */
+.assignments-block {
+  background: var(--bg);
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.modal-content {
-    background: #1e293b;
-    padding: 30px;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 500px;
-    position: relative;
-    border: 1px solid #334155;
+.assignments-label {
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
-.close-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    cursor: pointer;
-    color: white;
-    font-size: 1.5rem;
+.assignment-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
-/* רספונסיביות לטלפונים */
-@media (max-width: 600px) {
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-    .full-width {
-        grid-column: span 1;
-    }
+.assignment-row select {
+  flex: 1;
+  min-width: 0;
+}
+
+.btn-remove-row {
+  font-family: 'Inter', sans-serif;
+  background: none;
+  border: 1px solid var(--failed-dim);
+  color: var(--failed);
+  border-radius: 6px;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-remove-row:hover:not(:disabled) {
+  background: var(--failed);
+  border-color: var(--failed);
+  color: #14152b;
+}
+
+.btn-remove-row:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.btn-add-row {
+  font-family: 'IBM Plex Mono', monospace;
+  background: none;
+  border: 1px dashed var(--brass-dim);
+  color: var(--brass);
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  align-self: flex-start;
+}
+
+.btn-add-row:hover {
+  background: var(--surface-2);
+  border-color: var(--brass);
+}
+
+/* ===== Password field ===== */
+.hint {
+  color: var(--muted);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.7rem;
+}
+
+.password-field {
+  display: flex;
+  gap: 8px;
+}
+
+.password-field input {
+  flex: 1;
+  min-width: 0;
+}
+
+.btn-toggle-password {
+  font-family: 'IBM Plex Mono', monospace;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 8px;
+  padding: 0 16px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-toggle-password:hover {
+  border-color: var(--brass);
+  color: var(--brass);
+}
+
+@media (max-width: 640px) {
+  .user-management-container { padding: 20px; }
+  .header-section { flex-direction: column; align-items: flex-start; }
+  .edit-card { padding: 20px; }
 }
