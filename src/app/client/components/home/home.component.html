@@ -1,8 +1,6 @@
 <div class="main-card-wrapper">
-
   <section class="hero-section snap-section" id="section-hero">
     <div class="stars" id="stars"></div>
-
     <svg class="hero-deco hero-deco-left" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="150" cy="150" r="120" stroke="white" stroke-width="1" />
       <circle cx="150" cy="150" r="80" stroke="white" stroke-width="1" stroke-dasharray="4 8" />
@@ -18,20 +16,17 @@
       <line x1="150" y1="270" x2="30" y2="150" stroke="white" stroke-width="0.5" />
       <line x1="30" y1="150" x2="150" y2="30" stroke="white" stroke-width="0.5" />
     </svg>
-
     <svg class="hero-deco hero-deco-right" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="150" cy="150" rx="120" ry="50" stroke="white" stroke-width="1" transform="rotate(30 150 150)" />
       <ellipse cx="150" cy="150" rx="120" ry="50" stroke="white" stroke-width="1" transform="rotate(90 150 150)" />
       <ellipse cx="150" cy="150" rx="120" ry="50" stroke="white" stroke-width="1" transform="rotate(150 150 150)" />
       <circle cx="150" cy="150" r="12" fill="white" />
     </svg>
-
     <div class="hero-content">
-      <span class="hero-eyebrow">October 2026 · Israel</span>
+      <span class="hero-eyebrow">October 25-26, 2026-Israel</span>
       <div class="logo-wrapper">
         <img src="../../../assets/logo.jpeg" alt="Mind-IL Logo" class="home-logo">
       </div>
-
       <a routerLink="/ConferenceEvents" class="hero-cta">
         {{ 'ABOUT.GO_TO_EVENTS' | translate }}
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -39,14 +34,17 @@
             stroke-linejoin="round" />
         </svg>
       </a>
-    </div>
 
+      <div class="hero-announcement">
+        <span class="hero-announcement-dot"></span>
+        Conferences registration openes soon!
+      </div>
+    </div>
     <div class="hero-scroll">
       <div class="scroll-line"></div>
       <span>Scroll</span>
     </div>
   </section>
-
   <section class="about-section snap-section" id="section-about">
     <app-about-conference></app-about-conference>
     <div class="committee-card">
@@ -60,7 +58,6 @@
       </div>
     </div>
   </section>
-
   <section class="partners-section snap-section" id="section-partners">
     <!-- <p class="section-label">{{ 'PARTNERS.TITLE' | translate }}</p> -->
     <h2 class="partners-heading">Supported By</h2>
@@ -71,12 +68,10 @@
       </a>
     </div>
   </section>
-
   <!-- Dot navigation -->
   <nav class="scroll-dots" aria-label="Page sections">
     <button class="dot active" (click)="scrollTo('section-hero')" aria-label="Hero"></button>
     <button class="dot" (click)="scrollTo('section-about')" aria-label="About"></button>
     <button class="dot" (click)="scrollTo('section-partners')" aria-label="Partners"></button>
   </nav>
-
 </div>

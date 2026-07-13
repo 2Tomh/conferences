@@ -164,6 +164,37 @@
   transform: translateX(4px);
 }
 
+/* ══ ANNOUNCEMENT (below CTA) ══ */
+.hero-announcement {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: clamp(20px, 3.5vh, 32px);
+  padding: clamp(12px, 1.8vh, 16px) clamp(26px, 3.5vw, 38px);
+  border: 2px solid #C9A84C;
+  border-radius: 40px;
+  background: #C9A84C;
+  color: #0F1B4C;
+  font-size: clamp(0.9rem, 2vh, 1.15rem);
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  box-shadow: 0 8px 32px rgba(201, 168, 76, 0.35);
+}
+
+.hero-announcement-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #0F1B4C;
+  flex-shrink: 0;
+  animation: hero-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes hero-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(15, 27, 76, 0.5); }
+  50% { opacity: 0.55; box-shadow: 0 0 0 7px rgba(15, 27, 76, 0); }
+}
+
 .hero-scroll {
   position: absolute;
   bottom: 16px;
@@ -504,6 +535,18 @@
     padding: 12px 24px;
   }
 
+  .hero-announcement {
+    margin-top: 18px;
+    font-size: 0.8rem;
+    padding: 10px 20px;
+    gap: 9px;
+  }
+
+  .hero-announcement-dot {
+    width: 8px;
+    height: 8px;
+  }
+
   /* About + Committee — compact */
   .about-section {
     align-items: stretch;
@@ -573,5 +616,9 @@
   .home-logo,
   .partner-item {
     transition: none;
+  }
+
+  .hero-announcement-dot {
+    animation: none;
   }
 }
