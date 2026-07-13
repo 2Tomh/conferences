@@ -1,4 +1,4 @@
-<!-- <div class="user-management-container">
+<div class="user-management-container">
     <div class="header-section">
         <h2>{{ 'USER_MGMT.TITLE' | translate }}</h2>
         <button class="btn-primary" [routerLink]="['/admin/create-user']">
@@ -61,110 +61,6 @@
                     <option *ngFor="let f of faculties" [value]="f">{{ f }}</option>
                 </select>
             </div>
-            <div class="form-actions">
-                <button type="submit" class="btn-save">Update</button>
-                <button type="button" class="btn-cancel" (click)="cancelEdit()">Cancel</button>
-            </div>
-        </form>
-    </div>
-</div> -->
-<div class="user-management-container">
-    <div class="header-section">
-        <h2>{{ 'USER_MGMT.TITLE' | translate }}</h2>
-        <button class="btn-primary" [routerLink]="['/admin/create-user']">
-            + {{ 'USER_MGMT.ADD_USER' | translate }}
-        </button>
-    </div>
-    <div class="table-wrapper" *ngIf="!editingUser">
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>E-mail</th>
-                    <th>Role</th>
-                    <th>Faculty</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let user of users">
-                    <td>{{ user.FullName }}</td>
-                    <td>{{ user.Email }}</td>
-                    <td>
-                        <span class="badge" [ngClass]="user.Role">{{ 'ROLES.' + user.Role.toUpperCase() | translate }}</span>
-                    </td>
-                    <td>
-                        <ng-container *ngIf="user.ManagedAssignments?.length; else legacyFaculty">
-                            {{ user.ManagedAssignments.length === 1
-                                ? (user.ManagedAssignments[0].FacultyName || user.ManagedAssignments[0].facultyName)
-                                : (user.ManagedAssignments.length + ' faculties') }}
-                        </ng-container>
-                        <ng-template #legacyFaculty>{{ user.FacultyName || '—' }}</ng-template>
-                    </td>
-                    <td class="actions">
-                        <button class="btn-edit" (click)="startEdit(user)">Edit</button>
-                        <button class="btn-delete" (click)="deleteUser(user.Id)">Delete</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="edit-card" *ngIf="editingUser">
-        <div class="edit-header">
-            <h3>{{ 'USER_MGMT.EDIT.TITLE' | translate: {name: editingUser.FullName} }}</h3>
-        </div>
-        <form [formGroup]="editForm" (ngSubmit)="saveEdit()">
-            <div>
-                <label>Name</label>
-                <input formControlName="fullName" type="text">
-            </div>
-
-            <div>
-                <label>E-mail</label>
-                <input formControlName="email" type="email">
-            </div>
-
-            <div>
-                <label>Role</label>
-                <select formControlName="role">
-                    <option *ngFor="let role of roles" [value]="role">{{ 'ROLES.' + role.toUpperCase() | translate }}</option>
-                </select>
-            </div>
-
-            <div *ngIf="editForm.value.role === 'FacultyManager'" formArrayName="assignments" class="assignments-block">
-                <label class="assignments-label">Faculty &amp; Conference Assignments</label>
-
-                <div *ngFor="let row of assignments.controls; let i = index" [formGroupName]="i" class="assignment-row">
-                    <select formControlName="facultyName">
-                        <option value="" disabled selected>-- Select Faculty --</option>
-                        <option *ngFor="let f of faculties" [value]="f">{{ f }}</option>
-                    </select>
-
-                    <select formControlName="conferenceId">
-                        <option value="" disabled selected>-- Select Conference --</option>
-                        <option *ngFor="let conf of filteredConferencesByRow[i]" [value]="conf.Id">
-                            {{ conf.Name || conf.name }}
-                        </option>
-                    </select>
-
-                    <button type="button" class="btn-remove-row" (click)="removeAssignment(i)"
-                        [disabled]="assignments.length === 1">✕</button>
-                </div>
-
-                <button type="button" class="btn-add-row" (click)="addAssignment()">+ Add another conference</button>
-            </div>
-
-            <div>
-                <label>New Password <span class="hint">(leave blank to keep current password)</span></label>
-                <div class="password-field">
-                    <input formControlName="password" [type]="showPassword ? 'text' : 'password'"
-                        placeholder="••••••••" autocomplete="new-password">
-                    <button type="button" class="btn-toggle-password" (click)="togglePasswordVisibility()">
-                        {{ showPassword ? 'Hide' : 'Show' }}
-                    </button>
-                </div>
-            </div>
-
             <div class="form-actions">
                 <button type="submit" class="btn-save">Update</button>
                 <button type="button" class="btn-cancel" (click)="cancelEdit()">Cancel</button>

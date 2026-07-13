@@ -1,4 +1,4 @@
-<!-- <div class="create-user-container">
+<div class="create-user-container">
   <h2>Create New User</h2>
   <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
     
@@ -20,45 +20,6 @@
         {{ conf.Name || conf.name }}
       </option>
     </select>
-    <button type="submit" [disabled]="userForm.invalid">Create User</button>
-  </form>
-</div> -->
-<div class="create-user-container">
-  <h2>Create New User</h2>
-  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-
-    <input formControlName="fullName" placeholder="Full Name">
-    <input formControlName="email" placeholder="Email">
-    <input type="password" formControlName="password" placeholder="Password">
-
-    <select formControlName="role">
-      <option value="Admin">Admin</option>
-      <option value="FacultyManager">FacultyManager</option>
-    </select>
-
-    <div *ngIf="userForm.value.role === 'FacultyManager'" formArrayName="assignments" class="assignments-block">
-      <label class="assignments-label">Faculty &amp; Conference Assignments</label>
-
-      <div *ngFor="let row of assignments.controls; let i = index" [formGroupName]="i" class="assignment-row">
-        <select formControlName="facultyName">
-          <option value="" disabled selected>-- Select Faculty --</option>
-          <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
-        </select>
-
-        <select formControlName="conferenceId">
-          <option value="" disabled selected>-- Select Conference --</option>
-          <option *ngFor="let conf of filteredConferencesByRow[i]" [value]="conf.Id">
-            {{ conf.Name || conf.name }}
-          </option>
-        </select>
-
-        <button type="button" class="btn-remove-row" (click)="removeAssignment(i)"
-          [disabled]="assignments.length === 1">✕</button>
-      </div>
-
-      <button type="button" class="btn-add-row" (click)="addAssignment()">+ Add another conference</button>
-    </div>
-
     <button type="submit" [disabled]="userForm.invalid">Create User</button>
   </form>
 </div>
