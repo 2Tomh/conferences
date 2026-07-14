@@ -1,3 +1,265 @@
+<!-- <div *ngIf="loading" class="loading-state">
+  <span class="loading-mark"></span>
+  Loading conference details…
+</div>
+
+<article *ngIf="conference && !loading" class="conf-page">
+
+  <nav class="breadcrumb">
+    <a routerLink="/">Home</a>
+    <span class="crumb-sep">›</span>
+    <a routerLink="/ConferenceEvents">All Conferences</a>
+    <span class="crumb-sep">›</span>
+    <span class="crumb-current">{{ conference.name }}</span>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-text">
+      <span class="hero-badge">Part of Mind-IL 2026</span>
+      <h1 class="hero-title">{{ conference.name }}</h1>
+      <p class="hero-desc" *ngIf="conference.tagline">{{ conference.tagline }}</p>
+
+      <ul class="hero-meta-list">
+        <li>
+          <span class="meta-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <path d="M16 2v4M8 2v4M3 10h18" />
+            </svg>
+          </span>
+          {{ formatDate(conference.date) }}
+        </li>
+        <li>
+          <span class="meta-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 1 1 18 0Z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+          </span>
+          {{ conference.location }}
+        </li>
+        <li *ngIf="conference.organizerName">
+          <span class="meta-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          </span>
+          Organized by {{ conference.organizerName }}
+        </li>
+      </ul>
+
+      <div class="hero-actions">
+        <button class="btn-primary" *ngIf="!isRegistrationBlocked" (click)="register()">
+          Register Through Mind-IL
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </button>
+        <span class="btn-pill" *ngIf="conference.hasAbstractSubmission">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+          </svg>
+          Abstract Submission Open
+        </span>
+      </div>
+    </div>
+
+    <div class="hero-image">
+      <img src="assets/tel-aviv-skyline.png" [alt]="conference.name">
+    </div>
+  </header>
+
+  <section class="about-grid">
+    <div class="about-main">
+      <h2 class="section-title">
+        <span class="title-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2Z" />
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7Z" />
+          </svg>
+        </span>
+        About the Conference
+      </h2>
+      <p class="body-text">{{ conference.description }}</p>
+    </div>
+
+    <aside class="about-aside">
+      <h2 class="section-title">
+        <span class="title-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+          </svg>
+        </span>
+        Who Should Attend?
+      </h2>
+      <p class="body-text">{{ conference.whoShouldAttend || 'Researchers, practitioners, and students interested in the  field.' }}</p>
+    </aside>
+  </section>
+
+  <section class="stats-bar">
+    <div class="stat-item">
+      <span class="stat-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2" />
+          <path d="M16 2v4M8 2v4M3 10h18" />
+        </svg>
+      </span>
+      <div>
+        <strong>Date</strong>
+        <p>{{ formatDate(conference.date) }}</p>
+      </div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 1 1 18 0Z" />
+          <circle cx="12" cy="10" r="3" />
+        </svg>
+      </span>
+      <div>
+        <strong>Venue</strong>
+        <p>{{ conference.location }}</p>
+      </div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+      </span>
+      <div>
+        <strong>Participation</strong>
+        <p>By Registration</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-grid">
+    <div class="card program-card">
+      <h2 class="section-title">
+        <span class="title-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <path d="M16 2v4M8 2v4M3 10h18" />
+          </svg>
+        </span>
+        Program at a Glance
+      </h2>
+      <div class="schedule" *ngIf="conference.programBlocks?.length">
+        <div class="schedule-row" *ngFor="let block of conference.programBlocks">
+          <span class="schedule-time">{{ block.startTime }} – {{ block.endTime }}</span>
+          <span class="schedule-title">{{ block.title }}</span>
+        </div>
+      </div>
+      <a class="btn-outline" *ngIf="conference.programPdfUrl" [href]="conference.programPdfUrl" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+        </svg>
+        Download Detailed Program (PDF)
+      </a>
+    </div>
+
+    <div class="side-stack">
+      <div class="card card-tint" *ngIf="conference.hasAbstractSubmission">
+        <h2 class="section-title">
+          <span class="title-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+            </svg>
+          </span>
+          Abstract Submission
+        </h2>
+        <p class="body-text">This conference welcomes abstract submissions through the Mind-IL registration system.</p>
+        <p class="deadline-line" *ngIf="conference.submissionDeadline">
+          Submission Deadline:<br>
+          <strong>{{ formatDeadline(conference.submissionDeadline) }}</strong>
+        </p>
+      </div>
+
+      <div class="card card-tint">
+        <h2 class="section-title">
+          <span class="title-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <path d="M16 2v4M8 2v4M3 10h18" />
+            </svg>
+          </span>
+          Key Dates
+        </h2>
+        <ul class="key-dates-list">
+          <li *ngIf="conference.registrationDeadline">
+            <span>Registration Deadline</span>
+            <strong>{{ formatDeadline(conference.registrationDeadline) }}</strong>
+          </li>
+          <li *ngIf="conference.date">
+            <span>Conference Date</span>
+            <strong>{{ formatDate(conference.date) }}</strong>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-grid">
+    <div class="card">
+      <h2 class="section-title">
+        <span class="title-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+        </span>
+        Organizers
+      </h2>
+      <ul class="organizers-list">
+        <li *ngFor="let org of conference.organizersDetails">
+          <strong>{{ org.name }}</strong>
+          <span *ngIf="org.affiliation"> ({{ org.affiliation }})</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">
+        <span class="title-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="4" width="20" height="16" rx="2" />
+            <path d="m2 6 10 7 10-7" />
+          </svg>
+        </span>
+        Contact
+      </h2>
+      <p class="body-text">For questions about the conference, please contact:</p>
+      <p class="contact-name" *ngIf="conference.contactName"><strong>{{ conference.contactName }}</strong></p>
+      <a class="contact-link" href="mailto:{{conference.contactEmail}}">{{conference.contactEmail}}</a>
+    </div>
+  </section>
+
+  <section class="cta-banner">
+    <div>
+      <h2>Ready to Participate?</h2>
+      <p>Registration, payment, and abstract submission are managed through the Mind-IL portal.</p>
+    </div>
+    <button class="btn-primary" *ngIf="!isRegistrationBlocked" (click)="register()">
+      Register Through Mind-IL
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M13 6l6 6-6 6" />
+      </svg>
+    </button>
+  </section>
+</article>
+
+<div *ngIf="notFound" class="not-found-state">
+  <h2>Conference not found</h2>
+  <button class="btn-secondary" (click)="router.navigate(['/all-conferences'])">Back to All Conferences</button>
+</div> -->
+
 <div *ngIf="loading" class="loading-state">
   <span class="loading-mark"></span>
   Loading conference details…
@@ -53,12 +315,22 @@
       </ul>
 
       <div class="hero-actions">
-        <!-- <button class="btn-primary" (click)="register()">
+        <button class="btn-primary" *ngIf="!isRegistrationBlocked" (click)="register()">
           Register Through Mind-IL
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M5 12h14M13 6l6 6-6 6" />
           </svg>
-        </button> -->
+        </button>
+
+        <!-- ⭐ חדש: כפתור לאתר החיצוני של הכנס, מוצג רק אם יש קישור שמור -->
+        <a class="btn-outline" *ngIf="conference.websiteUrl" [href]="conference.websiteUrl" target="_blank">
+          Visit Conference Website
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            <path d="M15 3h6v6M10 14 21 3" />
+          </svg>
+        </a>
+
         <span class="btn-pill" *ngIf="conference.hasAbstractSubmission">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
@@ -253,12 +525,12 @@
       <h2>Ready to Participate?</h2>
       <p>Registration, payment, and abstract submission are managed through the Mind-IL portal.</p>
     </div>
-    <!-- <button class="btn-primary" (click)="register()">
+    <button class="btn-primary" *ngIf="!isRegistrationBlocked" (click)="register()">
       Register Through Mind-IL
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M5 12h14M13 6l6 6-6 6" />
       </svg>
-    </button> -->
+    </button>
   </section>
 </article>
 

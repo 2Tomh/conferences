@@ -68,7 +68,7 @@
   margin: 0;
 }
 
-/* ⭐ חדש: מכיל את כפתורי הייצוא ואת שורת הסטטיסטיקה יחד, באותה שורה */
+/* מכיל את כפתורי הייצוא ואת שורת הסטטיסטיקה יחד, באותה שורה */
 .header-actions {
   display: flex;
   align-items: center;
@@ -149,7 +149,6 @@
 }
 
 /* ===== Export ===== */
-/* ⭐ עודכן: הכפתורים כבר לא בשורה נפרדת מעל, אלא זה-לצד-זה בתוך header-actions */
 .export-buttons {
   display: flex;
   gap: 10px;
@@ -275,11 +274,23 @@
   border-bottom: none;
 }
 
-.attendee-table td:nth-child(7),
-.attendee-table td:nth-child(8) {
+/* ⭐ תוקן: העמודות זזו ימינה ב-1 בגלל עמודת ה-Role החדשה שנוספה כעמודה רביעית.
+   Amount ו-Registration Date הן עכשיו nth-child(8) ו-(9), לא (7) ו-(8) כמו קודם —
+   בלי התיקון הזה, עמודת ה-Payment הייתה מקבלת בטעות את הסגנון המונו/אפור. */
+.attendee-table td:nth-child(8),
+.attendee-table td:nth-child(9) {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.83rem;
   color: var(--muted);
+}
+
+/* ⭐ חדש: מאפשר לעמודות טקסט ארוכות (Affiliation, Role) לעטוף שורות
+   במקום להישאר ב-nowrap גורף, כדי שהטבלה כולה תהיה צרה יותר ותצטרך
+   פחות גלילה אופקית אחרי הוספת עמודת ה-Role. */
+.attendee-table td:nth-child(3),
+.attendee-table td:nth-child(4) {
+  white-space: normal;
+  max-width: 220px;
 }
 
 .sortable {
@@ -661,7 +672,6 @@
     padding: 20px;
   }
 
-  /* ⭐ עודכן: במובייל header-actions נשבר לעמודה, הכפתורים ברוחב מלא */
   .header-actions {
     flex-direction: column;
     align-items: stretch;

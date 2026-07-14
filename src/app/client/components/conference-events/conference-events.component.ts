@@ -66,16 +66,23 @@
 //       .reduce((max, d) => d > max ? d : max, new Date(0));
 //   }
 
+//   // עוזר משותף: בודק אם כנס שייך לקטגוריה נתונה,
+//   // תוך תמיכה גם בשדה הישן (יחיד) וגם במערך החדש (multi-category)
+//   private conferenceMatchesCategory(c: any, category: string): boolean {
+//     const target = (category || '').toLowerCase();
+//     const singleCategory = (c.Category || c.category || '').toLowerCase();
+//     const categoriesArray: string[] = c.categories || c.Categories || [];
+//     const matchesArray = categoriesArray.some((cat: string) => (cat || '').toLowerCase() === target);
+//     return singleCategory === target || matchesArray;
+//   }
+
 //   // ה-Getter של הסינון שתומך גם בטאבים וגם בחיפוש חופשי
 //   get filteredConferences(): any[] {
 //     let list = this.conferences;
 
-//     // 1. סינון לפי קטגוריות
+//     // 1. סינון לפי קטגוריות (כולל תמיכה במערך categories)
 //     if (this.selectedCategory && this.selectedCategory !== 'All') {
-//       // נרמול גם של הקטגוריה כדי למנוע טעויות Case Sensitivity
-//       list = list.filter(c =>
-//         (c.Category || c.category || '').toLowerCase() === this.selectedCategory.toLowerCase()
-//       );
+//       list = list.filter(c => this.conferenceMatchesCategory(c, this.selectedCategory));
 //     }
 
 //     if (!this.searchText) { return list; }
@@ -123,7 +130,6 @@
 //     this.currentPage = 1;
 //   }
 // }
-
 import { Component, OnInit } from '@angular/core';
 import { ConferenceEventsService } from '../../../services/conference-events.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -144,6 +150,14 @@ export class ConferenceEventsComponent implements OnInit {
 
   // --- ניהול ה-Popup של התיאור ---
   activeDescription: string | null = null;
+
+  // ⭐ חדש: שמות הכנסים שאין להם עמוד כנס פנימי משלנו —
+  // עבורם מציגים רק את הקישור לאתר החיצוני שלהם (כפתור Website),
+  // ומסתירים View Description / Conference Website / Express Interest
+  private readonly EXTERNAL_ONLY_CONFERENCE_NAMES: string[] = [
+    'Law',
+    'Network Dynamics in Socio-Technical Systems: From Resilient Control to Incentives and Information Design'
+  ];
 
   constructor(
     private conferenceEventsService: ConferenceEventsService,
@@ -200,6 +214,15 @@ export class ConferenceEventsComponent implements OnInit {
     const categoriesArray: string[] = c.categories || c.Categories || [];
     const matchesArray = categoriesArray.some((cat: string) => (cat || '').toLowerCase() === target);
     return singleCategory === target || matchesArray;
+  }
+
+  // ⭐ חדש: true אם לכנס הזה אין עמוד כנס פנימי משלנו —
+  // ה-HTML משתמש בזה כדי להציג רק את כפתור ה-Website החיצוני
+  isExternalOnlyConference(conf: any): boolean {
+    const name = (conf.Name || conf.name || conf.Conference || conf.conference || '').toLowerCase();
+    return this.EXTERNAL_ONLY_CONFERENCE_NAMES.some(
+      excluded => excluded.toLowerCase() === name
+    );
   }
 
   // ה-Getter של הסינון שתומך גם בטאבים וגם בחיפוש חופשי

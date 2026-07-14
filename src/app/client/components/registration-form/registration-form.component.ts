@@ -96,13 +96,14 @@
 //     private fb: FormBuilder,
 //     private apiService: ApiService,
 //     private router: Router,
-//     private route: ActivatedRoute // ⭐ חדש - כדי לקרוא את ה-sessionId מה-URL
+//     private route: ActivatedRoute // ⭐ כדי לקרוא את ה-sessionId מה-URL
 //   ) { }
 
 //   ngOnInit(): void {
 //     this.initForms();
+//     this.setupRoleOtherValidation(); // ⭐ חדש: ולידציה דינמית לשדה "Other"
 
-//     // ⭐ חדש: הראוט מוגדר כ-register/:sessionId, אבל הקומפוננטה מוגדרת עם
+//     // ⭐ הראוט מוגדר כ-register/:sessionId, אבל הקומפוננטה מוגדרת עם
 //     // @Input() preselectedConferenceId שאף אחד לא מזריק כשהיא נטענת ישירות
 //     // דרך ה-Router (בלי קומפוננטת-אב). לכן קוראים את הפרמטר מה-URL בעצמנו
 //     // ומשתמשים בו כ-preselection - זו הסיבה שכפתור ה-Register בעמוד הכנס
@@ -143,7 +144,11 @@
 //         Validators.minLength(5),
 //         Validators.pattern(/^.+[\s,].+$/)
 //       ]],
-//       conferenceId: ['', Validators.required]
+//       conferenceId: ['', Validators.required],
+
+//       // ⭐ חדש: תפקיד/סטטוס אקדמי
+//       role: ['', Validators.required],
+//       roleOther: ['']
 //     });
 
 //     this.abstractForm = this.fb.group({
@@ -156,6 +161,21 @@
 //       title: ['', [Validators.required, maxWords(25)]],
 //       authors: ['', Validators.required],
 //       notes: ['']
+//     });
+//   }
+
+//   // ⭐ חדש: כאשר נבחר "Other" מפעילים חובה על שדה הטקסט החופשי,
+//   // אחרת מנקים אותו ומבטלים את הדרישה
+//   private setupRoleOtherValidation(): void {
+//     this.regForm.get('role')?.valueChanges.subscribe((val: string) => {
+//       const otherCtrl = this.regForm.get('roleOther');
+//       if (val === 'Other') {
+//         otherCtrl?.setValidators([Validators.required, Validators.maxLength(60)]);
+//       } else {
+//         otherCtrl?.clearValidators();
+//         otherCtrl?.setValue('');
+//       }
+//       otherCtrl?.updateValueAndValidity();
 //     });
 //   }
 
@@ -328,7 +348,7 @@
 //   // ══ STEPS ══
 //   private stepFields: { [key: number]: string[] } = {
 //     1: ['conferenceId'],
-//     2: ['fullName', 'email', 'affiliation', 'address'],
+//     2: ['fullName', 'email', 'affiliation', 'address', 'role', 'roleOther'], // ⭐ הוספת role, roleOther
 //     3: []
 //   };
 
@@ -375,6 +395,13 @@
 //       Affiliation: formVal.affiliation,
 //       Address: formVal.address,
 //       ConferenceId: formVal.conferenceId,
+
+//       // ⭐ חדש: אם נבחר Other, שולחים את הטקסט שהמשתמש הקליד;
+//       // אחרת שולחים את הבחירה מה-dropdown. RoleCategory תמיד שומר
+//       // את הבחירה המקורית (כולל 'Other'), שימושי לסינון/סטטיסטיקה.
+//       Role: formVal.role === 'Other' ? formVal.roleOther : formVal.role,
+//       RoleCategory: formVal.role,
+
 //       IsLifetimeMember: this.isLifetimeMember,
 //       HasAbstract: this.abstractSaved,
 //       AbstractTitle: abstract?.title || null,
@@ -420,7 +447,6 @@ import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/cor
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ApiService } from '../../../services/api.service';
 import { ActivatedRoute, Router } from '@angular/router';
-
 export function abstractValidator(maxWordsLimit: number, maxCharsLimit: number) {
   return (control: AbstractControl): ValidationErrors | null => {
     if (!control.value) return null;
@@ -432,7 +458,6 @@ export function abstractValidator(maxWordsLimit: number, maxCharsLimit: number) 
     return null;
   };
 }
-
 export function maxWords(limit: number) {
   return (control: AbstractControl): ValidationErrors | null => {
     if (!control.value) return null;
@@ -440,75 +465,65 @@ export function maxWords(limit: number) {
     return wordCount > limit ? { maxWords: { required: limit, actual: wordCount } } : null;
   };
 }
-
 @Component({
   selector: 'app-registration-form',
   templateUrl: './registration-form.component.html',
   styleUrls: ['./registration-form.component.css']
 })
 export class RegistrationFormComponent implements OnInit, OnChanges {
-
   @Input() preselectedConferenceId: string | null = null;
   @Input() autoOpenAbstract: boolean = false;
-
   regForm!: FormGroup;
   abstractForm!: FormGroup;
   posterForm!: FormGroup;
-
   allConferences: any[] = [];
   filteredConferences: any[] = [];
   selectedConference: any = null;
-
   isLoading = false;
-
   showConferencePopup = false;
   showAbstractPopup = false;
   showAbstractPendingPopup = false;
   showPosterPopup = false;
   showAbstractNotice = false;
   showPosterNotice = false;
-
   conferenceSearch = '';
-
   wantsAbstract: boolean | null = null;
   wantsPoster: boolean | null = null;
   abstractSaved = false;
   posterSaved = false;
-
   isLifetimeMember = false;
-
   // מחירים לתצוגה בלבד (מוצג למשתמש ב-$)
   readonly REGULAR_PRICE = 50;
   readonly LIFETIME_PRICE = 250;
-
   // מחירים בפועל לחיוב (נגבה בפועל ב-₪ דרך Tranzila)
   readonly REGULAR_PRICE_ILS = 150;
   readonly LIFETIME_PRICE_ILS = 750;
-
   // מחיר לתצוגה בלבד ($), אינו משמש לחיוב בפועל
   get registrationDisplayPrice(): number {
     return this.isLifetimeMember ? this.LIFETIME_PRICE : this.REGULAR_PRICE;
   }
-
   // הסכום שנשלח בפועל לתשלום (₪)
   get registrationAmount(): number {
     return this.isLifetimeMember ? this.LIFETIME_PRICE_ILS : this.REGULAR_PRICE_ILS;
   }
-
   get canSubmitPoster(): boolean {
     return !this.abstractSaved && (this.selectedConference?.allowsPoster === true);
   }
-
   // ספירת מילים חיה עבור שדה Full Name (מוצג במונה מתחת לשדה)
   get fullNameWordCount(): number {
     const val = this.regForm?.get('fullName')?.value || '';
     return val.trim().split(/\s+/).filter((w: string) => w.length > 0).length;
   }
-
   currentStep = 1;
   totalSteps = 3;
-
   paymentInputData: any = null;
+
+  // ⭐ חדש: שמות הכנסים שיש להסתיר לחלוטין ממסך ההרשמה —
+  // המשתמש לא יוכל לראות אותם ברשימה ולכן לא יוכל להירשם אליהם בכלל
+  private readonly EXCLUDED_CONFERENCE_NAMES: string[] = [
+    'Law',
+    'Network Dynamics in Socio-Technical Systems: From Resilient Control to Incentives and Information Design'
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -516,11 +531,9 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
     private router: Router,
     private route: ActivatedRoute // ⭐ כדי לקרוא את ה-sessionId מה-URL
   ) { }
-
   ngOnInit(): void {
     this.initForms();
     this.setupRoleOtherValidation(); // ⭐ חדש: ולידציה דינמית לשדה "Other"
-
     // ⭐ הראוט מוגדר כ-register/:sessionId, אבל הקומפוננטה מוגדרת עם
     // @Input() preselectedConferenceId שאף אחד לא מזריק כשהיא נטענת ישירות
     // דרך ה-Router (בלי קומפוננטת-אב). לכן קוראים את הפרמטר מה-URL בעצמנו
@@ -530,16 +543,13 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
     if (sessionIdFromRoute && !this.preselectedConferenceId) {
       this.preselectedConferenceId = sessionIdFromRoute;
     }
-
     this.loadConferences();
   }
-
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['preselectedConferenceId'] && this.allConferences.length) {
       this.applyPreselection();
     }
   }
-
   initForms() {
     this.regForm = this.fb.group({
       fullName: ['', [
@@ -563,25 +573,21 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
         Validators.pattern(/^.+[\s,].+$/)
       ]],
       conferenceId: ['', Validators.required],
-
       // ⭐ חדש: תפקיד/סטטוס אקדמי
       role: ['', Validators.required],
       roleOther: ['']
     });
-
     this.abstractForm = this.fb.group({
       title: ['', [Validators.required, maxWords(25)]],
       body: ['', [Validators.required, abstractValidator(250, 2500)]],
       notes: ['']
     });
-
     this.posterForm = this.fb.group({
       title: ['', [Validators.required, maxWords(25)]],
       authors: ['', Validators.required],
       notes: ['']
     });
   }
-
   // ⭐ חדש: כאשר נבחר "Other" מפעילים חובה על שדה הטקסט החופשי,
   // אחרת מנקים אותו ומבטלים את הדרישה
   private setupRoleOtherValidation(): void {
@@ -596,22 +602,29 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
       otherCtrl?.updateValueAndValidity();
     });
   }
-
   loadConferences() {
     this.isLoading = true;
     this.apiService.getSurveys().subscribe({
       next: (data) => {
-        this.allConferences = data.map(conf => ({
-          ...conf,
-          id: conf.Id || conf._id || conf.id,
-          name: conf.Name || conf.name || conf.Conference || 'Unnamed Conference',
-          location: conf.Location || conf.location || '',
-          description: conf.Description || conf.description || '',
-          abstractGuidelines: conf.AbstractGuidelines || conf.abstractGuidelines || '',
-          allowsAbstract: conf.AbstractSubmission || conf.Abstract_submission || conf.abstract_submission || false,
-          allowsPoster: conf.AllowsPoster || conf.allowsPoster || false,
-          posterGuidelines: conf.PosterGuidelines || conf.posterGuidelines || ''
-        }));
+        this.allConferences = data
+          .map(conf => ({
+            ...conf,
+            id: conf.Id || conf._id || conf.id,
+            name: conf.Name || conf.name || conf.Conference || 'Unnamed Conference',
+            location: conf.Location || conf.location || '',
+            description: conf.Description || conf.description || '',
+            abstractGuidelines: conf.AbstractGuidelines || conf.abstractGuidelines || '',
+            allowsAbstract: conf.AbstractSubmission || conf.Abstract_submission || conf.abstract_submission || false,
+            allowsPoster: conf.AllowsPoster || conf.allowsPoster || false,
+            posterGuidelines: conf.PosterGuidelines || conf.posterGuidelines || ''
+          }))
+          // ⭐ חדש: מסננים החוצה כנסים שאסור להירשם אליהם —
+          // הם פשוט לא ייכנסו ל-allConferences, כך שגם preselection
+          // דרך URL (sessionId) לא תצליח להם
+          .filter(conf => !this.EXCLUDED_CONFERENCE_NAMES.some(
+            excluded => excluded.toLowerCase() === (conf.name || '').toLowerCase()
+          ));
+
         this.filteredConferences = [...this.allConferences];
         this.isLoading = false;
         this.applyPreselection();
@@ -622,7 +635,6 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
       }
     });
   }
-
   private applyPreselection(): void {
     if (!this.preselectedConferenceId) return;
     const match = this.allConferences.find(c =>
@@ -635,15 +647,12 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
       }
     }
   }
-
   openConferencePopup() {
     this.conferenceSearch = '';
     this.filteredConferences = [...this.allConferences];
     this.showConferencePopup = true;
   }
-
   closeConferencePopup() { this.showConferencePopup = false; }
-
   onConferenceSearch(event: Event) {
     const inputElement = event.target as HTMLInputElement;
     const term = inputElement.value.toLowerCase();
@@ -657,7 +666,6 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
       );
     }
   }
-
   selectConference(conf: any) {
     this.selectedConference = conf;
     const id = conf.id || conf._id;
@@ -670,14 +678,12 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
     this.showPosterNotice = false;
     this.showConferencePopup = false;
   }
-
   // ══ PLAN SELECTION (Standard / Mind-IL Honored) ══
   selectPlan(isLifetime: boolean): void {
     this.isLifetimeMember = isLifetime;
     // הערה: אין יותר איפוס של wantsAbstract/wantsPoster כאן —
     // הגשת תקציר/פוסטר תלויה עכשיו בכנס הנבחר בלבד, לא במסלול הרישום
   }
-
   // ══ ABSTRACT ══
   onAbstractChoice(wants: boolean) {
     this.wantsAbstract = wants;
@@ -694,14 +700,12 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
       this.showAbstractNotice = false;
     }
   }
-
   closeAbstractPopup() {
     this.showAbstractPopup = false;
     if (!this.abstractSaved) {
       this.wantsAbstract = null;
     }
   }
-
   saveAbstract() {
     if (this.abstractForm.invalid) {
       this.abstractForm.markAllAsTouched();
@@ -713,15 +717,12 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
     // ושכדי לבקש הצגה כפוסטר יש לציין זאת ב-Additional Notes
     this.showAbstractPendingPopup = true;
   }
-
   closeAbstractPendingPopup() {
     this.showAbstractPendingPopup = false;
     // לאחר סגירת הפופאפ, מציגים את הודעת האישור הרגילה על התקציר שנשמר
     this.showAbstractNotice = true;
   }
-
   closeAbstractNotice() { this.showAbstractNotice = false; }
-
   // ══ POSTER ══
   onPosterOnlyChoice() {
     this.wantsAbstract = false;
@@ -732,7 +733,6 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
     this.showAbstractNotice = false;
     this.showAbstractPopup = false;
   }
-
   onNoSubmission() {
     this.wantsAbstract = false;
     this.wantsPoster = false;
@@ -743,14 +743,12 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
     this.showAbstractNotice = false;
     this.showPosterNotice = false;
   }
-
   closePosterPopup() {
     this.showPosterPopup = false;
     if (!this.posterSaved) {
       this.wantsPoster = null;
     }
   }
-
   savePoster() {
     if (this.posterForm.invalid) {
       this.posterForm.markAllAsTouched();
@@ -760,30 +758,24 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
     this.showPosterPopup = false;
     this.showPosterNotice = true;
   }
-
   closePosterNotice() { this.showPosterNotice = false; }
-
   // ══ STEPS ══
   private stepFields: { [key: number]: string[] } = {
     1: ['conferenceId'],
     2: ['fullName', 'email', 'affiliation', 'address', 'role', 'roleOther'], // ⭐ הוספת role, roleOther
     3: []
   };
-
   isStepValid(step: number): boolean {
     return this.stepFields[step].every(field => this.regForm.get(field)?.valid);
   }
-
   nextStep(): void {
     this.stepFields[this.currentStep].forEach(field => this.regForm.get(field)?.markAsTouched());
     if (!this.isStepValid(this.currentStep)) return;
     if (this.currentStep < this.totalSteps) this.currentStep++;
   }
-
   prevStep(): void {
     if (this.currentStep > 1) this.currentStep--;
   }
-
   goToStep(step: number): void {
     if (step < this.currentStep) { this.currentStep = step; return; }
     for (let i = 1; i < step; i++) {
@@ -791,7 +783,6 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
     }
     this.currentStep = step;
   }
-
   // ══ SUBMIT ══
   onSubmit() {
     if (this.regForm.invalid) {
@@ -801,25 +792,21 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
       }
       return;
     }
-
     this.isLoading = true;
     const formVal = this.regForm.value;
     const abstract = this.abstractSaved ? this.abstractForm.value : null;
     const poster = this.posterSaved ? this.posterForm.value : null;
-
     const payload = {
       FullName: formVal.fullName,
       Email: formVal.email,
       Affiliation: formVal.affiliation,
       Address: formVal.address,
       ConferenceId: formVal.conferenceId,
-
       // ⭐ חדש: אם נבחר Other, שולחים את הטקסט שהמשתמש הקליד;
       // אחרת שולחים את הבחירה מה-dropdown. RoleCategory תמיד שומר
       // את הבחירה המקורית (כולל 'Other'), שימושי לסינון/סטטיסטיקה.
       Role: formVal.role === 'Other' ? formVal.roleOther : formVal.role,
       RoleCategory: formVal.role,
-
       IsLifetimeMember: this.isLifetimeMember,
       HasAbstract: this.abstractSaved,
       AbstractTitle: abstract?.title || null,
@@ -830,7 +817,6 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
       PosterAuthors: poster?.authors || null,
       PosterNotes: poster?.notes || null
     };
-
     this.apiService.registerAttendee(payload).subscribe({
       next: (res: any) => {
         this.isLoading = false;
@@ -855,7 +841,6 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
       }
     });
   }
-
   get f() { return this.regForm.controls; }
   get af() { return this.abstractForm.controls; }
   get pf() { return this.posterForm.controls; }
