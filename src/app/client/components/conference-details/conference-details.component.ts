@@ -249,9 +249,13 @@ export class ConferenceDetailsComponent implements OnInit {
 
   formatDate(date: string): string {
     if (!date || date === '0001-01-01T00:00:00Z') return 'Date TBD';
-    return new Date(date).toLocaleDateString('en-US', {
-      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return 'Date TBD';
+    const formatted = d.toLocaleDateString('en-US', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+      timeZone: 'Asia/Jerusalem'
     });
+    return `${formatted} (Israel Time)`;
   }
 
   // פונקציה לניווט לטופס ההרשמה עם ה-ID של הכנס
