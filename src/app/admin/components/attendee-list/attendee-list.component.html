@@ -1,30 +1,35 @@
 <!-- <div class="attendee-page" dir="ltr">
-    <button class="btn-export" (click)="exportToCSV()">Export to CSV</button>
     <div class="page-header">
         <div class="page-header-text">
             <span class="page-eyebrow">Mind-IL · Registration Desk</span>
             <h2>Attendees</h2>
         </div>
-        <div class="stats-row">
-            <div class="stat-chip">
-                <span class="stat-count">{{ totalCount }}</span>
-                <span class="stat-label">Total</span>
+        <div class="header-actions">
+            <div class="export-buttons">
+                <button class="btn-export" (click)="exportToCSV()">Export to CSV</button>
+                <button class="btn-export" (click)="exportAbstractsToCSV()">Export Abstracts Only</button>
             </div>
-            <div class="stat-chip paid">
-                <span class="stat-count">{{ paidCount }}</span>
-                <span class="stat-label">Paid</span>
-            </div>
-            <div class="stat-chip pending">
-                <span class="stat-count">{{ pendingCount }}</span>
-                <span class="stat-label">Pending</span>
-            </div>
-            <div class="stat-chip failed">
-                <span class="stat-count">{{ failedCount }}</span>
-                <span class="stat-label">Failed</span>
-            </div>
-            <div class="stat-chip abstract">
-                <span class="stat-count">{{ withAbstractCount }}</span>
-                <span class="stat-label">Abstracts</span>
+            <div class="stats-row">
+                <div class="stat-chip">
+                    <span class="stat-count">{{ totalCount }}</span>
+                    <span class="stat-label">Total</span>
+                </div>
+                <div class="stat-chip paid">
+                    <span class="stat-count">{{ paidCount }}</span>
+                    <span class="stat-label">Paid</span>
+                </div>
+                <div class="stat-chip pending">
+                    <span class="stat-count">{{ pendingCount }}</span>
+                    <span class="stat-label">Pending</span>
+                </div>
+                <div class="stat-chip failed">
+                    <span class="stat-count">{{ failedCount }}</span>
+                    <span class="stat-label">Failed</span>
+                </div>
+                <div class="stat-chip abstract">
+                    <span class="stat-count">{{ withAbstractCount }}</span>
+                    <span class="stat-label">Abstracts</span>
+                </div>
             </div>
         </div>
     </div>
@@ -204,6 +209,7 @@
                     <th (click)="sortBy('FullName')" class="sortable">Full Name</th>
                     <th (click)="sortBy('Email')" class="sortable">Email</th>
                     <th>Affiliation</th>
+                    <th>Role</th>
                     <th (click)="sortBy('ConferenceName')" class="sortable">Conference</th>
                     <th>Abstract</th>
                     <th (click)="sortBy('PaymentStatus')" class="sortable">Payment</th>
@@ -217,6 +223,7 @@
                     <td>{{ a.FullName }}</td>
                     <td>{{ a.Email }}</td>
                     <td>{{ a.Affiliation || a.affiliation || '—' }}</td>
+                    <td>{{ a.Role || a.role || '—' }}</td>
                     <td>{{ a.ConferenceName }}</td>
                     <td>
                         <span class="badge no-abstract" *ngIf="!a.HasAbstract && !a.hasAbstract">No</span>
@@ -234,7 +241,7 @@
                     </td>
                 </tr>
                 <tr *ngIf="filteredAttendees.length === 0">
-                    <td colspan="9" class="no-data">No attendees found</td>
+                    <td colspan="10" class="no-data">No attendees found</td>
                 </tr>
             </tbody>
         </table>
@@ -258,6 +265,10 @@
             <div class="detail-row">
                 <span class="label">Affiliation</span>
                 <span>{{ selectedAttendee.Affiliation || selectedAttendee.affiliation || '—' }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Role</span>
+                <span>{{ selectedAttendee.Role || selectedAttendee.role || '—' }}</span>
             </div>
             <div class="detail-row">
                 <span class="label">Conference</span>

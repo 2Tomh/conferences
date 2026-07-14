@@ -50,6 +50,41 @@
 //     link.click();
 //     document.body.removeChild(link);
 //   }
+//   // ⭐ חדש: ייצוא נפרד שמכיל רק את הנרשמים שהגישו תקציר, עם עמודות
+//   // ממוקדות להשוואה נוחה (שם, שיוך, כותרת, גוף, הערות) - בלי עמודות
+//   // תשלום/הרשמה שלא רלוונטיות כשמשווים בין תקצירים.
+//   exportAbstractsToCSV() {
+//     const withAbstracts = this.filteredAttendees.filter(
+//       a => a.HasAbstract === true || a.hasAbstract === true
+//     );
+
+//     if (!withAbstracts || withAbstracts.length === 0) {
+//       alert("No abstracts to export");
+//       return;
+//     }
+
+//     const header = "Full Name,Affiliation,Conference,Abstract Title,Abstract Body,Additional Notes\n";
+//     const rows = withAbstracts.map(a => {
+//       return [
+//         a.FullName,
+//         a.Affiliation || a.affiliation || '—',
+//         a.ConferenceName || '—',
+//         a.AbstractTitle || a.abstractTitle || '',
+//         a.AbstractBody || a.abstractBody || '',
+//         a.AbstractNotes || a.abstractNotes || ''
+//       ].map(value => `"${String(value).replace(/"/g, '""')}"`).join(",");
+//     }).join("\n");
+
+//     const csvContent = "\uFEFF" + header + rows;
+//     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+//     const link = document.createElement("a");
+//     const url = URL.createObjectURL(blob);
+//     link.setAttribute("href", url);
+//     link.setAttribute("download", "abstracts.csv");
+//     document.body.appendChild(link);
+//     link.click();
+//     document.body.removeChild(link);
+//   }
 //   loadAttendees() {
 //     this.isLoading = true;
 //     this.error = '';
@@ -130,6 +165,7 @@
 //     return this.filteredAttendees.filter(a => a.HasAbstract === true || a.hasAbstract === true).length;
 //   }
 // }
+
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../services/api.service';
 @Component({
@@ -160,13 +196,15 @@ export class AttendeeListComponent implements OnInit {
       alert("No data to export");
       return;
     }
-    const header = "Full Name,Email,Affiliation,Address,Payment Status,Amount Paid,Registration Date\n";
+    // ⭐ הוספת עמודת Role
+    const header = "Full Name,Email,Affiliation,Address,Role,Payment Status,Amount Paid,Registration Date\n";
     const rows = this.filteredAttendees.map(a => {
       return [
         a.FullName,
         a.Email,
         a.Affiliation || '—',
         a.Address || '—',
+        a.Role || a.role || '—', // ⭐ חדש
         a.DisplayStatus || a.PaymentStatus,
         (a.Amount || a.amount || 0) + ' ₪',
         a.RegisteredAt ? new Date(a.RegisteredAt).toLocaleString('en-US') : ''
@@ -182,7 +220,7 @@ export class AttendeeListComponent implements OnInit {
     link.click();
     document.body.removeChild(link);
   }
-  // ⭐ חדש: ייצוא נפרד שמכיל רק את הנרשמים שהגישו תקציר, עם עמודות
+  // ⭐ ייצוא נפרד שמכיל רק את הנרשמים שהגישו תקציר, עם עמודות
   // ממוקדות להשוואה נוחה (שם, שיוך, כותרת, גוף, הערות) - בלי עמודות
   // תשלום/הרשמה שלא רלוונטיות כשמשווים בין תקצירים.
   exportAbstractsToCSV() {
