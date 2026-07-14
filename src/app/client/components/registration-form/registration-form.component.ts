@@ -522,7 +522,8 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
   // המשתמש לא יוכל לראות אותם ברשימה ולכן לא יוכל להירשם אליהם בכלל
   private readonly EXCLUDED_CONFERENCE_NAMES: string[] = [
     'Law',
-    'Network Dynamics in Socio-Technical Systems: From Resilient Control to Incentives and Information Design'
+    'Network Dynamics in Socio-Technical Systems: From Resilient Control to Incentives and Information Design',
+    'Cancer Biology Across Scales'
   ];
 
   constructor(

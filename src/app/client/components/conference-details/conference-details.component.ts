@@ -11,7 +11,7 @@
 //   loading = true;
 //   notFound = false;
 
-//   // ⭐ חדש: שמות הכנסים שאסור לאפשר להם הרשמה בכלל —
+//   // ⭐ שמות הכנסים שאסור לאפשר להם הרשמה בכלל —
 //   // כפתור ה-Register מוסתר לגמרי בעמוד הזה עבורם
 //   private readonly EXCLUDED_CONFERENCE_NAMES: string[] = [
 //     'Law',
@@ -52,6 +52,8 @@
 //             // השדה קיים במודל (ContactName) ובמסד הנתונים, אבל מעולם
 //             // לא נשלף כאן - בדיוק אותה משפחת באג כמו whoShouldAttend/hasAbstractSubmission
 //             contactName: data.ContactName || data.contactName || '',
+//             // ⭐ חדש: קישור לאתר החיצוני של הכנס (אם הוזן בטופס הניהול תחת Links.website)
+//             websiteUrl: data.Links?.website || data.links?.website || '',
 //             programBlocks: (data.ProgramBlocks || data.programBlocks || []).map((pb: any) => ({
 //               startTime: pb.StartTime || pb.startTime || '',
 //               endTime: pb.EndTime || pb.endTime || '',
@@ -91,7 +93,7 @@
 //     });
 //   }
 
-//   // ⭐ חדש: true אם הכנס הנוכחי נמצא ברשימת החסימה —
+//   // ⭐ true אם הכנס הנוכחי נמצא ברשימת החסימה —
 //   // ה-HTML משתמש בזה כדי להסתיר את שני כפתורי ה-Register בעמוד
 //   get isRegistrationBlocked(): boolean {
 //     const name = (this.conference?.name || '').toLowerCase();
@@ -139,6 +141,7 @@
 //     return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 //   }
 // }
+
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../../services/api.service';
@@ -152,11 +155,12 @@ export class ConferenceDetailsComponent implements OnInit {
   loading = true;
   notFound = false;
 
-  // ⭐ שמות הכנסים שאסור לאפשר להם הרשמה בכלל —
-  // כפתור ה-Register מוסתר לגמרי בעמוד הזה עבורם
+  // ⭐ עודכן: הוספת כנס נוסף לרשימת החסימה —
+  // גם כפתור ה-Register וגם ה-CTA banner בתחתית מוסתרים לגמרי עבורו
   private readonly EXCLUDED_CONFERENCE_NAMES: string[] = [
     'Law',
-    'Network Dynamics in Socio-Technical Systems: From Resilient Control to Incentives and Information Design'
+    'Network Dynamics in Socio-Technical Systems: From Resilient Control to Incentives and Information Design',
+    'Cancer Biology Across Scales'
   ];
 
   constructor(
@@ -193,7 +197,7 @@ export class ConferenceDetailsComponent implements OnInit {
             // השדה קיים במודל (ContactName) ובמסד הנתונים, אבל מעולם
             // לא נשלף כאן - בדיוק אותה משפחת באג כמו whoShouldAttend/hasAbstractSubmission
             contactName: data.ContactName || data.contactName || '',
-            // ⭐ חדש: קישור לאתר החיצוני של הכנס (אם הוזן בטופס הניהול תחת Links.website)
+            // קישור לאתר החיצוני של הכנס (אם הוזן בטופס הניהול תחת Links.website)
             websiteUrl: data.Links?.website || data.links?.website || '',
             programBlocks: (data.ProgramBlocks || data.programBlocks || []).map((pb: any) => ({
               startTime: pb.StartTime || pb.startTime || '',
@@ -234,8 +238,8 @@ export class ConferenceDetailsComponent implements OnInit {
     });
   }
 
-  // ⭐ true אם הכנס הנוכחי נמצא ברשימת החסימה —
-  // ה-HTML משתמש בזה כדי להסתיר את שני כפתורי ה-Register בעמוד
+  // true אם הכנס הנוכחי נמצא ברשימת החסימה —
+  // ה-HTML משתמש בזה כדי להסתיר את כפתורי ה-Register וה-CTA banner בעמוד
   get isRegistrationBlocked(): boolean {
     const name = (this.conference?.name || '').toLowerCase();
     return this.EXCLUDED_CONFERENCE_NAMES.some(
@@ -252,7 +256,7 @@ export class ConferenceDetailsComponent implements OnInit {
 
   // פונקציה לניווט לטופס ההרשמה עם ה-ID של הכנס
   register(): void {
-    // ⭐ הגנה כפולה: גם אם הכפתור מוסתר ב-HTML, לא לאפשר ניווט בפועל
+    // הגנה כפולה: גם אם הכפתור מוסתר ב-HTML, לא לאפשר ניווט בפועל
     if (this.isRegistrationBlocked) {
       console.warn('Registration is blocked for this conference');
       return;

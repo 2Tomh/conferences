@@ -322,7 +322,7 @@
           </svg>
         </button>
 
-        <!-- ⭐ חדש: כפתור לאתר החיצוני של הכנס, מוצג רק אם יש קישור שמור -->
+        <!-- כפתור לאתר החיצוני של הכנס, מוצג רק אם יש קישור שמור -->
         <a class="btn-outline" *ngIf="conference.websiteUrl" [href]="conference.websiteUrl" target="_blank">
           Visit Conference Website
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -520,12 +520,14 @@
   </section>
 
   <!-- ══ CTA BANNER ══ -->
-  <section class="cta-banner">
+  <!-- ⭐ עודכן: כל הבלוק הזה (טקסט + כפתור) מוסתר לגמרי לכנסים חסומים,
+       לא רק הכפתור בפנים -->
+  <section class="cta-banner" *ngIf="!isRegistrationBlocked">
     <div>
       <h2>Ready to Participate?</h2>
       <p>Registration, payment, and abstract submission are managed through the Mind-IL portal.</p>
     </div>
-    <button class="btn-primary" *ngIf="!isRegistrationBlocked" (click)="register()">
+    <button class="btn-primary" (click)="register()">
       Register Through Mind-IL
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M5 12h14M13 6l6 6-6 6" />

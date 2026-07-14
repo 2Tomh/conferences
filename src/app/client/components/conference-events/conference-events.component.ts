@@ -156,7 +156,7 @@ export class ConferenceEventsComponent implements OnInit {
   // ומסתירים View Description / Conference Website / Express Interest
   private readonly EXTERNAL_ONLY_CONFERENCE_NAMES: string[] = [
     'Law',
-    'Network Dynamics in Socio-Technical Systems: From Resilient Control to Incentives and Information Design'
+    'Network Dynamics in Socio-Technical Systems: From Resilient Control to Incentives and Information Design',
   ];
 
   constructor(
