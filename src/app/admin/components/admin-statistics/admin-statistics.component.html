@@ -1,0 +1,81 @@
+<div class="stats-page" dir="rtl">
+  <div class="page-header">
+    <h2>📊 דשבורד סטטיסטיקות</h2>
+    <p>סקירה כללית של הרשמות, תשלומים והגשות תקציר בכל הכנסים</p>
+  </div>
+
+  <div class="loading" *ngIf="isLoading">טוען נתונים...</div>
+  <div class="error-msg" *ngIf="error">{{ error }}</div>
+
+  <ng-container *ngIf="!isLoading && !error && stats">
+
+    <!-- ══ כרטיסי סיכום ══ -->
+    <div class="summary-cards">
+      <div class="summary-card">
+        <span class="card-value">{{ stats.TotalRegistrations }}</span>
+        <span class="card-label">סה"כ נרשמים</span>
+      </div>
+      <div class="summary-card success">
+        <span class="card-value">{{ stats.TotalPaid }}</span>
+        <span class="card-label">שולמו</span>
+      </div>
+      <div class="summary-card pending">
+        <span class="card-value">{{ stats.TotalPending }}</span>
+        <span class="card-label">ממתינים</span>
+      </div>
+      <div class="summary-card failed">
+        <span class="card-value">{{ stats.TotalFailed }}</span>
+        <span class="card-label">נכשלו</span>
+      </div>
+      <div class="summary-card abstract">
+        <span class="card-value">{{ stats.TotalWithAbstract }}</span>
+        <span class="card-label">הגשות תקציר</span>
+      </div>
+    </div>
+
+    <!-- ══ גרפים ══ -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>נרשמים לפי כנס</h3>
+        <canvas #conferenceBarCanvas></canvas>
+      </div>
+
+      <div class="chart-card">
+        <h3>הגשות תקציר לפי כנס</h3>
+        <canvas #abstractBarCanvas></canvas>
+      </div>
+
+      <div class="chart-card small">
+        <h3>סטטוס תשלום</h3>
+        <canvas #paymentPieCanvas></canvas>
+      </div>
+
+      <div class="chart-card small">
+        <h3>התפלגות תפקידים</h3>
+        <canvas #rolePieCanvas></canvas>
+      </div>
+    </div>
+
+    <!-- ══ טבלת פירוט לפי כנס ══ -->
+    <div class="detail-table-wrap">
+      <h3>פירוט מלא לפי כנס</h3>
+      <table class="detail-table">
+        <thead>
+          <tr>
+            <th>כנס</th>
+            <th>נרשמים</th>
+            <th>הגשות תקציר</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let conf of stats.RegistrationsByConference">
+            <td>{{ conf.ConferenceName }}</td>
+            <td>{{ conf.Count }}</td>
+            <td>{{ getAbstractCountFor(conf.ConferenceName) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </ng-container>
+</div>

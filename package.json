@@ -23,7 +23,7 @@
     "@angular/router": "~10.0.3",
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
-    "chart.js": "^4.5.1",
+    "chart.js": "^3.9.1",
     "jwt-decode": "^4.0.0",
     "ngx-intl-tel-input": "^17.0.0",
     "rxjs": "~6.5.5",

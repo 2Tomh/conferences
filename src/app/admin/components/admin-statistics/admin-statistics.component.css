@@ -1,0 +1,102 @@
+.stats-page {
+  padding: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 28px;
+}
+
+.page-header h2 {
+  font-size: 1.8rem;
+  margin: 0 0 6px;
+}
+
+.page-header p {
+  color: #6b6b80;
+  margin: 0;
+}
+
+.summary-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.summary-card {
+  flex: 1 1 160px;
+  background: #fff;
+  border: 1px solid #e4e4ec;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: center;
+}
+
+.summary-card .card-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0F1B4C;
+}
+
+.summary-card.success .card-value { color: #34c77a; }
+.summary-card.pending .card-value { color: #f5a524; }
+.summary-card.failed .card-value { color: #f2545b; }
+.summary-card.abstract .card-value { color: #6ea8fe; }
+
+.summary-card .card-label {
+  font-size: 0.85rem;
+  color: #6b6b80;
+  font-weight: 600;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.chart-card {
+  background: #fff;
+  border: 1px solid #e4e4ec;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.chart-card h3 {
+  margin: 0 0 16px;
+  font-size: 1rem;
+}
+
+.detail-table-wrap {
+  background: #fff;
+  border: 1px solid #e4e4ec;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.detail-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.detail-table th, .detail-table td {
+  text-align: right;
+  padding: 10px 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.loading, .error-msg {
+  text-align: center;
+  padding: 40px;
+  color: #6b6b80;
+}
+
+@media (max-width: 768px) {
+  .charts-grid { grid-template-columns: 1fr; }
+}

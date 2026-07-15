@@ -91,9 +91,9 @@ export class ApiService {
 
   getAllAttendees(filters?: { conferenceId?: string; paymentStatus?: string; search?: string }) {
     let params = new HttpParams();
-    if (filters?.conferenceId)  params = params.set('conferenceId',  filters.conferenceId);
+    if (filters?.conferenceId) params = params.set('conferenceId', filters.conferenceId);
     if (filters?.paymentStatus) params = params.set('paymentStatus', filters.paymentStatus);
-    if (filters?.search)        params = params.set('search',        filters.search);
+    if (filters?.search) params = params.set('search', filters.search);
     return this.http.get<any[]>(`${this.apiUrl}/registration/all`, { params });
   }
 
@@ -114,6 +114,13 @@ export class ApiService {
   // ==========================================
   sendPaymentConfirmation(orderId: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/payment/send-confirmation`, { orderId });
+  }
+
+  // ==========================================
+  // Statistics
+  // ==========================================
+  getStatistics(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/registration/statistics`);
   }
 }
 

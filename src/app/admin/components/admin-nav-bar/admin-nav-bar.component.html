@@ -1,33 +1,5 @@
 <!-- <nav class="top-navbar">
   <div class="nav-container">
-
-    <div class="nav-links" [dir]="currentDir">
-      <div class="nav-actions" *ngIf="!isLoginPage">
-        <button class="btn-logout" (click)="onLogout()">
-          <i class="icon-exit">LogOut</i>
-        </button>
-        <ng-container *ngIf="isLoggedIn$ | async">
-          <a routerLink="/admin/dashboard" routerLinkActive="active">
-            <i class="icon-dashboard"></i> Dashboard
-          </a>
-          <ng-container *ngIf="authService.isAnyManager()">
-            <a routerLink="/admin/attendees" routerLinkActive="active">
-              Attendees
-            </a>
-          </ng-container>
-          <ng-container *ngIf="authService.isAdmin()">
-            <a routerLink="/admin/users" routerLinkActive="active">
-              <i class="icon-users"></i> User Management
-            </a>
-          </ng-container>       
-        </ng-container>
-      </div>
-    </div>
-  </div>
-</nav> -->
-
-<nav class="top-navbar">
-  <div class="nav-container">
     <div class="nav-links" [dir]="currentDir">
       <ng-container *ngIf="isLoggedIn$ | async">
         <div class="nav-links-group">
@@ -49,6 +21,38 @@
         <div class="nav-actions" *ngIf="!isLoginPage">
           <button class="btn-logout" (click)="onLogout()">
            LogOut
+          </button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</nav> -->
+<nav class="top-navbar">
+  <div class="nav-container">
+    <div class="nav-links" [dir]="currentDir">
+      <ng-container *ngIf="isLoggedIn$ | async">
+        <div class="nav-links-group">
+          <a routerLink="/admin/dashboard" routerLinkActive="active">
+            <i class="icon-dashboard"></i> Dashboard
+          </a>
+          <ng-container *ngIf="authService.isAnyManager()">
+            <a routerLink="/admin/attendees" routerLinkActive="active">
+              Attendees
+            </a>
+          </ng-container>
+          <ng-container *ngIf="authService.isAdmin()">
+            <a routerLink="/admin/statistics" routerLinkActive="active">
+              📊 Statistics
+            </a>
+            <a routerLink="/admin/users" routerLinkActive="active">
+              <i class="icon-users"></i> User Management
+            </a>
+          </ng-container>
+        </div>
+
+        <div class="nav-actions" *ngIf="!isLoginPage">
+          <button class="btn-logout" (click)="onLogout()">
+            LogOut
           </button>
         </div>
       </ng-container>

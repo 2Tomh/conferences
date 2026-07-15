@@ -19,6 +19,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { SharedModule } from '../shared/shared.module';
 import { ConferenceEditComponent } from './components/conference-edit/conference-edit.component';
+import { AdminStatisticsComponent } from './components/admin-statistics/admin-statistics.component';
 @NgModule({
   declarations: [
     AdminRootComponent,
@@ -30,6 +31,7 @@ import { ConferenceEditComponent } from './components/conference-edit/conference
     CreateUserComponent,
     UserManagementComponent,
     ConferenceEditComponent,
+    AdminStatisticsComponent,
   ],
   imports: [
     CommonModule,
