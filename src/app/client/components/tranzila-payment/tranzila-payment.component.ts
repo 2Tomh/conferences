@@ -90,15 +90,6 @@ export class TranzilaPaymentComponent implements OnInit, OnChanges, OnDestroy {
       },
       error: (err) => {
         console.error("Payment error:", err);
-
-        // TEMPORARY DEBUG LOGS - remove after diagnosing
-        console.log("DEBUG err.status:", err?.status);
-        console.log("DEBUG err.error:", err?.error);
-        console.log("DEBUG err.error type:", typeof err?.error);
-        console.log("DEBUG err.error.code:", err?.error?.code);
-        console.log("DEBUG full err JSON:", JSON.stringify(err, null, 2));
-        // END TEMPORARY DEBUG LOGS
-
         this.loading = false;
 
         // Reliable check against a structured error code from the backend,
