@@ -174,3 +174,60 @@
   .spinner-ring { animation: none; }
   .btn-retry { transition: none; }
 }
+
+
+/* ══ ALREADY REGISTERED POPUP ══ */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 27, 76, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 40px;
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 8px 40px rgba(15, 27, 76, 0.25);
+}
+
+.popup-content h3 {
+  color: #0F1B4C;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0 0 16px;
+}
+
+.popup-content p {
+  color: #4a4a6a;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0 0 24px;
+}
+
+.popup-content .btn-submit {
+  padding: 12px 32px;
+  background: #C9A84C;
+  color: #0F1B4C;
+  border: 2px solid #C9A84C;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.popup-content .btn-submit:hover {
+  background: transparent;
+  color: #C9A84C;
+}
