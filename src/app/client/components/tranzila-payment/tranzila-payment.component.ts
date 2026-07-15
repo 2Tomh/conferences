@@ -103,9 +103,10 @@ export class TranzilaPaymentComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  closeAlreadyRegisteredPopup() {
-    this.alreadyRegistered = false;
-  }
+closeAlreadyRegisteredPopup() {
+  this.alreadyRegistered = false;
+  this.router.navigate(['/ConferenceEvents']); // Redirect back to the conferences list
+}
 
   startPollingTransactionStatus() {
     this.pollingStartTime = Date.now();
