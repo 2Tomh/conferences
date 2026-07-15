@@ -63,6 +63,7 @@ export interface PaymentPreparationResponse {
     failureUrl?: string;
     email?: string;
     fullName?: string;
+    affiliation?: string;
 }
 
 @Injectable({ providedIn: 'root' })
