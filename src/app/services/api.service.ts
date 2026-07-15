@@ -242,7 +242,8 @@ export class ApiService {
   sendPaymentConfirmation(orderId: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/payment/send-confirmation`, { orderId });
   }
-    // Statistics
+    // ==========================================
+  // Statistics
   // ==========================================
   getStatistics(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/registration/statistics`);
