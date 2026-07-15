@@ -93,6 +93,7 @@
           <label>מארגנים:</label>
           <div *ngFor="let org of organizers.controls; let i = index" class="row">
             <input [formControlName]="i" class="form-control">
+            <button type="button" (click)="removeOrganizer(i)" title="הסר מארגן">❌</button>
           </div>
           <button type="button" (click)="addOrganizer()">+ הוסף מארגן</button>
         </div>
