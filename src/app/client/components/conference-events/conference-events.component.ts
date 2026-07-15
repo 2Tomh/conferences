@@ -157,6 +157,7 @@ export class ConferenceEventsComponent implements OnInit {
   private readonly EXTERNAL_ONLY_CONFERENCE_NAMES: string[] = [
     'Law',
     'Network Dynamics in Socio-Technical Systems: From Resilient Control to Incentives and Information Design',
+    'Mid-Chain DeFi Conference'
   ];
 
   constructor(

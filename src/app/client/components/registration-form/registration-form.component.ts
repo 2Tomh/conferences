@@ -470,15 +470,15 @@ export function maxWords(limit: number) {
 export class RegistrationFormComponent implements OnInit, OnChanges {
   @Input() preselectedConferenceId: string | null = null;
   @Input() autoOpenAbstract: boolean = false;
-  
+
   regForm!: FormGroup;
   abstractForm!: FormGroup;
   posterForm!: FormGroup;
-  
+
   allConferences: any[] = [];
   filteredConferences: any[] = [];
   selectedConference: any = null;
-  
+
   isLoading = false;
   showConferencePopup = false;
   showAbstractPopup = false;
@@ -487,7 +487,7 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
   showAbstractNotice = false;
   showPosterNotice = false;
   showAlreadyRegisteredPopup = false; // ⭐ הפופ-אפ החדש לזיהוי רישום כפול
-  
+
   conferenceSearch = '';
   wantsAbstract: boolean | null = null;
   wantsPoster: boolean | null = null;
@@ -521,7 +521,8 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
   private readonly EXCLUDED_CONFERENCE_NAMES: string[] = [
     'Law',
     'Network Dynamics in Socio-Technical Systems: From Resilient Control to Incentives and Information Design',
-    'Cancer Biology Across Scales'
+    'Cancer Biology Across Scales',
+    'Mid-Chain DeFi Conference'
   ];
 
   constructor(
@@ -587,16 +588,16 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
     this.apiService.getSurveys().subscribe({
       next: (data) => {
         this.allConferences = data.map(conf => ({
-            ...conf,
-            id: conf.Id || conf._id || conf.id,
-            name: conf.Name || conf.name || conf.Conference || 'Unnamed Conference',
-            location: conf.Location || conf.location || '',
-            description: conf.Description || conf.description || '',
-            abstractGuidelines: conf.AbstractGuidelines || conf.abstractGuidelines || '',
-            allowsAbstract: conf.AbstractSubmission || conf.Abstract_submission || conf.abstract_submission || false,
-            allowsPoster: conf.AllowsPoster || conf.allowsPoster || false,
-            posterGuidelines: conf.PosterGuidelines || conf.posterGuidelines || ''
-          }))
+          ...conf,
+          id: conf.Id || conf._id || conf.id,
+          name: conf.Name || conf.name || conf.Conference || 'Unnamed Conference',
+          location: conf.Location || conf.location || '',
+          description: conf.Description || conf.description || '',
+          abstractGuidelines: conf.AbstractGuidelines || conf.abstractGuidelines || '',
+          allowsAbstract: conf.AbstractSubmission || conf.Abstract_submission || conf.abstract_submission || false,
+          allowsPoster: conf.AllowsPoster || conf.allowsPoster || false,
+          posterGuidelines: conf.PosterGuidelines || conf.posterGuidelines || ''
+        }))
           .filter(conf => !this.EXCLUDED_CONFERENCE_NAMES.some(excluded => excluded.toLowerCase() === (conf.name || '').toLowerCase()));
 
         this.filteredConferences = [...this.allConferences];
@@ -617,7 +618,7 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
 
   openConferencePopup() { this.conferenceSearch = ''; this.filteredConferences = [...this.allConferences]; this.showConferencePopup = true; }
   closeConferencePopup() { this.showConferencePopup = false; }
-  
+
   onConferenceSearch(event: Event) {
     const term = (event.target as HTMLInputElement).value.toLowerCase();
     this.filteredConferences = !term ? [...this.allConferences] : this.allConferences.filter(c => c.name?.toLowerCase().includes(term));
@@ -648,7 +649,7 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
 
   onPosterOnlyChoice() { this.wantsAbstract = false; this.wantsPoster = true; this.showPosterPopup = true; }
   onNoSubmission() { this.wantsAbstract = false; this.wantsPoster = false; this.showAbstractPopup = false; this.showPosterPopup = false; }
-  
+
   savePoster() {
     if (this.posterForm.invalid) { this.posterForm.markAllAsTouched(); return; }
     this.posterSaved = true; this.showPosterPopup = false; this.showPosterNotice = true;
