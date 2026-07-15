@@ -59,3 +59,14 @@
     </button>
   </div>
 </div>
+
+<!-- Already Registered popup -->
+<div *ngIf="alreadyRegistered" class="popup-overlay">
+  <div class="popup-content">
+    <h3>Already Registered</h3>
+    <p>You are already a registered participant of this conference.</p>
+    <button type="button" class="btn-submit" (click)="closeAlreadyRegisteredPopup()">
+      OK
+    </button>
+  </div>
+</div>

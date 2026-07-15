@@ -13,6 +13,7 @@
 
 //   loading: boolean = true;
 //   error: string | null = null;
+//   alreadyRegistered: boolean = false; // NEW: shows a dedicated popup when the user already has a paid registration for this conference
 
 //   paymentData: PaymentPreparationResponse = {
 //     terminal: '',
@@ -28,7 +29,7 @@
 //   private statusCheckInterval: any;
 //   private isCheckingStatus: boolean = false;
 //   private pollingStartTime: number = 0;
-//   private readonly POLLING_TIMEOUT_MS = 10 * 60 * 1000;
+//   private readonly POLLING_TIMEOUT_MS = 10 * 60 * 1000; // 10 minutes
 
 //   constructor(private paymentService: PaymentService, private router: Router) { }
 
@@ -55,6 +56,7 @@
 
 //     this.loading = true;
 //     this.error = null;
+//     this.alreadyRegistered = false;
 
 //     const payload = {
 //       orderId: data.orderId,
@@ -64,7 +66,7 @@
 //       phone: data.Phone || data.phone || '',
 //       conferenceId: data.ConferenceId || data.conferenceId || null,
 //       isLifetimeMember: data.IsLifetimeMember || false,
-//       // ⭐ שדות אישיים - נדרשים כדי שה-Attendee הסופי ייבנה נכון
+//       // Personal fields - required so the final Attendee record is built correctly
 //       affiliation: data.Affiliation || data.affiliation || '',
 //       address: data.Address || data.address || '',
 //       role: data.Role || data.role || '',
@@ -88,10 +90,22 @@
 //       },
 //       error: (err) => {
 //         console.error("Payment error:", err);
-//         this.error = "אירעה שגיאה בטעינת דף התשלום.";
 //         this.loading = false;
+
+//         // NEW: detect the specific "already registered" error from the server
+//         // and show a dedicated popup instead of the generic error message
+//         const serverMessage = err?.error?.toString?.() || '';
+//         if (serverMessage.includes('משתמש זה כבר רשום לכנס זה')) {
+//           this.alreadyRegistered = true;
+//         } else {
+//           this.error = "An error occurred while loading the payment page.";
+//         }
 //       }
 //     });
+//   }
+
+//   closeAlreadyRegisteredPopup() {
+//     this.alreadyRegistered = false;
 //   }
 
 //   startPollingTransactionStatus() {
@@ -147,6 +161,7 @@
 //     this.stopPolling();
 //   }
 // }
+
 import { Component, OnInit, OnChanges, ViewChild, ElementRef, OnDestroy, Input, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { PaymentService, PaymentPreparationResponse } from '../../../services/payment.service';
@@ -162,7 +177,7 @@ export class TranzilaPaymentComponent implements OnInit, OnChanges, OnDestroy {
 
   loading: boolean = true;
   error: string | null = null;
-  alreadyRegistered: boolean = false; // NEW: shows a dedicated popup when the user already has a paid registration for this conference
+  alreadyRegistered: boolean = false; // Shows a dedicated popup when the user already has a paid registration for this conference
 
   paymentData: PaymentPreparationResponse = {
     terminal: '',
@@ -241,10 +256,9 @@ export class TranzilaPaymentComponent implements OnInit, OnChanges, OnDestroy {
         console.error("Payment error:", err);
         this.loading = false;
 
-        // NEW: detect the specific "already registered" error from the server
-        // and show a dedicated popup instead of the generic error message
-        const serverMessage = err?.error?.toString?.() || '';
-        if (serverMessage.includes('משתמש זה כבר רשום לכנס זה')) {
+        // Reliable check against a structured error code from the backend,
+        // instead of matching free text (which is fragile across encodings/wrapping)
+        if (err?.error?.code === 'ALREADY_REGISTERED') {
           this.alreadyRegistered = true;
         } else {
           this.error = "An error occurred while loading the payment page.";
