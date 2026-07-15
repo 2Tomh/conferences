@@ -891,7 +891,20 @@
   height: 3px;
   background: linear-gradient(90deg, #C9A84C, #E8C97A, #C9A84C);
 }
+/* ══ EXTERNAL CONFERENCE NOTE ══ */
+.external-conference-note {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-style: italic;
+  font-weight: 400;
+  margin: 6px 0 0;
+  line-height: 1.5;
+}
 
+.external-conference-note strong {
+  font-weight: 500;
+  color: #94a3b8;
+}
 @keyframes slideUp {
   from {
     transform: translateY(20px);
