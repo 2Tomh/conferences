@@ -23,12 +23,12 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        // בדיקה: האם זו שגיאת 401?
+        // Check: is this a 401 error?
         if (error.status === 401) {
-          
-          // בדיקה: האם המשתמש נמצא כרגע בנתיב של ה-Admin?
-          // אם כן - נבצע Logout ונפנה ללוגין.
-          // אם לא - נשאיר אותו בדף הלקוח (הוא פשוט לא יראה נתונים מוגנים).
+
+          // Check: is the user currently on an Admin route?
+          // If so - log out and redirect to login.
+          // If not - leave them on the public page (they just won't see protected data).
           if (this.router.url.includes('/admin')) {
             console.warn('Unauthorized access to admin area, logging out...');
             this.authService.logOut();
@@ -38,7 +38,12 @@ export class AuthInterceptor implements HttpInterceptor {
           }
         }
 
-        return throwError(() => error);
+        // FIXED: pass the error value directly instead of a factory function.
+        // This project's RxJS version expects throwError(value), not throwError(() => value).
+        // Using the factory-function syntax on this version caused the function itself
+        // to be thrown instead of the actual HttpErrorResponse, so every .subscribe({ error })
+        // handler in the app was receiving `undefined` for err.status / err.error / etc.
+        return throwError(error);
       })
     );
   }
