@@ -1,120 +1,3 @@
-// // import { Component, OnInit, OnChanges, ViewChild, ElementRef, OnDestroy, Input, SimpleChanges } from '@angular/core';
-// // import { Router } from '@angular/router';
-// // import { PaymentService, PaymentPreparationResponse } from '../../../services/payment.service';
-
-// // @Component({
-// //   selector: 'app-tranzila-payment',
-// //   templateUrl: './tranzila-payment.component.html',
-// //   styleUrls: ['./tranzila-payment.component.css']
-// // })
-// // export class TranzilaPaymentComponent implements OnInit, OnChanges, OnDestroy {
-// //   @Input() paymentInputData: any = null;
-// //   @ViewChild('paymentForm') paymentForm!: ElementRef<HTMLFormElement>;
-
-// //   loading: boolean = true;
-// //   error: string | null = null;
-// //   paymentData: PaymentPreparationResponse = {
-// //     terminal: '',
-// //     orderId: '',
-// //     amount: 0,
-// //     notifyUrl: '',
-// //     successUrl: '',
-// //     failureUrl: '',
-// //     email: '',
-// //     fullName: ''
-// //   };
-
-// //   private statusCheckInterval: any;
-// //   private isCheckingStatus: boolean = false;
-// //   private pollingStartTime: number = 0;
-// //   private readonly POLLING_TIMEOUT_MS = 10 * 60 * 1000; // 10 דקות
-
-// //   constructor(private paymentService: PaymentService, private router: Router) { }
-
-// //   ngOnInit() {
-// //     if (!this.paymentInputData) {
-// //       this.paymentInputData = history.state?.data;
-// //     }
-// //     this.startPaymentFlow();
-// //   }
-
-// //   ngOnChanges(changes: SimpleChanges) {
-// //     if (changes['paymentInputData'] && this.paymentInputData && !changes['paymentInputData'].firstChange) {
-// //       this.startPaymentFlow();
-// //     }
-// //   }
-
-// //   startPaymentFlow() {
-// //     const data = this.paymentInputData;
-// //     if (!data) {
-// //       this.error = 'No payment data found.';
-// //       this.loading = false;
-// //       return;
-// //     }
-
-// //     this.loading = true;
-// //     this.error = null;
-
-// //     this.paymentService.preparePayment(data).subscribe({
-// //       next: (res) => {
-// //         this.paymentData = res;
-// //         this.loading = false;
-        
-// //         // הגשת הטופס לתוך ה-Iframe באופן אוטומטי
-// //         setTimeout(() => {
-// //           this.paymentForm?.nativeElement.submit();
-// //           this.startPollingTransactionStatus();
-// //         }, 500);
-// //       },
-// //       error: (err) => {
-// //         console.error("Payment error:", err);
-// //         this.error = "אירעה שגיאה בטעינת דף התשלום.";
-// //         this.loading = false;
-// //       }
-// //     });
-// //   }
-
-// //   startPollingTransactionStatus() {
-// //     this.pollingStartTime = Date.now();
-// //     this.statusCheckInterval = setInterval(() => {
-// //       // בדיקת Timeout
-// //       if (Date.now() - this.pollingStartTime > this.POLLING_TIMEOUT_MS) {
-// //         this.stopPolling();
-// //         this.router.navigate(['/payment/failed'], { queryParams: { orderId: this.paymentData.orderId } });
-// //         return;
-// //       }
-
-// //       if (this.isCheckingStatus) return;
-// //       this.isCheckingStatus = true;
-
-// //       this.paymentService.verifyPayment('', this.paymentData.orderId).subscribe({
-// //         next: (res) => {
-// //           this.isCheckingStatus = false;
-// //           if (res?.status === 'success') {
-// //             this.stopPolling();
-// //             this.router.navigate(['/payment/success'], { queryParams: { orderId: this.paymentData.orderId } });
-// //           } else if (res?.status === 'failed') {
-// //             this.stopPolling();
-// //             this.router.navigate(['/payment/failed'], { queryParams: { orderId: this.paymentData.orderId } });
-// //           }
-// //         },
-// //         error: (err) => {
-// //           this.isCheckingStatus = false;
-// //           console.error('Polling error:', err);
-// //         }
-// //       });
-// //     }, 1500);
-// //   }
-
-// //   stopPolling() {
-// //     if (this.statusCheckInterval) clearInterval(this.statusCheckInterval);
-// //   }
-
-// //   ngOnDestroy() {
-// //     this.stopPolling();
-// //   }
-// // }
-
 // import { Component, OnInit, OnChanges, ViewChild, ElementRef, OnDestroy, Input, SimpleChanges } from '@angular/core';
 // import { Router } from '@angular/router';
 // import { PaymentService, PaymentPreparationResponse } from '../../../services/payment.service';
@@ -130,7 +13,6 @@
 
 //   loading: boolean = true;
 //   error: string | null = null;
-
 //   paymentData: PaymentPreparationResponse = {
 //     terminal: '',
 //     orderId: '',
@@ -145,7 +27,7 @@
 //   private statusCheckInterval: any;
 //   private isCheckingStatus: boolean = false;
 //   private pollingStartTime: number = 0;
-//   private readonly POLLING_TIMEOUT_MS = 10 * 60 * 1000;
+//   private readonly POLLING_TIMEOUT_MS = 10 * 60 * 1000; // 10 דקות
 
 //   constructor(private paymentService: PaymentService, private router: Router) { }
 
@@ -173,27 +55,12 @@
 //     this.loading = true;
 //     this.error = null;
 
-//     const payload = {
-//       orderId: data.orderId,
-//       amount: data.amount || 1,
-//       fullName: data.FullName || data.fullName || '',
-//       email: data.Email || data.email || '',
-//       phone: data.Phone || data.phone || '',
-//       conferenceId: data.ConferenceId || data.conferenceId || null,
-//       isLifetimeMember: data.IsLifetimeMember || false,
-//       hasAbstract: data.HasAbstract || false,
-//       abstractTitle: data.AbstractTitle || null,
-//       abstractAuthors: data.FullName || data.fullName || null,
-//       hasPoster: data.HasPoster || false,
-//       posterTitle: data.PosterTitle || null,
-//       posterAuthors: data.PosterAuthors || data.FullName || data.fullName || null
-//     };
-
-//     this.paymentService.preparePayment(payload).subscribe({
+//     this.paymentService.preparePayment(data).subscribe({
 //       next: (res) => {
-//         res.amount = res.amount || 1;
 //         this.paymentData = res;
 //         this.loading = false;
+        
+//         // הגשת הטופס לתוך ה-Iframe באופן אוטומטי
 //         setTimeout(() => {
 //           this.paymentForm?.nativeElement.submit();
 //           this.startPollingTransactionStatus();
@@ -210,11 +77,10 @@
 //   startPollingTransactionStatus() {
 //     this.pollingStartTime = Date.now();
 //     this.statusCheckInterval = setInterval(() => {
+//       // בדיקת Timeout
 //       if (Date.now() - this.pollingStartTime > this.POLLING_TIMEOUT_MS) {
 //         this.stopPolling();
-//         this.router.navigate(['/payment/failed'], {
-//           queryParams: { orderId: this.paymentData.orderId }
-//         });
+//         this.router.navigate(['/payment/failed'], { queryParams: { orderId: this.paymentData.orderId } });
 //         return;
 //       }
 
@@ -224,36 +90,24 @@
 //       this.paymentService.verifyPayment('', this.paymentData.orderId).subscribe({
 //         next: (res) => {
 //           this.isCheckingStatus = false;
-//           if (res) {
-//             if (res.status === 'success') {
-//               this.stopPolling();
-//               this.router.navigate(['/payment/success'], {
-//                 queryParams: { orderId: this.paymentData.orderId }
-//               });
-//             } else if (res.status === 'failed') {
-//               this.stopPolling();
-//               this.router.navigate(['/payment/failed'], {
-//                 queryParams: { orderId: this.paymentData.orderId }
-//               });
-//             }
+//           if (res?.status === 'success') {
+//             this.stopPolling();
+//             this.router.navigate(['/payment/success'], { queryParams: { orderId: this.paymentData.orderId } });
+//           } else if (res?.status === 'failed') {
+//             this.stopPolling();
+//             this.router.navigate(['/payment/failed'], { queryParams: { orderId: this.paymentData.orderId } });
 //           }
 //         },
 //         error: (err) => {
 //           this.isCheckingStatus = false;
 //           console.error('Polling error:', err);
-//           this.stopPolling();
-//           this.router.navigate(['/payment/failed'], {
-//             queryParams: { orderId: this.paymentData.orderId }
-//           });
 //         }
 //       });
 //     }, 1500);
 //   }
 
 //   stopPolling() {
-//     if (this.statusCheckInterval) {
-//       clearInterval(this.statusCheckInterval);
-//     }
+//     if (this.statusCheckInterval) clearInterval(this.statusCheckInterval);
 //   }
 
 //   ngOnDestroy() {
@@ -327,16 +181,12 @@ export class TranzilaPaymentComponent implements OnInit, OnChanges, OnDestroy {
       phone: data.Phone || data.phone || '',
       conferenceId: data.ConferenceId || data.conferenceId || null,
       isLifetimeMember: data.IsLifetimeMember || false,
-      // ⭐ חדש: שדות אישיים - נדרשים כדי שה-Attendee הסופי ייבנה נכון
-      affiliation: data.Affiliation || data.affiliation || '',
-      address: data.Address || data.address || '',
-      role: data.Role || data.role || '',
-      roleCategory: data.RoleCategory || data.roleCategory || '',
       hasAbstract: data.HasAbstract || false,
       abstractTitle: data.AbstractTitle || null,
       abstractAuthors: data.FullName || data.fullName || null,
-      abstractBody: data.AbstractBody || null,
-      abstractNotes: data.AbstractNotes || null
+      hasPoster: data.HasPoster || false,
+      posterTitle: data.PosterTitle || null,
+      posterAuthors: data.PosterAuthors || data.FullName || data.fullName || null
     };
 
     this.paymentService.preparePayment(payload).subscribe({
@@ -410,3 +260,153 @@ export class TranzilaPaymentComponent implements OnInit, OnChanges, OnDestroy {
     this.stopPolling();
   }
 }
+
+// import { Component, OnInit, OnChanges, ViewChild, ElementRef, OnDestroy, Input, SimpleChanges } from '@angular/core';
+// import { Router } from '@angular/router';
+// import { PaymentService, PaymentPreparationResponse } from '../../../services/payment.service';
+
+// @Component({
+//   selector: 'app-tranzila-payment',
+//   templateUrl: './tranzila-payment.component.html',
+//   styleUrls: ['./tranzila-payment.component.css']
+// })
+// export class TranzilaPaymentComponent implements OnInit, OnChanges, OnDestroy {
+//   @Input() paymentInputData: any = null;
+//   @ViewChild('paymentForm') paymentForm!: ElementRef<HTMLFormElement>;
+
+//   loading: boolean = true;
+//   error: string | null = null;
+
+//   paymentData: PaymentPreparationResponse = {
+//     terminal: '',
+//     orderId: '',
+//     amount: 0,
+//     notifyUrl: '',
+//     successUrl: '',
+//     failureUrl: '',
+//     email: '',
+//     fullName: ''
+//   };
+
+//   private statusCheckInterval: any;
+//   private isCheckingStatus: boolean = false;
+//   private pollingStartTime: number = 0;
+//   private readonly POLLING_TIMEOUT_MS = 10 * 60 * 1000;
+
+//   constructor(private paymentService: PaymentService, private router: Router) { }
+
+//   ngOnInit() {
+//     if (!this.paymentInputData) {
+//       this.paymentInputData = history.state?.data;
+//     }
+//     this.startPaymentFlow();
+//   }
+
+//   ngOnChanges(changes: SimpleChanges) {
+//     if (changes['paymentInputData'] && this.paymentInputData && !changes['paymentInputData'].firstChange) {
+//       this.startPaymentFlow();
+//     }
+//   }
+
+//   startPaymentFlow() {
+//     const data = this.paymentInputData;
+//     if (!data) {
+//       this.error = 'No payment data found.';
+//       this.loading = false;
+//       return;
+//     }
+
+//     this.loading = true;
+//     this.error = null;
+
+//     const payload = {
+//       orderId: data.orderId,
+//       amount: data.amount || 1,
+//       fullName: data.FullName || data.fullName || '',
+//       email: data.Email || data.email || '',
+//       phone: data.Phone || data.phone || '',
+//       conferenceId: data.ConferenceId || data.conferenceId || null,
+//       isLifetimeMember: data.IsLifetimeMember || false,
+//       // ⭐ חדש: שדות אישיים - נדרשים כדי שה-Attendee הסופי ייבנה נכון
+//       affiliation: data.Affiliation || data.affiliation || '',
+//       address: data.Address || data.address || '',
+//       role: data.Role || data.role || '',
+//       roleCategory: data.RoleCategory || data.roleCategory || '',
+//       hasAbstract: data.HasAbstract || false,
+//       abstractTitle: data.AbstractTitle || null,
+//       abstractAuthors: data.FullName || data.fullName || null,
+//       abstractBody: data.AbstractBody || null,
+//       abstractNotes: data.AbstractNotes || null
+//     };
+
+//     this.paymentService.preparePayment(payload).subscribe({
+//       next: (res) => {
+//         res.amount = res.amount || 1;
+//         this.paymentData = res;
+//         this.loading = false;
+//         setTimeout(() => {
+//           this.paymentForm?.nativeElement.submit();
+//           this.startPollingTransactionStatus();
+//         }, 500);
+//       },
+//       error: (err) => {
+//         console.error("Payment error:", err);
+//         this.error = "אירעה שגיאה בטעינת דף התשלום.";
+//         this.loading = false;
+//       }
+//     });
+//   }
+
+//   startPollingTransactionStatus() {
+//     this.pollingStartTime = Date.now();
+//     this.statusCheckInterval = setInterval(() => {
+//       if (Date.now() - this.pollingStartTime > this.POLLING_TIMEOUT_MS) {
+//         this.stopPolling();
+//         this.router.navigate(['/payment/failed'], {
+//           queryParams: { orderId: this.paymentData.orderId }
+//         });
+//         return;
+//       }
+
+//       if (this.isCheckingStatus) return;
+//       this.isCheckingStatus = true;
+
+//       this.paymentService.verifyPayment('', this.paymentData.orderId).subscribe({
+//         next: (res) => {
+//           this.isCheckingStatus = false;
+//           if (res) {
+//             if (res.status === 'success') {
+//               this.stopPolling();
+//               this.router.navigate(['/payment/success'], {
+//                 queryParams: { orderId: this.paymentData.orderId }
+//               });
+//             } else if (res.status === 'failed') {
+//               this.stopPolling();
+//               this.router.navigate(['/payment/failed'], {
+//                 queryParams: { orderId: this.paymentData.orderId }
+//               });
+//             }
+//           }
+//         },
+//         error: (err) => {
+//           this.isCheckingStatus = false;
+//           console.error('Polling error:', err);
+//           this.stopPolling();
+//           this.router.navigate(['/payment/failed'], {
+//             queryParams: { orderId: this.paymentData.orderId }
+//           });
+//         }
+//       });
+//     }, 1500);
+//   }
+
+//   stopPolling() {
+//     if (this.statusCheckInterval) {
+//       clearInterval(this.statusCheckInterval);
+//     }
+//   }
+
+//   ngOnDestroy() {
+//     this.stopPolling();
+//   }
+// }
