@@ -52,6 +52,7 @@
                     <th (click)="sortBy('FullName')" class="sortable">Full Name</th>
                     <th (click)="sortBy('Email')" class="sortable">Email</th>
                     <th>Affiliation</th>
+                    <th>Role</th>
                     <th (click)="sortBy('ConferenceName')" class="sortable">Conference</th>
                     <th>Abstract</th>
                     <th (click)="sortBy('PaymentStatus')" class="sortable">Payment</th>
@@ -65,6 +66,7 @@
                     <td>{{ a.FullName }}</td>
                     <td>{{ a.Email }}</td>
                     <td>{{ a.Affiliation || a.affiliation || '—' }}</td>
+                    <td>{{ a.Role || a.role || '—' }}</td>
                     <td>{{ a.ConferenceName }}</td>
                     <td>
                         <span class="badge no-abstract" *ngIf="!a.HasAbstract && !a.hasAbstract">No</span>
@@ -82,7 +84,7 @@
                     </td>
                 </tr>
                 <tr *ngIf="filteredAttendees.length === 0">
-                    <td colspan="9" class="no-data">No attendees found</td>
+                    <td colspan="10" class="no-data">No attendees found</td>
                 </tr>
             </tbody>
         </table>
@@ -106,6 +108,10 @@
             <div class="detail-row">
                 <span class="label">Affiliation</span>
                 <span>{{ selectedAttendee.Affiliation || selectedAttendee.affiliation || '—' }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Role</span>
+                <span>{{ selectedAttendee.Role || selectedAttendee.role || '—' }}</span>
             </div>
             <div class="detail-row">
                 <span class="label">Conference</span>
@@ -154,7 +160,6 @@
         </div>
     </div>
 </div> -->
-
 <div class="attendee-page" dir="ltr">
     <div class="page-header">
         <div class="page-header-text">
@@ -219,12 +224,13 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let a of filteredAttendees">
+                <!-- ⭐ שונה: עוברים על pagedAttendees (רק העמוד הנוכחי) במקום כל filteredAttendees -->
+                <tr *ngFor="let a of pagedAttendees">
                     <td>{{ a.FullName }}</td>
                     <td>{{ a.Email }}</td>
                     <td>{{ a.Affiliation || a.affiliation || '—' }}</td>
                     <td>{{ a.Role || a.role || '—' }}</td>
-                    <td>{{ a.ConferenceName }}</td>
+                    <td class="conference-cell" [title]="a.ConferenceName">{{ a.ConferenceName }}</td>
                     <td>
                         <span class="badge no-abstract" *ngIf="!a.HasAbstract && !a.hasAbstract">No</span>
                         <button class="btn-details" *ngIf="a.HasAbstract || a.hasAbstract" (click)="openAbstractDetails(a)">View</button>
@@ -245,6 +251,25 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+    <!-- ⭐ חדש: פס הפאג'ינציה - מוצג רק כשיש תוצאות -->
+    <div class="pagination-bar" *ngIf="!isLoading && !error && filteredAttendees.length > 0">
+        <span class="pagination-info">Showing {{ pageStart }}–{{ pageEnd }} of {{ filteredAttendees.length }}</span>
+        <div class="pagination-controls">
+            <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 1">‹ Prev</button>
+
+            <button class="page-btn" *ngIf="pageNumbers[0] > 1" (click)="goToPage(1)">1</button>
+            <span class="page-ellipsis" *ngIf="pageNumbers[0] > 2">…</span>
+
+            <button class="page-btn" *ngFor="let p of pageNumbers" [class.active]="p === currentPage"
+                (click)="goToPage(p)">{{ p }}</button>
+
+            <span class="page-ellipsis" *ngIf="pageNumbers[pageNumbers.length - 1] < totalPages - 1">…</span>
+            <button class="page-btn" *ngIf="pageNumbers[pageNumbers.length - 1] < totalPages"
+                (click)="goToPage(totalPages)">{{ totalPages }}</button>
+
+            <button class="page-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">Next ›</button>
+        </div>
     </div>
 </div>
 <div class="popup-overlay" *ngIf="selectedAttendee" (click)="closeDetails()">

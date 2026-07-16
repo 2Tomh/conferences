@@ -9,7 +9,6 @@
 
   <ng-container *ngIf="!isLoading && !error && stats">
 
-    <!-- ══ כרטיסי סיכום ══ -->
     <div class="summary-cards">
       <div class="summary-card">
         <span class="card-value">{{ stats.TotalRegistrations }}</span>
@@ -33,7 +32,6 @@
       </div>
     </div>
 
-    <!-- ══ גרפים ══ -->
     <div class="charts-grid">
       <div class="chart-card">
         <h3>נרשמים לפי כנס</h3>
@@ -56,7 +54,6 @@
       </div>
     </div>
 
-    <!-- ══ טבלת פירוט לפי כנס ══ -->
     <div class="detail-table-wrap">
       <h3>פירוט מלא לפי כנס</h3>
       <table class="detail-table">
