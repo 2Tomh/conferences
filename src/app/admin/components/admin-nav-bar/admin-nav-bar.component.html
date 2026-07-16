@@ -12,6 +12,9 @@
             </a>
           </ng-container>
           <ng-container *ngIf="authService.isAdmin()">
+            <a routerLink="/admin/statistics" routerLinkActive="active">
+              📊 Statistics
+            </a>
             <a routerLink="/admin/users" routerLinkActive="active">
               <i class="icon-users"></i> User Management
             </a>
@@ -20,17 +23,18 @@
 
         <div class="nav-actions" *ngIf="!isLoginPage">
           <button class="btn-logout" (click)="onLogout()">
-           LogOut
+            LogOut
           </button>
         </div>
       </ng-container>
     </div>
   </div>
 </nav> -->
+
 <nav class="top-navbar">
   <div class="nav-container">
     <div class="nav-links" [dir]="currentDir">
-      <ng-container *ngIf="isLoggedIn$ | async">
+      <ng-container *ngIf="(isLoggedIn$ | async) && !isLoginPage">
         <div class="nav-links-group">
           <a routerLink="/admin/dashboard" routerLinkActive="active">
             <i class="icon-dashboard"></i> Dashboard
@@ -50,7 +54,7 @@
           </ng-container>
         </div>
 
-        <div class="nav-actions" *ngIf="!isLoginPage">
+        <div class="nav-actions">
           <button class="btn-logout" (click)="onLogout()">
             LogOut
           </button>
