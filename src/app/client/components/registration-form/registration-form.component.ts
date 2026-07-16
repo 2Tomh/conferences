@@ -678,22 +678,30 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
     this.currentStep = step;
   }
 
-  onSubmit() {
-    if (this.regForm.invalid) { this.regForm.markAllAsTouched(); return; }
-    const formVal = this.regForm.value;
-    this.paymentInputData = {
-      ...formVal,
-      Role: formVal.role === 'Other' ? formVal.roleOther : formVal.role,
-      RoleCategory: formVal.role,
-      IsLifetimeMember: this.isLifetimeMember,
-      HasAbstract: this.abstractSaved,
-      AbstractTitle: this.abstractSaved ? this.abstractForm.value.title : null,
-      HasPoster: this.posterSaved,
-      amount: this.registrationAmount,
-      currency: 'ILS'
-    };
-    this.currentStep = 3;
-  }
+onSubmit() {
+  if (this.regForm.invalid) { this.regForm.markAllAsTouched(); return; }
+  const formVal = this.regForm.value;
+  const abstract = this.abstractSaved ? this.abstractForm.value : null;
+  const poster = this.posterSaved ? this.posterForm.value : null;
+  
+  this.paymentInputData = {
+    ...formVal,
+    Role: formVal.role === 'Other' ? formVal.roleOther : formVal.role,
+    RoleCategory: formVal.role,
+    IsLifetimeMember: this.isLifetimeMember,
+    HasAbstract: this.abstractSaved,
+    AbstractTitle: abstract?.title || null,
+    AbstractBody: abstract?.body || null,      // ⬅️ להוסיף
+    AbstractNotes: abstract?.notes || null,    // ⬅️ להוסיף
+    HasPoster: this.posterSaved,
+    PosterTitle: poster?.title || null,        // ⬅️ להוסיף
+    PosterAuthors: poster?.authors || null,    // ⬅️ להוסיף
+    PosterNotes: poster?.notes || null,        // ⬅️ להוסיף
+    amount: this.registrationAmount,
+    currency: 'ILS'
+  };
+  this.currentStep = 3;
+}
 
   get f() { return this.regForm.controls; }
   get af() { return this.abstractForm.controls; }

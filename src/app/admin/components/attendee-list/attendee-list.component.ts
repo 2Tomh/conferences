@@ -1,3 +1,4 @@
+קוד חדש
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../services/api.service';
 @Component({
@@ -153,7 +154,11 @@ export class AttendeeListComponent implements OnInit {
   }
   openDetails(attendee: any) { this.selectedAttendee = attendee; }
   closeDetails() { this.selectedAttendee = null; }
-  openAbstractDetails(attendee: any) { this.selectedAbstractAttendee = attendee; }
+  // openAbstractDetails(attendee: any) { this.selectedAbstractAttendee = attendee; }
+  openAbstractDetails(attendee: any) {
+    console.log('Attendee data:', attendee); // זמני - לבדיקה
+    this.selectedAbstractAttendee = attendee;
+  }
   closeAbstractDetails() { this.selectedAbstractAttendee = null; }
   get totalCount() {
     return this.filteredAttendees.length;
