@@ -7,28 +7,32 @@
   <div class="loading" *ngIf="isLoading">טוען נתונים...</div>
   <div class="error-msg" *ngIf="error">{{ error }}</div>
 
-  <ng-container *ngIf="!isLoading && !error && stats">
+  <ng-container *ngIf="!isLoading && !error">
 
     <div class="summary-cards">
       <div class="summary-card">
-        <span class="card-value">{{ stats.TotalRegistrations }}</span>
+        <span class="card-value">{{ totalRegistrations }}</span>
         <span class="card-label">סה"כ נרשמים</span>
       </div>
       <div class="summary-card success">
-        <span class="card-value">{{ stats.TotalPaid }}</span>
+        <span class="card-value">{{ totalPaid }}</span>
         <span class="card-label">שולמו</span>
       </div>
       <div class="summary-card pending">
-        <span class="card-value">{{ stats.TotalPending }}</span>
+        <span class="card-value">{{ totalPending }}</span>
         <span class="card-label">ממתינים</span>
       </div>
       <div class="summary-card failed">
-        <span class="card-value">{{ stats.TotalFailed }}</span>
+        <span class="card-value">{{ totalFailed }}</span>
         <span class="card-label">נכשלו</span>
       </div>
       <div class="summary-card abstract">
-        <span class="card-value">{{ stats.TotalWithAbstract }}</span>
+        <span class="card-value">{{ totalWithAbstract }}</span>
         <span class="card-label">הגשות תקציר</span>
+      </div>
+      <div class="summary-card money">
+        <span class="card-value">{{ totalMoneyRaised | number }} ₪</span>
+        <span class="card-label">סה"כ הושג</span>
       </div>
     </div>
 
@@ -44,34 +48,14 @@
       </div>
 
       <div class="chart-card small">
-        <h3>סטטוס תשלום</h3>
-        <canvas #paymentPieCanvas></canvas>
+        <h3>התפלגות לפי מחיר הרשמה (50$/150₪ מול 250$/750₪)</h3>
+        <canvas #paymentTierPieCanvas></canvas>
       </div>
 
-      <div class="chart-card small">
-        <h3>התפלגות תפקידים</h3>
-        <canvas #rolePieCanvas></canvas>
+      <div class="chart-card">
+        <h3>נרשמים לפי אוניברסיטה</h3>
+        <canvas #universityBarCanvas></canvas>
       </div>
-    </div>
-
-    <div class="detail-table-wrap">
-      <h3>פירוט מלא לפי כנס</h3>
-      <table class="detail-table">
-        <thead>
-          <tr>
-            <th>כנס</th>
-            <th>נרשמים</th>
-            <th>הגשות תקציר</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let conf of stats.RegistrationsByConference">
-            <td>{{ conf.ConferenceName }}</td>
-            <td>{{ conf.Count }}</td>
-            <td>{{ getAbstractCountFor(conf.ConferenceName) }}</td>
-          </tr>
-        </tbody>
-      </table>
     </div>
 
   </ng-container>
