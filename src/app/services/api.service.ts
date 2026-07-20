@@ -143,7 +143,7 @@ export class ApiService {
   // CONFERENCES ENDPOINTS
   // ==========================================
   getAllConferences(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/Conferences`);
+    return this.http.get<any[]>(`${this.apiUrl}/surveys`);
   }
 
   getConferences(): Observable<any[]> {

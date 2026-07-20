@@ -387,7 +387,7 @@
 }
 
 .partner-item {
-  display: flex;
+  /* display: flex;
   align-items: center;
   justify-content: center;
   background: #ffffff;
@@ -395,6 +395,16 @@
   border-radius: 8px;
   min-width: 175px;
   min-height: 78px;
+  text-decoration: none;
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 1px solid #E8E8ED;
+  border-radius: 8px;
+  min-width: 200px;
+  min-height: 150px;
   text-decoration: none;
   transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
 }
@@ -406,7 +416,7 @@
 }
 
 .partner-item img {
-  max-height: 50px;
+  max-height: 100px;
   max-width: 148px;
   object-fit: contain;
   filter: grayscale(15%);
