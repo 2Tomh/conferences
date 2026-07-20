@@ -22,24 +22,20 @@
       <ellipse cx="150" cy="150" rx="120" ry="50" stroke="white" stroke-width="1" transform="rotate(150 150 150)" />
       <circle cx="150" cy="150" r="12" fill="white" />
     </svg>
-    <div class="hero-content">
-      <span class="hero-eyebrow">October 25-26, 2026-Israel</span>
-      <div class="logo-wrapper">
-        <img src="../../../assets/logo.jpeg" alt="Mind-IL Logo" class="home-logo">
-      </div>
-      <a routerLink="/ConferenceEvents" class="hero-cta">
-        {{ 'ABOUT.GO_TO_EVENTS' | translate }}
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-            stroke-linejoin="round" />
-        </svg>
-      </a>
-
-      <div class="hero-announcement">
-        <span class="hero-announcement-dot"></span>
-        Conferences registration is now open
-      </div>
-    </div>
+<div class="hero-content">
+  <span class="hero-eyebrow">Save the date: October 25-26, 2026 · Israel</span>
+  <div class="logo-wrapper">
+    <img src="../../../assets/logo.jpeg" alt="Mind-IL Logo" class="home-logo">
+  </div>
+  <a routerLink="/ConferenceEvents" class="hero-cta hero-announcement">
+    <span class="hero-announcement-dot"></span>
+    {{ 'ABOUT.GO_TO_EVENTS' | translate }}
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+        stroke-linejoin="round" />
+    </svg>
+  </a>
+</div>
     <div class="hero-scroll">
       <div class="scroll-line"></div>
       <span>Scroll</span>
