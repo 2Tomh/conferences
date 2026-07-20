@@ -7,35 +7,41 @@
   <div class="loading" *ngIf="isLoading">טוען נתונים...</div>
   <div class="error-msg" *ngIf="error">{{ error }}</div>
 
-  <ng-container *ngIf="!isLoading && !error">
+  <ng-container *ngIf="!isLoading && !error && stats">
 
+    <!-- ══ כרטיסי סיכום ══ -->
     <div class="summary-cards">
       <div class="summary-card">
-        <span class="card-value">{{ totalRegistrations }}</span>
+        <span class="card-value">{{ stats.TotalRegistrations }}</span>
         <span class="card-label">סה"כ נרשמים</span>
       </div>
       <div class="summary-card success">
-        <span class="card-value">{{ totalPaid }}</span>
+        <span class="card-value">{{ stats.TotalPaid }}</span>
         <span class="card-label">שולמו</span>
       </div>
-      <div class="summary-card pending">
-        <span class="card-value">{{ totalPending }}</span>
-        <span class="card-label">ממתינים</span>
-      </div>
-      <div class="summary-card failed">
-        <span class="card-value">{{ totalFailed }}</span>
-        <span class="card-label">נכשלו</span>
-      </div>
       <div class="summary-card abstract">
-        <span class="card-value">{{ totalWithAbstract }}</span>
+        <span class="card-value">{{ stats.TotalWithAbstract }}</span>
         <span class="card-label">הגשות תקציר</span>
       </div>
       <div class="summary-card money">
-        <span class="card-value">{{ totalMoneyRaised | number }} ₪</span>
+        <span class="card-value">{{ totalMoneyRaised | number:'1.0-0' }} ₪</span>
         <span class="card-label">סה"כ הושג</span>
       </div>
     </div>
 
+    <!-- ══ כרטיסי אחוזי תעריף תשלום ══ -->
+    <div class="summary-cards">
+      <div class="summary-card tier">
+        <span class="card-value">{{ tier150Percentage }}%</span>
+        <span class="card-label">שילמו 150₪ / 50$</span>
+      </div>
+      <div class="summary-card tier">
+        <span class="card-value">{{ tier750Percentage }}%</span>
+        <span class="card-label">שילמו 750₪ / 250$</span>
+      </div>
+    </div>
+
+    <!-- ══ גרפים ══ -->
     <div class="charts-grid">
       <div class="chart-card">
         <h3>נרשמים לפי כנס</h3>
@@ -46,16 +52,27 @@
         <h3>הגשות תקציר לפי כנס</h3>
         <canvas #abstractBarCanvas></canvas>
       </div>
+    </div>
 
-      <div class="chart-card small">
-        <h3>התפלגות לפי מחיר הרשמה (50$/150₪ מול 250$/750₪)</h3>
-        <canvas #paymentTierPieCanvas></canvas>
-      </div>
-
-      <div class="chart-card">
-        <h3>נרשמים לפי אוניברסיטה</h3>
-        <canvas #universityBarCanvas></canvas>
-      </div>
+    <!-- ══ טבלת פירוט לפי כנס ══ -->
+    <div class="detail-table-wrap">
+      <h3>פירוט מלא לפי כנס</h3>
+      <table class="detail-table">
+        <thead>
+          <tr>
+            <th>כנס</th>
+            <th>נרשמים</th>
+            <th>הגשות תקציר</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let conf of stats.RegistrationsByConference">
+            <td>{{ conf.ConferenceName }}</td>
+            <td>{{ conf.Count }}</td>
+            <td>{{ getAbstractCountFor(conf.ConferenceName) }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
   </ng-container>

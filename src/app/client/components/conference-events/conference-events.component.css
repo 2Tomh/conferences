@@ -132,7 +132,6 @@
 
 .search-container {
   margin-bottom: 24px !important;
-  text-align: right;
 }
 
 .search-container input {
@@ -224,7 +223,7 @@
   flex-shrink: 0;
   min-height: 44px;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  /* -webkit-line-clamp: 2; */
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
