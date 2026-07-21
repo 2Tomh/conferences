@@ -16,6 +16,35 @@
   /* display: block; */
 }
 
+.btn-toggle-external {
+  background: transparent;
+  border: 1.5px solid #ccc;
+  color: #555;
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-toggle-external:hover:not(:disabled) {
+  border-color: #0F1B4C;
+  color: #0F1B4C;
+}
+
+.btn-toggle-external.is-external {
+  background: #0F1B4C;
+  border-color: #0F1B4C;
+  color: #C9A84C;
+}
+
+.btn-toggle-external:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .dashboard-container {
   font-family: 'Inter', sans-serif;
   color: var(--paper);
@@ -24,7 +53,9 @@
   min-height: 100vh;
 }
 
-.dashboard-container * { box-sizing: border-box; }
+.dashboard-container * {
+  box-sizing: border-box;
+}
 
 /* ===== Header ===== */
 .header-actions {
@@ -61,8 +92,13 @@
   transition: background 0.15s ease, transform 0.1s ease;
 }
 
-.btn-add:hover { background: #f2c169; }
-.btn-add:active { transform: translateY(1px); }
+.btn-add:hover {
+  background: #f2c169;
+}
+
+.btn-add:active {
+  transform: translateY(1px);
+}
 
 /* ===== Category tabs ===== */
 .category-navbar {
@@ -85,7 +121,9 @@
   transition: color 0.15s ease, border-color 0.15s ease;
 }
 
-.nav-tab:hover { color: var(--paper); }
+.nav-tab:hover {
+  color: var(--paper);
+}
 
 .nav-tab.active {
   color: var(--brass);
@@ -93,7 +131,8 @@
 }
 
 /* ===== Loader / empty ===== */
-.loader, .no-data {
+.loader,
+.no-data {
   text-align: center;
   color: var(--muted);
   padding: 46px;
@@ -108,9 +147,14 @@
   background: var(--surface);
 }
 
-.admin-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
 
-.admin-table th, .admin-table td {
+.admin-table th,
+.admin-table td {
   padding: 13px 16px;
   text-align: left;
   vertical-align: middle;
@@ -132,15 +176,37 @@
   border-bottom: 1px dashed var(--border);
 }
 
-.admin-table tbody tr:last-child td { border-bottom: none; }
-.admin-table tbody tr { transition: background 0.12s ease; }
-.admin-table tbody tr:hover { background: rgba(232, 179, 77, 0.05); }
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
 
-.conf-name-cell { font-weight: 600; color: var(--paper); }
+.admin-table tbody tr {
+  transition: background 0.12s ease;
+}
 
-.text-success { color: var(--success); font-weight: 500; }
-.text-muted   { color: var(--muted); }
-.text-info    { color: var(--info); font-size: 0.85rem; margin-top: 3px; }
+.admin-table tbody tr:hover {
+  background: rgba(232, 179, 77, 0.05);
+}
+
+.conf-name-cell {
+  font-weight: 600;
+  color: var(--paper);
+}
+
+.text-success {
+  color: var(--success);
+  font-weight: 500;
+}
+
+.text-muted {
+  color: var(--muted);
+}
+
+.text-info {
+  color: var(--info);
+  font-size: 0.85rem;
+  margin-top: 3px;
+}
 
 /* ===== Abstract submission badge ===== */
 .abstract-flag {
@@ -155,13 +221,23 @@
   display: inline-block;
 }
 
-.abstract-flag.yes { color: var(--success); }
-.abstract-flag.no  { color: var(--failed); }
+.abstract-flag.yes {
+  color: var(--success);
+}
+
+.abstract-flag.no {
+  color: var(--failed);
+}
 
 /* ===== Actions ===== */
-.actions { display: flex; gap: 8px; align-items: center; }
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
 
-.btn-edit, .btn-delete {
+.btn-edit,
+.btn-delete {
   font-family: 'Inter', sans-serif;
   background: none;
   border-radius: 6px;
@@ -217,7 +293,10 @@
   transition: all 0.15s ease;
 }
 
-.page-btn:hover:not(:disabled) { border-color: var(--brass); color: var(--brass); }
+.page-btn:hover:not(:disabled) {
+  border-color: var(--brass);
+  color: var(--brass);
+}
 
 .page-btn.active {
   background: var(--brass);
@@ -225,7 +304,10 @@
   color: #14152b;
 }
 
-.page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.page-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
 
 .page-info {
   font-family: 'IBM Plex Mono', monospace;
@@ -235,7 +317,16 @@
 }
 
 @media (max-width: 640px) {
-  .dashboard-container { padding: 20px; }
-  .header-actions { flex-direction: column; align-items: flex-start; }
-  .category-navbar { gap: 0; }
+  .dashboard-container {
+    padding: 20px;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .category-navbar {
+    gap: 0;
+  }
 }

@@ -82,9 +82,17 @@ export class PaymentService {
 
     // פונקציה לאימות תשלום
     verifyPayment(txId: string, orderId: string): Observable<any> {
-        return this.http.post(`${this.api}/payment/verify`, {
+        return this.http.post('https://conference-backend-8339.onrender.com/api/payment/verify', {
             txId: txId,
             orderId: orderId
         });
     }
+
+    //    verifyPayment(txId: string, orderId: string): Observable<any> {
+//         // חובה לשלוח את ה-orderId כאובייקט בתוך ה-Body של ה-POST
+//         return this.http.post('https://conference-backend-8339.onrender.com/api/payment/verify', {
+//             txId: txId,
+//             orderId: orderId
+//         });
+//     }
 }
