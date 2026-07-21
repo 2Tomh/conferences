@@ -5,8 +5,8 @@
 
 :host {
   display: block;
-  background: #F8F6F0;
-  min-height: 100vh;
+  /* background: #F8F6F0; */
+  /* min-height: 100vh; */
 }
 
 .payment-container {

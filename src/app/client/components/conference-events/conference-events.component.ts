@@ -392,7 +392,13 @@ export class ConferenceEventsComponent implements OnInit {
     return singleCategory === target || matchesArray;
   }
 
+  // ⭐ עודכן: בודקת קודם את השדה מה-DB (IsExternalOnly, באות גדולה כי
+  // PropertyNamingPolicy = null בצד השרת), וכ-fallback את הרשימה הקשיחה
   isExternalOnlyConference(conf: any): boolean {
+    if (conf.IsExternalOnly === true) {
+      return true;
+    }
+
     const name = (conf.Name || conf.name || conf.Conference || conf.conference || '').toLowerCase();
     return this.EXTERNAL_ONLY_CONFERENCE_NAMES.some(
       excluded => excluded.toLowerCase() === name
