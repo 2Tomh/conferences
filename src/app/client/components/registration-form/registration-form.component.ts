@@ -84,7 +84,8 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
     'Network Dynamics in Socio-Technical Systems: From Resilient Control to Incentives and Information Design',
     'Cancer Biology Across Scales',
     'Mid-Chain DeFi Conference',
-    'Applied Mathematics'
+    'Applied Mathematics',
+    'ARC Summit 2026'
   ];
 
   constructor(

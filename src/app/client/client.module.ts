@@ -19,6 +19,7 @@ import {SharedModule} from '../shared/shared.module';
 import { TranzilaPaymentComponent } from './components/tranzila-payment/tranzila-payment.component';
 import { PaymentSuccessComponent } from './components/payment-success/payment-success.component';
 import { PaymentFailedComponent } from './components/payment-failed/payment-failed.component';
+import { CountdownPopupComponent } from './countdown-popup/countdown-popup.component';
 @NgModule({
   declarations: [
     ClientRootComponent,
@@ -34,6 +35,7 @@ import { PaymentFailedComponent } from './components/payment-failed/payment-fail
     TranzilaPaymentComponent,
     PaymentSuccessComponent,
     PaymentFailedComponent,
+    CountdownPopupComponent,
   ],
   imports: [
     CommonModule,
