@@ -1,122 +1,138 @@
-<!-- <div class="dashboard-container">
+  <!-- <div class="dashboard-container">
+    <div class="header-actions">
+      <h1>{{ 'DASHBOARD_PAGE.TITLE' | translate }}</h1>
+      <button class="btn-add" routerLink="../manage-conference">
+        ➕ {{ 'DASHBOARD_PAGE.CREATE_NEW' | translate }}
+      </button>
+    </div>
+
+    <div class="category-navbar">
+      <button *ngIf="userRole === 'Admin'" class="nav-tab" [class.active]="selectedCategory === 'All'"
+        (click)="selectCategory('All')">
+        {{ 'CATEGORIES.ALL' | translate }}
+      </button>
+
+      <button *ngIf="canShowCategory('Humanities and Arts')" class="nav-tab"
+        [class.active]="selectedCategory === 'Humanities and Arts'" (click)="selectCategory('Humanities and Arts')">
+        {{ 'CATEGORIES.HUMANITIES_ARTS' | translate }}
+      </button>
+
+      <button *ngIf="canShowCategory('Social Sciences & Law')" class="nav-tab"
+        [class.active]="selectedCategory === 'Social Sciences & Law'" (click)="selectCategory('Social Sciences & Law')">
+        {{ 'CATEGORIES.SOCIAL_SCIENCES_LAW' | translate }}
+      </button>
+
+      <button *ngIf="canShowCategory('BioMed')" class="nav-tab" [class.active]="selectedCategory === 'BioMed'"
+        (click)="selectCategory('BioMed')">
+        {{ 'CATEGORIES.BIOMED' | translate }}
+      </button>
+
+      <button *ngIf="canShowCategory('Engineering')" class="nav-tab" [class.active]="selectedCategory === 'Engineering'"
+        (click)="selectCategory('Engineering')">
+        {{ 'CATEGORIES.ENGINEERING' | translate }}
+      </button>
+
+      <button *ngIf="canShowCategory('Exact Sciences')" class="nav-tab"
+        [class.active]="selectedCategory === 'Exact Sciences'" (click)="selectCategory('Exact Sciences')">
+        {{ 'CATEGORIES.EXACT_SCIENCES' | translate }}
+      </button>
+    </div>
+
+    <div *ngIf="loading" class="loader">{{ 'COMMON.LOADING' | translate }}</div>
+
+    <div class="table-wrapper" *ngIf="!loading && filteredConferences.length > 0">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>{{ 'TABLE.NAME' | translate }}</th>
+            <th>Category</th>
+            <th>Survey Status</th>
+            <th>Abstract Submission</th>
+            <th>External</th>
+            <th>{{ 'TABLE.ACTIONS' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let conf of pagedConferences">
+            <td>
+              <div class="conf-name-cell">
+                {{ conf.name || conf.Name || conf.Conference || conf.conference || 'Unnamed Conference' }}
+              </div>
+            </td>
+            <td>{{ conf.Category }}</td>
+
+            <td>
+              <div *ngIf="conf.Links?.survey || conf.Links?.Survey || conf.survey || conf.Survey" class="text-success">
+                ✅ Active survey
+              </div>
+              <div *ngIf="!(conf.Links?.survey || conf.Links?.Survey || conf.survey || conf.Survey)" class="text-muted">
+                ❌ No survey link
+              </div>
+
+              <div *ngIf="conf.Links?.website || conf.website" class="text-info">
+                🌐 Has website
+              </div>
+            </td>
+
+            <td>
+              <span class="abstract-flag"
+                [ngClass]="(conf.AbstractSubmission || conf.Abstract_submission) ? 'yes' : 'no'">
+                {{ (conf.AbstractSubmission || conf.Abstract_submission) ? 'Yes' : 'No' }}
+              </span>
+            </td>
+
+            <td>
+              <button class="btn-toggle-external" [class.is-external]="conf.IsExternalOnly"
+                [disabled]="updatingExternalId === (conf.Id || conf._id)" (click)="toggleExternalOnly(conf)">
+                {{ conf.IsExternalOnly ? '🌐 חיצוני' : 'פנימי' }}
+              </button>
+            </td>
+
+            <td>
+              <div class="actions">
+                <button class="btn-edit" [routerLink]="['/admin/edit-conference', conf.Id || conf._id]">
+                  Edit
+                </button>
+
+                <button class="btn-delete" (click)="onDelete(conf.Id || conf._id)">
+                  {{ 'COMMON_ACTIONS.DELETE' | translate }}
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination" *ngIf="!loading && filteredConferences.length > pageSize">
+      <button class="page-btn" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">&#8249;</button>
+
+      <button *ngFor="let p of pages" class="page-btn" [class.active]="p === currentPage" (click)="goToPage(p)">
+        {{ p }}
+      </button>
+
+      <button class="page-btn" (click)="goToPage(currentPage + 1)"
+        [disabled]="currentPage === totalPages">&#8250;</button>
+      <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
+    </div>
+
+    <div *ngIf="!loading && filteredConferences.length === 0" class="no-data">
+      {{ 'DASHBOARD_PAGE.NO_DATA' | translate }}
+    </div>
+  </div> -->
+
+  <div class="dashboard-container">
   <div class="header-actions">
     <h1>{{ 'DASHBOARD_PAGE.TITLE' | translate }}</h1>
-    <button class="btn-add" routerLink="../manage-conference">
-      ➕ {{ 'DASHBOARD_PAGE.CREATE_NEW' | translate }}
-    </button>
-  </div>
-
-  <div class="category-navbar">
-    <button *ngIf="userRole === 'Admin'" class="nav-tab" [class.active]="selectedCategory === 'All'"
-      (click)="selectCategory('All')">
-      {{ 'CATEGORIES.ALL' | translate }}
-    </button>
-
-    <button *ngIf="canShowCategory('Humanities and Arts')" class="nav-tab"
-      [class.active]="selectedCategory === 'Humanities and Arts'" (click)="selectCategory('Humanities and Arts')">
-      {{ 'CATEGORIES.HUMANITIES_ARTS' | translate }}
-    </button>
-
-    <button *ngIf="canShowCategory('Social Sciences & Law')" class="nav-tab"
-      [class.active]="selectedCategory === 'Social Sciences & Law'" (click)="selectCategory('Social Sciences & Law')">
-      {{ 'CATEGORIES.SOCIAL_SCIENCES_LAW' | translate }}
-    </button>
-
-    <button *ngIf="canShowCategory('BioMed')" class="nav-tab" [class.active]="selectedCategory === 'BioMed'"
-      (click)="selectCategory('BioMed')">
-      {{ 'CATEGORIES.BIOMED' | translate }}
-    </button>
-
-    <button *ngIf="canShowCategory('Engineering')" class="nav-tab" [class.active]="selectedCategory === 'Engineering'"
-      (click)="selectCategory('Engineering')">
-      {{ 'CATEGORIES.ENGINEERING' | translate }}
-    </button>
-
-    <button *ngIf="canShowCategory('Exact Sciences')" class="nav-tab"
-      [class.active]="selectedCategory === 'Exact Sciences'" (click)="selectCategory('Exact Sciences')">
-      {{ 'CATEGORIES.EXACT_SCIENCES' | translate }}
-    </button>
-  </div>
-
-  <div *ngIf="loading" class="loader">{{ 'COMMON.LOADING' | translate }}</div>
-
-  <div class="table-wrapper" *ngIf="!loading && filteredConferences.length > 0">
-    <table class="admin-table">
-      <thead>
-        <tr>
-          <th>{{ 'TABLE.NAME' | translate }}</th>
-          <th>Category</th>
-          <th>Survey Status</th>
-          <th>Abstract Submission</th>
-          <th>{{ 'TABLE.ACTIONS' | translate }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let conf of pagedConferences">
-          <td>
-            <div class="conf-name-cell">
-              {{ conf.name || conf.Name || conf.Conference || conf.conference || 'Unnamed Conference' }}
-            </div>
-          </td>
-          <td>{{ conf.Category }}</td>
-
-          <td>
-            <div *ngIf="conf.Links?.survey || conf.Links?.Survey || conf.survey || conf.Survey" class="text-success">
-              ✅ Active survey
-            </div>
-            <div *ngIf="!(conf.Links?.survey || conf.Links?.Survey || conf.survey || conf.Survey)" class="text-muted">
-              ❌ No survey link
-            </div>
-
-            <div *ngIf="conf.Links?.website || conf.website" class="text-info">
-              🌐 Has website
-            </div>
-          </td>
-
-          <td>
-            <span class="abstract-flag" [ngClass]="(conf.AbstractSubmission || conf.Abstract_submission) ? 'yes' : 'no'">
-              {{ (conf.AbstractSubmission || conf.Abstract_submission) ? 'Yes' : 'No' }}
-            </span>
-          </td>
-          <td>
-            <div class="actions">
-              <button class="btn-edit" [routerLink]="['/admin/edit-conference', conf.Id || conf._id]">
-                Edit
-              </button>
-
-              <button class="btn-delete" (click)="onDelete(conf.Id || conf._id)">
-                {{ 'COMMON_ACTIONS.DELETE' | translate }}
-              </button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="pagination" *ngIf="!loading && filteredConferences.length > pageSize">
-    <button class="page-btn" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">&#8249;</button>
-
-    <button *ngFor="let p of pages" class="page-btn" [class.active]="p === currentPage" (click)="goToPage(p)">
-      {{ p }}
-    </button>
-
-    <button class="page-btn" (click)="goToPage(currentPage + 1)"
-      [disabled]="currentPage === totalPages">&#8250;</button>
-    <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
-  </div>
-
-  <div *ngIf="!loading && filteredConferences.length === 0" class="no-data">
-    {{ 'DASHBOARD_PAGE.NO_DATA' | translate }}
-  </div>
-</div> -->
-
-<div class="dashboard-container">
-  <div class="header-actions">
-    <h1>{{ 'DASHBOARD_PAGE.TITLE' | translate }}</h1>
-    <button class="btn-add" routerLink="../manage-conference">
-      ➕ {{ 'DASHBOARD_PAGE.CREATE_NEW' | translate }}
-    </button>
+    <div class="action-buttons">
+      <!-- ⭐ כפתור ייצוא לאקסל -->
+      <button class="btn-export" (click)="exportToExcel()" [disabled]="filteredConferences.length === 0">
+        📊 ייצוא לאקסל
+      </button>
+      <button class="btn-add" routerLink="../manage-conference">
+        ➕ {{ 'DASHBOARD_PAGE.CREATE_NEW' | translate }}
+      </button>
+    </div>
   </div>
 
   <div class="category-navbar">

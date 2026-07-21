@@ -26,50 +26,48 @@
         sandbox="allow-forms allow-scripts allow-same-origin allow-top-navigation">
     </iframe>
 </div> -->
-
 <div class="payment-container">
     <div *ngIf="loading" class="loader">
         <div class="spinner-border text-primary" role="status"></div>
         <span class="ms-2">טוען דף תשלום מאובטח...</span>
     </div>
+
     <div *ngIf="error" class="error-message">
         <p>{{ error }}</p>
         <button type="button" (click)="ngOnInit()">נסה שוב</button>
     </div>
-    <form #paymentForm ngNoForm action="https://direct.tranzila.com/kapaim3/iframenew.php" target="tranzila-iframe"
-        method="POST" style="display: none;">
+
+    <!-- טופס מעבר ישיר לטרנזילה במסך מלא (ללא iframe וללא target) -->
+    <form #paymentForm ngNoForm action="https://direct.tranzila.com/kapaim3/iframenew.php" method="POST" style="display: none;">
         <input type="hidden" name="sum" [value]="paymentData.amount">
         <input type="hidden" name="orderId" [value]="paymentData.orderId">
         <input type="hidden" name="currency" value="1">
-        <input type="hidden" name="notify_url_address"
-            value="https://conference-backend-8339.onrender.com/api/payment/notify">
-        <!-- קריטי: בלי שני השדות האלה, Tranzila מנווטת את כל הדפדפן (בזכות
-             allow-top-navigation שב-sandbox) לכתובת ברירת מחדל שמוגדרת בפאנל
-             הניהול שלה, ולא לעמודי ה-success/failed של האתר שלנו -->
+        <input type="hidden" name="notify_url_address" value="https://conference-backend-8339.onrender.com/api/payment/notify">
+
+        <!-- כתובות ההצלחה והכישלון -->
         <input type="hidden" name="success_url_address" [value]="paymentData.successUrl">
         <input type="hidden" name="fail_url_address" [value]="paymentData.failureUrl">
+        
+        <!-- חובה: מורה לטרנזילה לחזור בשיטת GET כדי למנוע שגיאת 405 -->
+        <input type="hidden" name="success_method" value="1">
+
         <input type="hidden" name="email" [value]="paymentData.email">
         <input type="hidden" name="contact" [value]="paymentData.fullName">
-        <!-- ⭐ ניסיון: שליחת ה-Affiliation דרך שדה ה-address, כדי לבדוק אם זה
-             מופיע כשורה נוספת מתחת לשם הלקוח בבלוק "TO:" של הקבלה -->
         <input type="hidden" name="company" [value]="paymentData.affiliation">
         <input type="hidden" name="eventname" value="MIND-IL">
         <input type="hidden" name="pdesc" value="MIND-IL CONFERENCE REGISTRATION">
     </form>
-    <iframe name="tranzila-iframe" width="450px" height="540px" frameborder="0" title="Tranzila Payment"
-        sandbox="allow-forms allow-scripts allow-same-origin allow-top-navigation">
-    </iframe>
 </div>
 
-<!-- Already Registered popup -->
+<!-- פופ-אפ רישום כפול -->
 <div *ngIf="alreadyRegistered" class="popup-overlay">
-  <div class="popup-content">
-    <h3>Already Registered</h3>
-    <p>You are already a registered participant of this conference.</p>
-    <button type="button" class="btn-submit" (click)="closeAlreadyRegisteredPopup()">
-      OK
-    </button>
-  </div>
+    <div class="popup-content">
+        <h3>Already Registered</h3>
+        <p>You are already a registered participant of this conference.</p>
+        <button type="button" class="btn-submit" (click)="closeAlreadyRegisteredPopup()">
+            OK
+        </button>
+    </div>
 </div>
 <!-- <div class="payment-container">
     <div *ngIf="loading" class="loader">
@@ -87,11 +85,11 @@
         <input type="hidden" name="currency" value="1">
         <input type="hidden" name="notify_url_address"
             value="https://conference-backend-8339.onrender.com/api/payment/notify">
-
         <input type="hidden" name="success_url_address" [value]="paymentData.successUrl">
         <input type="hidden" name="fail_url_address" [value]="paymentData.failureUrl">
         <input type="hidden" name="email" [value]="paymentData.email">
         <input type="hidden" name="contact" [value]="paymentData.fullName">
+        <input type="hidden" name="company" [value]="paymentData.affiliation">
         <input type="hidden" name="eventname" value="MIND-IL">
         <input type="hidden" name="pdesc" value="MIND-IL CONFERENCE REGISTRATION">
     </form>
@@ -99,6 +97,7 @@
         sandbox="allow-forms allow-scripts allow-same-origin allow-top-navigation">
     </iframe>
 </div>
+
 <div *ngIf="alreadyRegistered" class="popup-overlay">
   <div class="popup-content">
     <h3>Already Registered</h3>
@@ -108,4 +107,3 @@
     </button>
   </div>
 </div> -->
-
