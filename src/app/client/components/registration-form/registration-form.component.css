@@ -547,7 +547,7 @@ textarea.form-control {
 .step-progress {
   display: flex;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: flex-end;
   padding: 28px 40px 8px;
   gap: 0;
 }
@@ -593,7 +593,7 @@ textarea.form-control {
 .step-label {
   position: absolute;
   top: 38px;
-  left: 50%;
+  left: 15%;
   transform: translateX(-50%);
   font-size: 0.66rem;
   font-weight: 600;
@@ -609,7 +609,7 @@ textarea.form-control {
   background: #E8E8ED;
   margin: 0 -4px;
   position: relative;
-  top: -16px;
+  top: 0px;
 }
 
 .step-dot-wrapper:has(.step-dot.done)+.step-dot-wrapper .step-line,
