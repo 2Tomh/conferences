@@ -161,7 +161,14 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 20px;
-  align-items: start;
+  /* ⭐ תוקן: "start" גרם לכל כרטיס לקבל בדיוק את הגובה שהתוכן שלו דורש,
+     כך שכרטיסים באותה שורה נראו בגבהים שונים (חלקם עם note/הרבה
+     מארגנים היו גבוהים יותר מהשכנים שלהם). "stretch" (ברירת המחדל של
+     גריד) גורם לכל הכרטיסים באותה שורה להתמתח לגובה הכרטיס הגבוה
+     ביותר באותה שורה - כך השורה נראית אחידה, ועדיין אין חיתוך תוכן
+     כי min-height (לא height קבוע) ממשיך לאפשר לתוכן ארוך לדחוף
+     כרטיס בודד לגובה גדול יותר, וכל שאר הכרטיסים בשורה יתמתחו יחד איתו. */
+  align-items: stretch;
 }
 
 .conf-card {
@@ -172,7 +179,11 @@
   flex-direction: column;
   box-shadow: 0 4px 20px rgba(15, 27, 76, 0.15);
   transition: transform 0.2s;
-  height: 340px;
+  /* ⭐ תוקן: height קבוע (350px) גרם לחיתוך תוכן בכרטיסים עם הרבה מארגנים
+     (למשל "Mid-Chain DeFi Conference" - השם האחרון של מארגן נחתך, וה-note
+     החיצוני התנגש איתו). min-height שומר על אחידות גובה כרטיסים ריקים
+     יחסית, אבל מאפשר לכרטיס לגדול כשצריך, בלי לחתוך תוכן. */
+  min-height: 390px;
 }
 
 .conf-card:hover {
@@ -236,7 +247,7 @@
   flex-direction: column;
   gap: 4px;
   max-height: 128px;
-  overflow-y: auto;
+  /* overflow-y: auto; */
   flex-shrink: 0;
 }
 
@@ -279,14 +290,20 @@
   color: rgba(240, 153, 123, 0.9);
   font-style: italic;
   font-weight: 400;
-  margin: 0;
   line-height: 1.4;
   background: rgba(153, 60, 29, 0.18);
   border-radius: 6px;
   padding: 6px 10px;
   flex-shrink: 0;
-  max-height: 66px;
-  /* overflow-y: auto; */
+  display: flex;
+  align-items: center;
+  /* ⭐ תוקן: זו הייתה הבעיה המרכזית. "margin: auto" בתוך flex column
+     גורם לתיבה לספוג את כל המרחב הפנוי ולהתמקם באמצע, כך שהמיקום
+     שלה השתנה מכרטיס לכרטיס לפי כמות המארגנים (למעלה/באמצע/מוצמד
+     לכפתור/חופף לרשימה). "margin-top: auto" בלבד מצמיד אותה תמיד
+     ישירות מעל הכפתור, כמו הכפתור עצמו - כך המיקום עקבי בכל כרטיס. */
+  margin-top: auto;
+  margin-bottom: 0;
 }
 
 .conf-card-btn {
@@ -306,6 +323,13 @@
   text-decoration: none;
   white-space: nowrap;
   transition: all 0.2s;
+}
+
+/* ⭐ חדש: כשהכפתור מגיע ישירות אחרי ה-note (כנס חיצוני), לא צריך לו
+   margin-top:auto משלו - ה-note כבר "ספג" את כל המרחב הפנוי ודחף
+   את שניהם (note+button) יחד לתחתית הכרטיס. מרווח קבוע וקטן ביניהם. */
+.conf-card .external-conference-note + .conf-card-btn {
+  margin-top: 10px;
 }
 
 .conf-card-btn:hover {
