@@ -456,14 +456,28 @@ export class ConferenceEventsComponent implements OnInit {
     return this.sortByName(filtered);
   }
 
+  // private sortByName(list: any[]): any[] {
+  //   return [...list].sort((a, b) => {
+  //     const nameA = (a.Name || a.name || a.Conference || a.conference || '').toLowerCase();
+  //     const nameB = (b.Name || b.name || b.Conference || b.conference || '').toLowerCase();
+  //     return nameA.localeCompare(nameB);
+  //   });
+  // }
   private sortByName(list: any[]): any[] {
     return [...list].sort((a, b) => {
+      // ⭐ קדימות לכנסים פנימיים - חיצוניים תמיד בסוף
+      const aExternal = this.isExternalOnlyConference(a) ? 1 : 0;
+      const bExternal = this.isExternalOnlyConference(b) ? 1 : 0;
+
+      if (aExternal !== bExternal) {
+        return aExternal - bExternal;
+      }
+
       const nameA = (a.Name || a.name || a.Conference || a.conference || '').toLowerCase();
       const nameB = (b.Name || b.name || b.Conference || b.conference || '').toLowerCase();
       return nameA.localeCompare(nameB);
     });
   }
-
   get pagedConferences(): any[] {
     const list = this.filteredConferences;
     const start = (this.currentPage - 1) * this.pageSize;
