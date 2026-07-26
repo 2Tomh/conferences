@@ -35,9 +35,12 @@ export class ApiService {
     return this.http.put(`${this.apiUrl}/Surveys/${id}`, data);
   }
 
+  // deleteConference(id: string): Observable<any> {
+  //   return this.http.delete(`${this.apiUrl}/Conferences/${id}`);
+  // }
   deleteConference(id: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/Conferences/${id}`);
-  }
+  return this.http.delete(`${this.apiUrl}/Surveys/${id}`);
+}
 
   registerToSession(data: any) {
     return this.http.post(`${this.apiUrl}/Conferences/register`, data);
@@ -105,8 +108,11 @@ export class ApiService {
     return this.http.get<any[]>(`${this.apiUrl}/partners`);
   }
 
+  // getConferenceById(id: string): Observable<any> {
+  //   return this.http.get(`${this.apiUrl}/Conferences/${encodeURIComponent(id)}`);
+  // }
   getConferenceById(id: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/Conferences/${encodeURIComponent(id)}`);
+    return this.http.get(`${this.apiUrl}/Surveys/${encodeURIComponent(id)}`);
   }
 
   // ==========================================
