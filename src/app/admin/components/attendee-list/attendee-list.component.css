@@ -626,7 +626,7 @@
 .abstract-view-popup {
   max-width: 560px;
   padding: 0;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .abstract-view-header {
