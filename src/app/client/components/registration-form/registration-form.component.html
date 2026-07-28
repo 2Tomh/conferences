@@ -1,4 +1,3 @@
-
 <div class="registration-page">
   <div class="registration-card">
     <div class="card-header-custom">
@@ -6,7 +5,7 @@
       <p>Enter your details to proceed with secure registration</p>
     </div>
     <div class="step-progress">
-      <div class="step-dot-wrapper" *ngFor="let s of [1,2,3]; let i = index">
+      <div class="step-dot-wrapper" *ngFor="let s of [1,2,3,4]; let i = index">
         <button type="button" class="step-dot"
           [class.active]="currentStep === s"
           [class.done]="currentStep > s"
@@ -18,13 +17,14 @@
           <ng-container [ngSwitch]="s">
             <ng-container *ngSwitchCase="1">Conference</ng-container>
             <ng-container *ngSwitchCase="2">Your Details</ng-container>
-            <ng-container *ngSwitchCase="3">Payment</ng-container>
+            <ng-container *ngSwitchCase="3">Currency</ng-container>
+            <ng-container *ngSwitchCase="4">Payment</ng-container>
           </ng-container>
         </span>
-        <div class="step-line" *ngIf="i < 2"></div>
+        <div class="step-line" *ngIf="i < 3"></div>
       </div>
     </div>
-    <form [formGroup]="regForm" (ngSubmit)="onSubmit()" class="registration-form">
+    <div [formGroup]="regForm" class="registration-form">
       <div class="step-panel" *ngIf="currentStep === 1">
         <div class="form-row">
           <label>Conference</label>
@@ -173,7 +173,33 @@
           </div>
         </div>
       </div>
+      <!-- ⭐ תוקן: שלב 3 עצמאי - רק בחירת מטבע, בלי הטמעת התשלום כאן -->
       <div class="step-panel" *ngIf="currentStep === 3">
+        <div class="currency-step">
+          <h3>Choose payment currency</h3>
+          <p>You can pay in Israeli Shekels or US Dollars.</p>
+
+          <div class="currency-options">
+            <label class="currency-option" [class.active]="selectedCurrency === 'ILS'">
+              <input type="radio" name="currency" [checked]="selectedCurrency === 'ILS'"
+                (change)="chooseCurrency('ILS')">
+              ₪ Israeli Shekel (ILS) — {{ isLifetimeMember ? LIFETIME_PRICE_ILS : REGULAR_PRICE_ILS }}₪
+            </label>
+            <label class="currency-option" [class.active]="selectedCurrency === 'USD'">
+              <input type="radio" name="currency" [checked]="selectedCurrency === 'USD'"
+                (change)="chooseCurrency('USD')">
+              $ US Dollar (USD) — ${{ isLifetimeMember ? LIFETIME_PRICE : REGULAR_PRICE }}
+            </label>
+          </div>
+
+          <button type="button" class="btn-submit" (click)="confirmCurrencyAndPay()">
+            Continue to Payment
+          </button>
+        </div>
+      </div>
+
+      <!-- ⭐ תוקן: שלב 4 עצמאי - רק התשלום עצמו (Tranzila), אחרי שהמטבע כבר נבחר -->
+      <div class="step-panel" *ngIf="currentStep === 4">
         <div class="payment-inline-wrapper">
           <div *ngIf="!paymentInputData" class="payment-loading">
             <p>Preparing your secure payment...</p>
@@ -181,20 +207,20 @@
           <app-tranzila-payment *ngIf="paymentInputData" [paymentInputData]="paymentInputData"></app-tranzila-payment>
         </div>
       </div>
-      <div class="step-actions" *ngIf="currentStep < totalSteps">
+      <div class="step-actions" *ngIf="currentStep < 3">
         <button type="button" class="btn-back" *ngIf="currentStep > 1" (click)="prevStep()">
           ← Back
         </button>
-        <button type="button" class="btn-next" *ngIf="currentStep < totalSteps - 1" (click)="nextStep()">
+        <button type="button" class="btn-next" *ngIf="currentStep === 1" (click)="nextStep()">
           Next →
         </button>
-        <button type="button" *ngIf="currentStep === totalSteps - 1"
+        <button type="button" *ngIf="currentStep === 2"
           [disabled]="regForm.invalid" class="btn-submit" (click)="onSubmit()">
-          Proceed to Payment
+          Continue to Currency Selection
         </button>
       </div>
 
-    </form>
+    </div>
   </div>
 </div>
 
@@ -267,4 +293,3 @@
     </button>
   </div>
 </div>
-

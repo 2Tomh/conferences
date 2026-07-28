@@ -1,32 +1,29 @@
-<!-- <div class="payment-container">
-    <div *ngIf="loading" class="loader">
-        <div class="spinner-border text-primary" role="status"></div>
-        <span class="ms-2">טוען דף תשלום מאובטח...</span>
-    </div>
-    <div *ngIf="error" class="error-message">
-        <p>{{ error }}</p>
-        <button type="button" (click)="ngOnInit()">נסה שוב</button>
-    </div>
-    <form #paymentForm ngNoForm action="https://direct.tranzila.com/kapaim3/iframenew.php" target="tranzila-iframe"
-        method="POST" style="display: none;">
-        <input type="hidden" name="sum" [value]="paymentData.amount">
-        <input type="hidden" name="orderId" [value]="paymentData.orderId">
-        <input type="hidden" name="currency" value="1">
-        <input type="hidden" name="notify_url_address"
-            value="https://conference-backend-8339.onrender.com/api/payment/notify">
-
-        <input type="hidden" name="success_url_address" [value]="paymentData.successUrl">
-        <input type="hidden" name="fail_url_address" [value]="paymentData.failureUrl">
-        <input type="hidden" name="email" [value]="paymentData.email">
-        <input type="hidden" name="contact" [value]="paymentData.fullName">
-        <input type="hidden" name="eventname" value="MIND-IL">
-        <input type="hidden" name="pdesc" value="MIND-IL CONFERENCE REGISTRATION">
-    </form>
-    <iframe name="tranzila-iframe" width="450px" height="540px" frameborder="0" title="Tranzila Payment"
-        sandbox="allow-forms allow-scripts allow-same-origin allow-top-navigation">
-    </iframe>
-</div> -->
 <div class="payment-container">
+
+    <!-- ⭐ חדש: מסך בחירת מטבע - מוצג לפני שהטופס נשלח אוטומטית לטרנזילה.
+         רק אחרי לחיצה על "המשך לתשלום" מתחילה בפועל זרימת ה-preparePayment. -->
+    <div *ngIf="showCurrencyStep" class="currency-step">
+        <h3>Choose payment currency</h3>
+        <p>You can pay in Israeli Shekels or US Dollars.</p>
+
+        <div class="currency-options">
+            <label class="currency-option" [class.active]="selectedCurrency === 'ILS'">
+                <input type="radio" name="currency" [checked]="selectedCurrency === 'ILS'"
+                    (change)="chooseCurrency('ILS')">
+                ₪ Israeli Shekel (ILS)
+            </label>
+            <label class="currency-option" [class.active]="selectedCurrency === 'USD'">
+                <input type="radio" name="currency" [checked]="selectedCurrency === 'USD'"
+                    (change)="chooseCurrency('USD')">
+                $ US Dollar (USD)
+            </label>
+        </div>
+
+        <button type="button" class="btn-submit" (click)="confirmCurrencyAndProceed()">
+            Continue to Payment
+        </button>
+    </div>
+
     <div *ngIf="loading" class="loader">
         <div class="spinner-border text-primary" role="status"></div>
         <span class="ms-2">טוען דף תשלום מאובטח...</span>
@@ -37,11 +34,11 @@
         <button type="button" (click)="ngOnInit()">נסה שוב</button>
     </div>
 
-    <!-- טופס מעבר ישיר לטרנזילה במסך מלא (ללא iframe וללא target) -->
-    <form #paymentForm ngNoForm action="https://direct.tranzila.com/kapaim3/iframenew.php" method="POST" style="display: none;">
+    <!-- ⭐ תוקן: מוחזר ל-iframe מוטמע (עם target) במקום ניווט מלא שעוזב את האתר -->
+    <form #paymentForm ngNoForm action="https://direct.tranzila.com/kapaim3/iframenew.php" target="tranzila-iframe" method="POST" style="display: none;">
         <input type="hidden" name="sum" [value]="paymentData.amount">
         <input type="hidden" name="orderId" [value]="paymentData.orderId">
-        <input type="hidden" name="currency" value="1">
+        <input type="hidden" name="currency" [value]="paymentData.currencyCode">
         <input type="hidden" name="notify_url_address" value="https://conference-backend-8339.onrender.com/api/payment/notify">
 
         <!-- כתובות ההצלחה והכישלון -->
@@ -57,6 +54,12 @@
         <input type="hidden" name="eventname" value="MIND-IL">
         <input type="hidden" name="pdesc" value="MIND-IL CONFERENCE REGISTRATION">
     </form>
+
+    <!-- ⭐ חדש: ה-iframe שקולט את תגובת הטופס - זה מה ששומר את המשתמש בתוך האתר -->
+    <iframe *ngIf="!loading && !error && !showCurrencyStep" name="tranzila-iframe" width="100%" height="540"
+        frameborder="0" title="Tranzila Payment" class="tranzila-iframe"
+        sandbox="allow-forms allow-scripts allow-same-origin allow-top-navigation">
+    </iframe>
 </div>
 
 <!-- פופ-אפ רישום כפול -->
@@ -69,41 +72,3 @@
         </button>
     </div>
 </div>
-<!-- <div class="payment-container">
-    <div *ngIf="loading" class="loader">
-        <div class="spinner-border text-primary" role="status"></div>
-        <span class="ms-2">טוען דף תשלום מאובטח...</span>
-    </div>
-    <div *ngIf="error" class="error-message">
-        <p>{{ error }}</p>
-        <button type="button" (click)="ngOnInit()">נסה שוב</button>
-    </div>
-    <form #paymentForm ngNoForm action="https://direct.tranzila.com/kapaim3/iframenew.php" target="tranzila-iframe"
-        method="POST" style="display: none;">
-        <input type="hidden" name="sum" [value]="paymentData.amount">
-        <input type="hidden" name="orderId" [value]="paymentData.orderId">
-        <input type="hidden" name="currency" value="1">
-        <input type="hidden" name="notify_url_address"
-            value="https://conference-backend-8339.onrender.com/api/payment/notify">
-        <input type="hidden" name="success_url_address" [value]="paymentData.successUrl">
-        <input type="hidden" name="fail_url_address" [value]="paymentData.failureUrl">
-        <input type="hidden" name="email" [value]="paymentData.email">
-        <input type="hidden" name="contact" [value]="paymentData.fullName">
-        <input type="hidden" name="company" [value]="paymentData.affiliation">
-        <input type="hidden" name="eventname" value="MIND-IL">
-        <input type="hidden" name="pdesc" value="MIND-IL CONFERENCE REGISTRATION">
-    </form>
-    <iframe name="tranzila-iframe" width="450px" height="540px" frameborder="0" title="Tranzila Payment"
-        sandbox="allow-forms allow-scripts allow-same-origin allow-top-navigation">
-    </iframe>
-</div>
-
-<div *ngIf="alreadyRegistered" class="popup-overlay">
-  <div class="popup-content">
-    <h3>Already Registered</h3>
-    <p>You are already a registered participant of this conference.</p>
-    <button type="button" class="btn-submit" (click)="closeAlreadyRegisteredPopup()">
-      OK
-    </button>
-  </div>
-</div> -->

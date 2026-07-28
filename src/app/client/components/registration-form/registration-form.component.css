@@ -955,3 +955,56 @@ textarea.form-control {
 .payment-loading p {
   margin: 0;
 }
+
+/* ⭐ חדש: מסך בחירת המטבע בתוך Step 3 */
+.currency-step {
+  max-width: 380px;
+  margin: 20px auto;
+  text-align: center;
+  padding: 28px;
+  border: 1.5px solid #E8E8ED;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.currency-step h3 {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0F1B4C;
+}
+
+.currency-step p {
+  margin: 0 0 18px;
+  color: #4a4a6a;
+  font-size: 0.86rem;
+}
+
+.currency-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.currency-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border: 1.5px solid #E8E8ED;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #2a2a4a;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.currency-option.active {
+  border-color: #C9A84C;
+  background: rgba(201, 168, 76, 0.08);
+}
+
+.currency-step .btn-submit {
+  margin-top: 0;
+}
