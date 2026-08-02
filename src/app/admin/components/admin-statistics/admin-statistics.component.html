@@ -3,12 +3,9 @@
     <h2>📊 דשבורד סטטיסטיקות</h2>
     <p>סקירה כללית של הרשמות, תשלומים והגשות תקציר בכל הכנסים</p>
   </div>
-
   <div class="loading" *ngIf="isLoading">טוען נתונים...</div>
   <div class="error-msg" *ngIf="error">{{ error }}</div>
-
   <ng-container *ngIf="!isLoading && !error && stats">
-
     <!-- ══ כרטיסי סיכום ══ -->
     <div class="summary-cards">
       <div class="summary-card">
@@ -28,52 +25,55 @@
         <span class="card-label">סה"כ הושג</span>
       </div>
     </div>
-
-    <!-- ══ כרטיסי אחוזי תעריף תשלום ══ -->
+    <!-- ⭐ תוקן: מציג כמות אנשים בפועל בכל תעריף, במקום אחוז -->
     <div class="summary-cards">
       <div class="summary-card tier">
-        <span class="card-value">{{ tier150Percentage }}%</span>
-        <span class="card-label">שילמו 150₪ / 50$</span>
+        <span class="card-value">{{ tier150Count }}</span>
+        <span class="card-label">שילמו 150₪</span>
       </div>
       <div class="summary-card tier">
-        <span class="card-value">{{ tier750Percentage }}%</span>
-        <span class="card-label">שילמו 750₪ / 250$</span>
+        <span class="card-value">{{ tier750Count }}</span>
+        <span class="card-label">שילמו 750₪</span>
+      </div>
+      <div class="summary-card tier">
+        <span class="card-value">{{ tier50UsdCount }}</span>
+        <span class="card-label">שילמו 50$</span>
+      </div>
+      <div class="summary-card tier">
+        <span class="card-value">{{ tier250UsdCount }}</span>
+        <span class="card-label">שילמו 250$</span>
       </div>
     </div>
-
-    <!-- ══ גרפים ══ -->
-    <div class="charts-grid">
-      <div class="chart-card">
-        <h3>נרשמים לפי כנס</h3>
-        <canvas #conferenceBarCanvas></canvas>
-      </div>
-
-      <div class="chart-card">
-        <h3>הגשות תקציר לפי כנס</h3>
-        <canvas #abstractBarCanvas></canvas>
-      </div>
-    </div>
-
-    <!-- ══ טבלת פירוט לפי כנס ══ -->
-    <div class="detail-table-wrap">
+    <!-- ⭐ תוקן: פירוט לפי כנס - כרטיסים במקום טבלה, עם חיפוש -->
+    <div class="conference-detail-section">
       <h3>פירוט מלא לפי כנס</h3>
-      <table class="detail-table">
-        <thead>
-          <tr>
-            <th>כנס</th>
-            <th>נרשמים</th>
-            <th>הגשות תקציר</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let conf of stats.RegistrationsByConference">
-            <td>{{ conf.ConferenceName }}</td>
-            <td>{{ conf.Count }}</td>
-            <td>{{ getAbstractCountFor(conf.ConferenceName) }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
 
+      <!-- ⭐ חדש: שדה חיפוש - מסנן את הכרטיסים למטה לפי שם הכנס -->
+      <div class="conference-search-container">
+        <input type="text" placeholder="חיפוש כנס..." [(ngModel)]="searchText">
+      </div>
+
+      <div class="conference-cards-grid">
+        <div class="conference-card" *ngFor="let conf of filteredConferences">
+          <div class="conference-card-topbar"></div>
+          <div class="conference-card-body">
+            <div class="conference-card-name" [title]="conf.ConferenceName">{{ conf.ConferenceName }}</div>
+            <div class="conference-card-stats">
+              <div class="conference-stat">
+                <span class="conference-stat-value">{{ conf.Count }}</span>
+                <span class="conference-stat-label">נרשמים</span>
+              </div>
+              <div class="conference-stat">
+                <span class="conference-stat-value">{{ getAbstractCountFor(conf.ConferenceName) }}</span>
+                <span class="conference-stat-label">הגשות תקציר</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ⭐ חדש: הודעה כשהחיפוש לא מוצא שום כנס -->
+        <p class="no-results" *ngIf="filteredConferences.length === 0">לא נמצאו כנסים תואמים לחיפוש</p>
+      </div>
+    </div>
   </ng-container>
 </div>
