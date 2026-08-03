@@ -20,6 +20,7 @@ import { TranzilaPaymentComponent } from './components/tranzila-payment/tranzila
 import { PaymentSuccessComponent } from './components/payment-success/payment-success.component';
 import { PaymentFailedComponent } from './components/payment-failed/payment-failed.component';
 import { CountdownPopupComponent } from './countdown-popup/countdown-popup.component';
+import { ChatWidgetComponent } from './components/chat-widget/chat-widget.component';
 @NgModule({
   declarations: [
     ClientRootComponent,
@@ -36,6 +37,7 @@ import { CountdownPopupComponent } from './countdown-popup/countdown-popup.compo
     PaymentSuccessComponent,
     PaymentFailedComponent,
     CountdownPopupComponent,
+    ChatWidgetComponent,
   ],
   imports: [
     CommonModule,

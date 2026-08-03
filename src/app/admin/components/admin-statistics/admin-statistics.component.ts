@@ -17,7 +17,11 @@ export class AdminStatisticsComponent implements OnInit, AfterViewInit {
   stats: any = null;
   isLoading = true;
   error = '';
-  totalMoneyRaised = 0;
+  // ⭐ תוקן: הוסר totalMoneyRaised (סה"כ משולב) - הוא חיבר ₪ ו-$ בלי המרת
+  // מטבע, מה שיצר מספר חסר משמעות (למשל 82,650₪ + 1,600$ = "84,250").
+  // נשארים רק שני הסכומים הנפרדים, שכל אחד מהם כן נכון בפני עצמו.
+  totalRaisedILS = 0;
+  totalRaisedUSD = 0;
   tier150Count = 0;
   tier750Count = 0;
   tier50UsdCount = 0;
@@ -72,7 +76,6 @@ export class AdminStatisticsComponent implements OnInit, AfterViewInit {
     const match = this.stats?.AbstractsByConference?.find((a: any) => a.ConferenceName === conferenceName);
     return match ? match.Count : 0;
   }
-
   // ⭐ חדש: רשימת הכנסים בפועל שמוצגת בכרטיסים, מסוננת לפי searchText
   // (חיפוש לא רגיש לאותיות גדולות/קטנות, על שם הכנס בלבד)
   get filteredConferences(): any[] {
@@ -94,7 +97,16 @@ export class AdminStatisticsComponent implements OnInit, AfterViewInit {
       !a.ConferenceId || !this.externalConferenceIds.has(a.ConferenceId)
     );
     const paidAttendees = relevantAttendees.filter(a => a.PaymentStatus === 'success');
-    this.totalMoneyRaised = paidAttendees.reduce((sum, a) => sum + this.getAmount(a), 0);
+
+    // אותו סכום, אבל מפוצל לפי מטבע - כל אחד מחושב בנפרד על בסיס
+    // getCurrency, בלי לערבב שקלים ודולרים באותו סכום
+    this.totalRaisedILS = paidAttendees
+      .filter(a => this.getCurrency(a) === 'ILS')
+      .reduce((sum, a) => sum + this.getAmount(a), 0);
+    this.totalRaisedUSD = paidAttendees
+      .filter(a => this.getCurrency(a) === 'USD')
+      .reduce((sum, a) => sum + this.getAmount(a), 0);
+
     const totalPaidCount = paidAttendees.length;
     if (totalPaidCount === 0) {
       this.tier150Count = 0;

@@ -1,0 +1,58 @@
+<!-- ⭐ הכפתור הצף - תמיד קיים בפינת המסך. הפעימה (pulse) והנקודה האדומה
+     מוצגות רק כשיש הודעה חדשה שהמשתמש עוד לא פתח -->
+<button class="chat-bubble" (click)="toggleOpen()" [class.open]="isOpen" aria-label="Chat assistant">
+  <span *ngIf="!isOpen">💬</span>
+  <span *ngIf="isOpen">✕</span>
+  <span class="unread-dot" *ngIf="hasUnread && !isOpen"></span>
+</button>
+
+<div class="chat-panel" *ngIf="isOpen">
+  <div class="chat-header">
+    <span class="chat-header-title">Conference Assistant</span>
+    <button class="chat-close-btn" (click)="toggleOpen()" aria-label="Close">✕</button>
+  </div>
+
+  <div class="chat-messages">
+    <ng-container *ngFor="let msg of messages">
+      <div class="chat-msg" [ngClass]="msg.from">
+        <div class="chat-bubble-text" *ngIf="msg.text">{{ msg.text }}</div>
+
+        <!-- ⭐ תוצאות התאמה מוצגות ככרטיסים קטנים בתוך הודעת הבוט עצמה -->
+        <div class="chat-results" *ngIf="msg.results?.length">
+          <div class="chat-result-card" *ngFor="let conf of msg.results">
+            <div class="chat-result-name">{{ conf.name }}</div>
+            <ng-container *ngIf="!conf.isExternalOnly; else externalLink">
+              <a class="chat-result-btn" [routerLink]="['/conference', conf.id]" (click)="toggleOpen()">
+                View &amp; Register
+              </a>
+            </ng-container>
+            <ng-template #externalLink>
+              <a class="chat-result-btn" *ngIf="conf.websiteUrl" [href]="conf.websiteUrl" target="_blank" rel="noopener">
+                Visit Website
+              </a>
+            </ng-template>
+          </div>
+        </div>
+
+        <!-- ⭐ חדש: קישור יחיד לרשימת כל הכנסים בקטגוריה (במקום כרטיסים מוגבלים) -->
+        <a class="chat-category-link-btn" *ngIf="msg.categoryLink" [routerLink]="['/ConferenceEvents']"
+          [queryParams]="{ category: msg.categoryLink }" (click)="toggleOpen()">
+          See all {{ msg.categoryLink }} conferences
+        </a>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- ⭐ כפתורי קטגוריה מהירים - תמיד זמינים מתחת לשיחה, לא רק בהודעה הראשונה -->
+  <div class="chat-categories">
+    <button type="button" class="chat-category-chip" *ngFor="let cat of categories" (click)="selectCategory(cat)">
+      {{ cat }}
+    </button>
+  </div>
+
+  <div class="chat-input-row">
+    <input type="text" placeholder="What are you looking for?" [(ngModel)]="userInput"
+      (keydown.enter)="sendMessage()">
+    <button type="button" class="chat-send-btn" (click)="sendMessage()" aria-label="Send">➤</button>
+  </div>
+</div>
