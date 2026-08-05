@@ -1,0 +1,163 @@
+:host {
+    font-family: 'Inter', Arial, sans-serif;
+    display: block;
+    background: #F8F6F0;
+}
+
+.contact-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px 72px;
+}
+
+/* ══ Hero ══ */
+.contact-hero {
+    background: #0F1B4C;
+    margin: 35PX 0 20px;
+    padding: 10px 0px 25px;
+    text-align: center;
+    border-radius: 32PX;
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-hero::after {
+    content: '';
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201, 168, 76, 0.18), transparent 70%);
+}
+
+.contact-eyebrow {
+    color: #C9A84C;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.contact-hero h1 {
+    color: #fff;
+    font-size: 2.4rem;
+    font-weight: 800;
+    margin: 12px 0 16px;
+    position: relative;
+}
+
+.contact-hero-sub {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 1rem;
+    line-height: 1.7;
+    max-width: 480px;
+    margin: 0 auto;
+    position: relative;
+}
+
+/* ⭐ שונה: כרטיס יחיד ממורכז במקום גריד של שניים */
+.contact-cards {
+    display: flex;
+    justify-content: center;
+}
+
+.contact-card {
+    background: #fff;
+    border: 1px solid #E8E8ED;
+    border-radius: 18px;
+    padding: 36px 32px;
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+    max-width: 420px;
+    width: 100%;
+}
+
+.contact-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(15, 27, 76, 0.1);
+}
+
+.contact-card.highlight {
+    border-color: #C9A84C;
+    background: linear-gradient(180deg, #FFFDF7 0%, #FBF7EC 100%);
+}
+
+.contact-icon {
+    font-size: 1.6rem;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #FBF0D2;
+    border-radius: 14px;
+    margin-bottom: 18px;
+}
+
+.contact-tag {
+    display: inline-block;
+    background: #C9A84C;
+    color: #0F1B4C;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+
+.contact-card h3 {
+    color: #0F1B4C;
+    font-size: 1.2rem;
+    margin: 0 0 10px;
+}
+
+.contact-card p {
+    color: #5a5a7a;
+    font-size: 0.92rem;
+    line-height: 1.65;
+    margin: 0 0 22px;
+}
+
+.contact-email-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #0F1B4C;
+    color: #C9A84C;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.contact-email-btn:hover {
+    background: #1a2a6b;
+}
+
+/* ══ Footnote ══ */
+.contact-footnote {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.contact-footnote p {
+    color: #8a8aa0;
+    font-size: 0.85rem;
+}
+
+/* ══ Responsive ══ */
+@media (max-width: 720px) {
+    .contact-hero {
+        padding: 56px 20px 48px;
+    }
+
+    .contact-hero h1 {
+        font-size: 1.9rem;
+    }
+}

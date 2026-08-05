@@ -20,6 +20,10 @@
         <a routerLink="/ConferenceEvents" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">
           {{ 'Client_NAV.SURVEYS' | translate }}
         </a>
+        <!-- ⭐ חדש: קישור לעמוד צרו קשר - טקסט קבוע, בלי translate -->
+        <a routerLink="/contact-us" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">
+          Contact Us
+        </a>
         <a class="nav-link btn-register" (click)="openRegistration(); closeMobileMenu()">
           {{ 'Client_NAV.REGISTER_CONFERENCE' | translate }}
         </a>
