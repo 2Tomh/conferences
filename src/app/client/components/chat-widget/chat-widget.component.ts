@@ -27,7 +27,7 @@ const TEXT = {
   headerTitle: 'Conference Assistant',
   greeting: "Hi! I can help you find the right conference, register, get in touch, or check a deadline. Please note that I communicate in English. Pick a field below, or just type your question.",
   inputPlaceholder: "What would you like to know?",
-  resultsFor: (term: string) => `Here's what I found for "${term}":`,
+  // resultsFor: (term: string) => `Here's what I found for "${term}":`,
   noMatch: (term: string) => `I couldn't find a conference matching "${term}". Please note I respond in English. Try a different topic or pick a category below.`,
   viewRegister: 'View & Register',
   visitWebsite: 'Visit Website',
@@ -431,7 +431,7 @@ private respondWithContact(text: string): void {
     }
     this.messages.push({
       from: 'bot',
-      text: this.t.resultsFor(term),
+      // text: this.t.resultsFor(term),
       results: matches.slice(0, 5)
     });
   }
