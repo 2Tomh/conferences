@@ -1,1 +1,29 @@
-<p>countdown-popup works!</p>
+<div class="countdown-wrapper">
+  <ng-container *ngIf="!isPast; else eventStarted">
+    <p class="countdown-label">Counting down to Mind-IL</p>
+    <div class="countdown-grid">
+      <div class="countdown-unit">
+        <span class="countdown-value">{{ days }}</span>
+        <span class="countdown-unit-label">Days</span>
+      </div>
+      <span class="countdown-colon">:</span>
+      <div class="countdown-unit">
+        <span class="countdown-value">{{ hours < 10 ? '0' + hours : hours }}</span>
+        <span class="countdown-unit-label">Hours</span>
+      </div>
+      <span class="countdown-colon">:</span>
+      <div class="countdown-unit">
+        <span class="countdown-value">{{ minutes < 10 ? '0' + minutes : minutes }}</span>
+        <span class="countdown-unit-label">Minutes</span>
+      </div>
+      <span class="countdown-colon">:</span>
+      <div class="countdown-unit">
+        <span class="countdown-value">{{ seconds < 10 ? '0' + seconds : seconds }}</span>
+        <span class="countdown-unit-label">Seconds</span>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #eventStarted>
+    <p class="countdown-live">🎉 Mind-IL has begun!</p>
+  </ng-template>
+</div>
