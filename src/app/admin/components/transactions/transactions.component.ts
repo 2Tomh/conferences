@@ -11,9 +11,11 @@ export class TransactionsComponent implements OnInit {
   isUnlocked = false;
   passwordInput = '';
   passwordError = '';
+  isVerifying = false;
 
-  // ⭐ הסיסמה שנוצרה
-  private readonly ACCESS_PASSWORD = 'Tx#9kLmQ2vRp!7Zw';
+  // ⭐ שונה: הסיסמה כבר לא כתובה כאן - מאומתת מול hash שמור ב-Mongo
+  // דרך apiService.verifyPageAccess. PAGE_KEY מזהה איזה עמוד זה בצד השרת.
+  private readonly PAGE_KEY = 'transactions';
   private readonly SESSION_KEY = 'txPageUnlocked';
 
   transactions: any[] = [];
@@ -29,18 +31,17 @@ export class TransactionsComponent implements OnInit {
   currentPage = 1;
   pageSize = 20;
 
-  // ⭐ חדש: state לפופ-אפ הפרטים המלאים
+  // ⭐ state לפופ-אפ הפרטים המלאים
   selectedTransaction: any = null;
 
-  // ⭐ חדש: מעקב אחרי בקשות "Resend" בתהליך, לפי OrderId - כדי להציג
-  // loading רק על השורה הרלוונטית ולמנוע לחיצה כפולה על אותה שורה
+  // ⭐ מעקב אחרי בקשות "Resend" בתהליך, לפי OrderId
   resendingOrderIds = new Set<string>();
   resendFeedback: { [orderId: string]: string } = {};
 
   constructor(private apiService: ApiService) { }
 
   ngOnInit(): void {
-    // ⭐ נשאר "פתוח" רק לטאב הנוכחי (sessionStorage), לא לצמיתות במחשב -
+    // נשאר "פתוח" רק לטאב הנוכחי (sessionStorage), לא לצמיתות במחשב -
     // כל פתיחה חדשה של האתר/טאב תבקש סיסמה מחדש
     if (sessionStorage.getItem(this.SESSION_KEY) === 'true') {
       this.isUnlocked = true;
@@ -48,16 +49,31 @@ export class TransactionsComponent implements OnInit {
     }
   }
 
+  // ⭐ שונה: שולח את הסיסמה לשרת לאימות, במקום להשוות מחרוזת מקומית
   submitPassword(): void {
-    if (this.passwordInput === this.ACCESS_PASSWORD) {
-      this.isUnlocked = true;
-      this.passwordError = '';
-      sessionStorage.setItem(this.SESSION_KEY, 'true');
-      this.loadTransactions();
-    } else {
-      this.passwordError = 'Incorrect password. Please try again.';
-      this.passwordInput = '';
-    }
+    if (!this.passwordInput || this.isVerifying) return;
+
+    this.isVerifying = true;
+    this.passwordError = '';
+
+    this.apiService.verifyPageAccess(this.PAGE_KEY, this.passwordInput).subscribe({
+      next: (res) => {
+        this.isVerifying = false;
+        if (res?.success) {
+          this.isUnlocked = true;
+          sessionStorage.setItem(this.SESSION_KEY, 'true');
+          this.loadTransactions();
+        } else {
+          this.passwordError = 'Incorrect password. Please try again.';
+          this.passwordInput = '';
+        }
+      },
+      error: (err) => {
+        this.isVerifying = false;
+        this.passwordError = 'Could not verify password — please try again.';
+        console.error('Error verifying page access:', err);
+      }
+    });
   }
 
   lockPage(): void {
@@ -121,7 +137,6 @@ export class TransactionsComponent implements OnInit {
     return raw != null ? parseFloat(raw) : 0;
   }
 
-  // ⭐ חדש: מוציא תאריך מהפורמט הכפול האפשרי ($date / string רגיל)
   getDate(value: any): string | null {
     const raw = value?.$date || value;
     return raw || null;
@@ -140,7 +155,6 @@ export class TransactionsComponent implements OnInit {
     this.applyFilters();
   }
 
-  // ⭐ חדש: פתיחה/סגירה של פופ-אפ הפרטים המלאים
   openDetails(tx: any): void {
     this.selectedTransaction = tx;
   }
@@ -149,15 +163,12 @@ export class TransactionsComponent implements OnInit {
     this.selectedTransaction = null;
   }
 
-  // ⭐ חדש: שולח (או שולח מחדש) את מייל האישור לעסקה נתונה.
-  // force=true תמיד - כי הכפתור הזה מיועד לשליחה מכוונת ע"י אדמין,
-  // גם אם EmailSent כבר true.
   resendEmail(tx: any): void {
     if (!tx?.OrderId) {
       this.resendFeedback[tx?.OrderId ?? ''] = 'Missing order ID';
       return;
     }
-    if (this.resendingOrderIds.has(tx.OrderId)) return; // כבר בתהליך שליחה
+    if (this.resendingOrderIds.has(tx.OrderId)) return;
 
     this.resendingOrderIds.add(tx.OrderId);
     delete this.resendFeedback[tx.OrderId];
@@ -166,14 +177,12 @@ export class TransactionsComponent implements OnInit {
       next: (res: any) => {
         this.resendingOrderIds.delete(tx.OrderId);
         tx.EmailSent = true;
-        // אם זה גם ה-transaction הפתוח כרגע בפופ-אפ, לעדכן גם שם
         if (this.selectedTransaction?.OrderId === tx.OrderId) {
           this.selectedTransaction.EmailSent = true;
         }
         this.resendFeedback[tx.OrderId] = res?.message === 'payment not confirmed yet'
           ? 'Payment not confirmed yet — email not sent'
           : 'Email sent successfully';
-        // מנקה את הודעת המשוב אחרי כמה שניות כדי לא להישאר תלויה לצמיתות
         setTimeout(() => delete this.resendFeedback[tx.OrderId], 4000);
       },
       error: (err: any) => {

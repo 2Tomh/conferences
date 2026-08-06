@@ -11,7 +11,9 @@
       [(ngModel)]="passwordInput"
       (keydown.enter)="submitPassword()">
     <div class="lock-error" *ngIf="passwordError">{{ passwordError }}</div>
-    <button class="lock-btn" (click)="submitPassword()">Unlock</button>
+    <button class="lock-btn" [disabled]="isVerifying" (click)="submitPassword()">
+      {{ isVerifying ? 'Checking...' : 'Unlock' }}
+    </button>
   </div>
 </div>
 
