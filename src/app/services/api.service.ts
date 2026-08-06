@@ -123,6 +123,25 @@ export class ApiService {
     return this.http.get<any[]>(`${this.apiUrl}/partners`);
   }
 
+  // ⭐ חדש: ניהול שותפים (Create/Update/Delete) - GET כבר קיים למעלה
+  createPartner(data: { name: string; logo: string; url: string; order: number }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/partners`, data);
+  }
+
+  updatePartner(id: string, data: { name: string; logo: string; url: string; order: number }): Observable<any> {
+    return this.http.put(`${this.apiUrl}/partners/${id}`, data);
+  }
+
+  deletePartner(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/partners/${id}`);
+  }
+
+  // ⭐ חדש: מאמת סיסמת-עמוד (כמו Transactions) מול hash שמור ב-Mongo,
+  // בלי שהסיסמה עצמה תישמר בקוד ה-Frontend
+  verifyPageAccess(pageKey: string, password: string): Observable<{ success: boolean }> {
+    return this.http.post<{ success: boolean }>(`${this.apiUrl}/page-access/verify`, { pageKey, password });
+  }
+
   getConferenceById(id: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/Surveys/${encodeURIComponent(id)}`);
   }

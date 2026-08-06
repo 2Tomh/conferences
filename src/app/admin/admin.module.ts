@@ -21,6 +21,7 @@ import { SharedModule } from '../shared/shared.module';
 import { ConferenceEditComponent } from './components/conference-edit/conference-edit.component';
 import { AdminStatisticsComponent } from './components/admin-statistics/admin-statistics.component';
 import { TransactionsComponent } from './components/transactions/transactions.component';
+import { PartnersManagementComponent } from './components/partners-management/partners-management.component';
 @NgModule({
   declarations: [
     AdminRootComponent,
@@ -34,6 +35,7 @@ import { TransactionsComponent } from './components/transactions/transactions.co
     ConferenceEditComponent,
     AdminStatisticsComponent,
     TransactionsComponent,
+    PartnersManagementComponent,
   ],
   imports: [
     CommonModule,
