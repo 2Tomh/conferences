@@ -1,7 +1,6 @@
 <div class="payment-container">
 
-    <!-- ⭐ חדש: מסך בחירת מטבע - מוצג לפני שהטופס נשלח אוטומטית לטרנזילה.
-         רק אחרי לחיצה על "המשך לתשלום" מתחילה בפועל זרימת ה-preparePayment. -->
+    <!-- מסך בחירת מטבע -->
     <div *ngIf="showCurrencyStep" class="currency-step">
         <h3>Choose payment currency</h3>
         <p>You can pay in Israeli Shekels or US Dollars.</p>
@@ -34,20 +33,14 @@
         <button type="button" (click)="ngOnInit()">נסה שוב</button>
     </div>
 
-    <!-- ⭐ תוקן: מוחזר ל-iframe מוטמע (עם target) במקום ניווט מלא שעוזב את האתר -->
     <form #paymentForm ngNoForm action="https://direct.tranzila.com/kapaim3/iframenew.php" target="tranzila-iframe" method="POST" style="display: none;">
         <input type="hidden" name="sum" [value]="paymentData.amount">
         <input type="hidden" name="orderId" [value]="paymentData.orderId">
         <input type="hidden" name="currency" [value]="paymentData.currencyCode">
         <input type="hidden" name="notify_url_address" value="https://conference-backend-8339.onrender.com/api/payment/notify">
-
-        <!-- כתובות ההצלחה והכישלון -->
         <input type="hidden" name="success_url_address" [value]="paymentData.successUrl">
         <input type="hidden" name="fail_url_address" [value]="paymentData.failureUrl">
-        
-        <!-- חובה: מורה לטרנזילה לחזור בשיטת GET כדי למנוע שגיאת 405 -->
         <input type="hidden" name="success_method" value="1">
-
         <input type="hidden" name="email" [value]="paymentData.email">
         <input type="hidden" name="contact" [value]="paymentData.fullName">
         <input type="hidden" name="company" [value]="paymentData.affiliation">
@@ -55,11 +48,19 @@
         <input type="hidden" name="pdesc" value="MIND-IL CONFERENCE REGISTRATION">
     </form>
 
-    <!-- ⭐ חדש: ה-iframe שקולט את תגובת הטופס - זה מה ששומר את המשתמש בתוך האתר -->
-    <iframe *ngIf="!loading && !error && !showCurrencyStep" name="tranzila-iframe" width="100%" height="540"
-        frameborder="0" title="Tranzila Payment" class="tranzila-iframe"
-        sandbox="allow-forms allow-scripts allow-same-origin allow-top-navigation">
-    </iframe>
+    <!-- ⭐ חדש: ה-iframe ולידו הערת ה-ID, בעטיפה משותפת לצורך המיקום זה-לצד-זה -->
+    <div class="payment-frame-row" *ngIf="!loading && !error && !showCurrencyStep">
+        <iframe name="tranzila-iframe" width="100%" height="540"
+            frameborder="0" title="Tranzila Payment" class="tranzila-iframe"
+            sandbox="allow-forms allow-scripts allow-same-origin allow-top-navigation">
+        </iframe>
+
+        <!-- ⭐ חדש: מוצג רק כשנבחר תשלום בדולרים -->
+        <div class="id-hint-note" *ngIf="selectedCurrency === 'USD'">
+            <strong>ID number:</strong> Required only when paying with an Israeli credit card.
+            If you are using a non-Israeli credit card, please enter <strong>000000000</strong>.
+        </div>
+    </div>
 </div>
 
 <!-- פופ-אפ רישום כפול -->

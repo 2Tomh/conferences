@@ -19,8 +19,9 @@ import {SharedModule} from '../shared/shared.module';
 import { TranzilaPaymentComponent } from './components/tranzila-payment/tranzila-payment.component';
 import { PaymentSuccessComponent } from './components/payment-success/payment-success.component';
 import { PaymentFailedComponent } from './components/payment-failed/payment-failed.component';
-import { CountdownPopupComponent } from './countdown-popup/countdown-popup.component';
+import { CountdownPopupComponent } from './components/countdown-popup/countdown-popup.component';
 import { ChatWidgetComponent } from './components/chat-widget/chat-widget.component';
+import { ContactUsComponent } from './components/contact-us/contact-us.component';
 @NgModule({
   declarations: [
     ClientRootComponent,
@@ -38,6 +39,7 @@ import { ChatWidgetComponent } from './components/chat-widget/chat-widget.compon
     PaymentFailedComponent,
     CountdownPopupComponent,
     ChatWidgetComponent,
+    ContactUsComponent,
   ],
   imports: [
     CommonModule,
