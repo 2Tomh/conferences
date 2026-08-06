@@ -1,0 +1,231 @@
+<!-- ⭐ מסך נעילה - מוצג עד שהוזנה הסיסמה הנכונה -->
+<div class="lock-screen" *ngIf="!isUnlocked">
+  <div class="lock-box">
+    <div class="lock-icon">🔒</div>
+    <h2>Restricted Access</h2>
+    <p>This page contains sensitive payment data. Please enter the access password to continue.</p>
+    <input
+      type="password"
+      class="lock-input"
+      placeholder="Password"
+      [(ngModel)]="passwordInput"
+      (keydown.enter)="submitPassword()">
+    <div class="lock-error" *ngIf="passwordError">{{ passwordError }}</div>
+    <button class="lock-btn" (click)="submitPassword()">Unlock</button>
+  </div>
+</div>
+
+<!-- ⭐ העמוד עצמו - מוצג רק אחרי פתיחת הנעילה -->
+<div class="tx-page" *ngIf="isUnlocked">
+  <div class="tx-header">
+    <div class="tx-header-text">
+      <span class="tx-eyebrow">Mind-IL · Admin</span>
+      <h2>Transactions</h2>
+    </div>
+    <div class="tx-header-actions">
+      <button class="btn-export" (click)="exportToCSV()">Export to CSV</button>
+      <button class="btn-lock" (click)="lockPage()">🔒 Lock Page</button>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-chip">
+      <span class="stat-count">{{ totalCount }}</span>
+      <span class="stat-label">Total</span>
+    </div>
+    <div class="stat-chip success">
+      <span class="stat-count">{{ successCount }}</span>
+      <span class="stat-label">Success</span>
+    </div>
+    <div class="stat-chip pending">
+      <span class="stat-count">{{ pendingCount }}</span>
+      <span class="stat-label">Pending</span>
+    </div>
+    <div class="stat-chip failed">
+      <span class="stat-count">{{ failedCount }}</span>
+      <span class="stat-label">Failed</span>
+    </div>
+    <div class="stat-chip amount">
+      <span class="stat-count">{{ totalAmount | number }}</span>
+      <span class="stat-label">Total (Success)</span>
+    </div>
+  </div>
+
+  <div class="filters-bar">
+    <input class="search-input" type="text" placeholder="Search by name, email, conference, TxId..."
+      [(ngModel)]="searchTerm" (input)="onSearch()" />
+    <select class="status-select" [(ngModel)]="selectedStatus" (change)="onStatusFilterChange()">
+      <option value="">All Statuses</option>
+      <option value="success">Success</option>
+      <option value="pending">Pending</option>
+      <option value="failed">Failed</option>
+    </select>
+  </div>
+
+  <div class="loading" *ngIf="isLoading">Loading transactions...</div>
+  <div class="error-msg" *ngIf="error">{{ error }}</div>
+
+  <div class="table-wrap" *ngIf="!isLoading && !error">
+    <table class="tx-table">
+      <thead>
+        <tr>
+          <th (click)="sortBy('FullName')" class="sortable">Full Name</th>
+          <th (click)="sortBy('Email')" class="sortable">Email</th>
+          <th (click)="sortBy('ConferenceName')" class="sortable">Conference</th>
+          <th (click)="sortBy('Status')" class="sortable">Status</th>
+          <th (click)="sortBy('Amount')" class="sortable">Amount</th>
+          <th (click)="sortBy('TxId')" class="sortable">TxId</th>
+          <th (click)="sortBy('CreatedAt')" class="sortable">Date</th>
+          <th (click)="sortBy('EmailSent')" class="sortable">Email Sent</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tx of pagedTransactions">
+          <td>{{ tx.FullName }}</td>
+          <td>{{ tx.Email }}</td>
+          <td class="conference-cell" [title]="tx.ConferenceName">{{ tx.ConferenceName }}</td>
+          <td><span class="badge" [ngClass]="tx.Status">{{ tx.Status }}</span></td>
+          <td>{{ getAmount(tx) | number }}</td>
+          <td>{{ tx.TxId }}</td>
+          <td>{{ getDate(tx.CreatedAt) | date:'dd/MM/yy HH:mm' }}</td>
+          <td>
+            <div class="email-sent-cell">
+              <span class="badge" [ngClass]="tx.EmailSent ? 'success' : 'failed'">
+                {{ tx.EmailSent ? 'Yes' : 'No' }}
+              </span>
+              <button
+                class="btn-resend"
+                [disabled]="isResending(tx.OrderId)"
+                (click)="resendEmail(tx)">
+                {{ isResending(tx.OrderId) ? 'Sending…' : 'Resend' }}
+              </button>
+              <span class="resend-feedback" *ngIf="resendFeedback[tx.OrderId]">
+                {{ resendFeedback[tx.OrderId] }}
+              </span>
+            </div>
+          </td>
+          <td>
+            <button class="btn-details" (click)="openDetails(tx)">View</button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredTransactions.length === 0">
+          <td colspan="9" class="no-data">No transactions found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination-bar" *ngIf="!isLoading && !error && filteredTransactions.length > 0">
+    <span class="pagination-info">Showing {{ pageStart }}–{{ pageEnd }} of {{ filteredTransactions.length }}</span>
+    <div class="pagination-controls">
+      <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 1">‹ Prev</button>
+      <span class="page-current">{{ currentPage }} / {{ totalPages }}</span>
+      <button class="page-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">Next ›</button>
+    </div>
+  </div>
+</div>
+
+<!-- ⭐ חדש: פופ-אפ עם כל השדות של ה-Transaction -->
+<div class="popup-overlay" *ngIf="selectedTransaction" (click)="closeDetails()">
+  <div class="popup-box details-popup" (click)="$event.stopPropagation()">
+    <div class="popup-header">
+      <h3>{{ selectedTransaction.FullName }}</h3>
+      <button class="btn-close" (click)="closeDetails()">✕</button>
+    </div>
+    <div class="details-grid">
+      <div class="detail-row">
+        <span class="label">Email</span>
+        <span>{{ selectedTransaction.Email }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Phone</span>
+        <span>{{ selectedTransaction.Phone || '—' }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Institution</span>
+        <span>{{ selectedTransaction.Institution || '—' }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Conference</span>
+        <span>{{ selectedTransaction.ConferenceName }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Conference Contact Email</span>
+        <span>{{ selectedTransaction.ConferenceContactEmail || '—' }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Status</span>
+        <span class="badge" [ngClass]="selectedTransaction.Status">{{ selectedTransaction.Status }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Amount</span>
+        <span>{{ getAmount(selectedTransaction) | number }} {{ selectedTransaction.Currency || 'ILS' }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">TxId</span>
+        <span>{{ selectedTransaction.TxId || '—' }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Order Id</span>
+        <span>{{ selectedTransaction.OrderId || '—' }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Registration Id</span>
+        <span>{{ selectedTransaction.RegistrationId || '—' }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Created At</span>
+        <span>{{ getDate(selectedTransaction.CreatedAt) | date:'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Updated At</span>
+        <span>{{ getDate(selectedTransaction.UpdatedAt) | date:'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Email Sent</span>
+        <span class="email-sent-cell">
+          {{ selectedTransaction.EmailSent ? 'Yes' : 'No' }}
+          <button
+            class="btn-resend"
+            [disabled]="isResending(selectedTransaction.OrderId)"
+            (click)="resendEmail(selectedTransaction)">
+            {{ isResending(selectedTransaction.OrderId) ? 'Sending…' : 'Resend' }}
+          </button>
+        </span>
+      </div>
+      <div class="detail-row" *ngIf="resendFeedback[selectedTransaction.OrderId]">
+        <span class="label"></span>
+        <span class="resend-feedback">{{ resendFeedback[selectedTransaction.OrderId] }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Lifetime Member</span>
+        <span>{{ selectedTransaction.IsLifetimeMember ? 'Yes' : 'No' }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Payment Description</span>
+        <span>{{ selectedTransaction.PaymentDescription || '—' }}</span>
+      </div>
+    </div>
+
+    <!-- בלוק תקציר - רק אם קיים -->
+    <div class="abstract-view-block" *ngIf="selectedTransaction.HasAbstract">
+      <span class="abstract-view-label">Abstract Title</span>
+      <p class="abstract-view-title">{{ selectedTransaction.AbstractTitle }}</p>
+      <span class="abstract-view-label">Abstract Authors</span>
+      <p class="abstract-view-title">{{ selectedTransaction.AbstractAuthors }}</p>
+      <span class="abstract-view-label" *ngIf="selectedTransaction.AbstractBody">Abstract Body</span>
+      <div class="abstract-body" *ngIf="selectedTransaction.AbstractBody">{{ selectedTransaction.AbstractBody }}</div>
+      <span class="abstract-view-label" *ngIf="selectedTransaction.AbstractNotes">Abstract Notes</span>
+      <p class="abstract-view-title" *ngIf="selectedTransaction.AbstractNotes">{{ selectedTransaction.AbstractNotes }}</p>
+    </div>
+
+    <!-- בלוק פוסטר - רק אם קיים -->
+    <div class="abstract-view-block" *ngIf="selectedTransaction.HasPoster">
+      <span class="abstract-view-label">Poster Title</span>
+      <p class="abstract-view-title">{{ selectedTransaction.PosterTitle }}</p>
+      <span class="abstract-view-label">Poster Authors</span>
+      <p class="abstract-view-title">{{ selectedTransaction.PosterAuthors }}</p>
+    </div>
+  </div>
+</div>
