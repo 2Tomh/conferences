@@ -48,18 +48,18 @@
         <input type="hidden" name="pdesc" value="MIND-IL CONFERENCE REGISTRATION">
     </form>
 
-    <!-- ⭐ חדש: ה-iframe ולידו הערת ה-ID, בעטיפה משותפת לצורך המיקום זה-לצד-זה -->
-    <div class="payment-frame-row" *ngIf="!loading && !error && !showCurrencyStep">
-        <iframe name="tranzila-iframe" width="100%" height="540"
-            frameborder="0" title="Tranzila Payment" class="tranzila-iframe"
-            sandbox="allow-forms allow-scripts allow-same-origin allow-top-navigation">
-        </iframe>
-
-        <!-- ⭐ חדש: מוצג רק כשנבחר תשלום בדולרים -->
+    <!-- ⭐ שונה: ההערה עכשיו מוצגת כבאנר מעל ה-iframe, לא לצידו -->
+    <div class="payment-column" *ngIf="!loading && !error && !showCurrencyStep">
+        <!-- מוצג רק כשנבחר תשלום בדולרים -->
         <div class="id-hint-note" *ngIf="selectedCurrency === 'USD'">
             <strong>ID number:</strong> Required only when paying with an Israeli credit card.
             If you are using a non-Israeli credit card, please enter <strong>000000000</strong>.
         </div>
+
+        <iframe name="tranzila-iframe" width="100%" height="540"
+            frameborder="0" title="Tranzila Payment" class="tranzila-iframe"
+            sandbox="allow-forms allow-scripts allow-same-origin allow-top-navigation">
+        </iframe>
     </div>
 </div>
 

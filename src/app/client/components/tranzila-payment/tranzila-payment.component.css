@@ -75,13 +75,23 @@
   min-width: 0;
 }
 
+/* ⭐ שונה: עמודה אנכית במקום שורה - ההערה מעל ה-iframe */
+.payment-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .id-hint-note {
-  flex-shrink: 0;
-  width: 240px;
+  background: #FDECEA;
+  border: 1px solid #F5C6C0;
+  border-left: 4px solid #C0392B;
+  border-radius: 8px;
+  padding: 14px 18px;
   color: #C0392B;
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   line-height: 1.6;
-  padding-top: 12px;
+  text-align: left;
 }
 
 @media (max-width: 900px) {
