@@ -10,13 +10,24 @@
   margin: 0 auto;
 }
 
+/* ⭐ שונה: שורה אחת (row), שני האלמנטים צמודים זה לזה עם רווח קטן (gap)
+   ביניהם, שניהם יחד בצד ימין (justify-content: flex-end + RTL) - לא
+   מתוחים לשני קצוות (space-between) ולא בעמודה אחד מעל השני (column) */
 .page-header {
+  display: flex;
+  flex-direction: row;
+  /* justify-content: flex-end; */
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
   margin-bottom: 28px;
 }
 
-/* ⭐ תוקן: כותרת העמוד עכשיו באותה שפה עיצובית כמו .section-title בעמוד
-   האירועים - Playfair Display + קו זהב תחתי, במקום כותרת פשוטה */
-.page-header h2 {
+.page-header-text {
+  text-align: right;
+}
+
+.page-header-text h2 {
   font-family: 'Playfair Display', serif;
   font-size: clamp(1.5rem, 3vw, 2rem);
   font-weight: 700;
@@ -26,7 +37,7 @@
   padding-bottom: 16px;
 }
 
-.page-header h2::after {
+.page-header-text h2::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -37,9 +48,21 @@
   border-radius: 2px;
 }
 
-.page-header p {
+.page-header-text p {
   color: #6b6b80;
   margin: 0;
+}
+
+.btn-export {
+  background: #0F1B4C;
+  color: #C9A84C;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .summary-cards {
@@ -89,9 +112,6 @@
   font-weight: 600;
 }
 
-/* ⭐ תוקן: כרטיסי הכנסים עכשיו בעיצוב זהה ל-.conf-card בעמוד האירועים -
-   רקע נייבי כהה, פס עליון (topbar) בגרדיאנט זהב, שם בלבן, ותאי הסטטיסטיקה
-   בתוך תיבות שקופות-לבן במקום הרקע הבהיר הקודם */
 .conference-detail-section h3 {
   font-family: 'Playfair Display', serif;
   margin: 0 0 16px;
@@ -99,8 +119,9 @@
   color: #0F1B4C;
 }
 
-/* ⭐ חדש: שדה החיפוש מעל כרטיסי הכנסים, באותו סגנון כמו .search-container בעמוד האירועים */
 .conference-search-container {
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 20px;
 }
 
@@ -174,9 +195,6 @@
   font-size: 0.95rem;
   font-weight: 600;
   line-height: 1.4;
-  /* ⭐ תוקן: הוסר line-clamp/overflow:hidden - השם המלא מוצג תמיד,
-     גם אם זה גורם לכרטיס לגדול בגובה. min-height רק שומר על אחידות
-     מינימלית בין כרטיסים עם שמות קצרים */
   min-height: 2.6em;
   direction: ltr;
 }

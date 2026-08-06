@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ApiService } from '../../../services/api.service';
+
 interface Attendee {
   Amount?: number;
   amount?: number;
@@ -8,6 +9,7 @@ interface Attendee {
   Currency?: string;
   currency?: string;
 }
+
 @Component({
   selector: 'app-admin-statistics',
   templateUrl: './admin-statistics.component.html',
@@ -17,19 +19,20 @@ export class AdminStatisticsComponent implements OnInit, AfterViewInit {
   stats: any = null;
   isLoading = true;
   error = '';
-  // ⭐ תוקן: הוסר totalMoneyRaised (סה"כ משולב) - הוא חיבר ₪ ו-$ בלי המרת
-  // מטבע, מה שיצר מספר חסר משמעות (למשל 82,650₪ + 1,600$ = "84,250").
-  // נשארים רק שני הסכומים הנפרדים, שכל אחד מהם כן נכון בפני עצמו.
+
   totalRaisedILS = 0;
   totalRaisedUSD = 0;
   tier150Count = 0;
   tier750Count = 0;
   tier50UsdCount = 0;
   tier250UsdCount = 0;
+
   private externalConferenceIds = new Set<string>();
-  // ⭐ חדש: טקסט החיפוש בפירוט לפי כנס
+
   searchText = '';
+
   constructor(private apiService: ApiService) { }
+
   ngOnInit(): void {
     this.apiService.getStatistics().subscribe({
       next: (data) => {
@@ -42,6 +45,7 @@ export class AdminStatisticsComponent implements OnInit, AfterViewInit {
         this.isLoading = false;
       }
     });
+
     this.apiService.getAllConferences().subscribe({
       next: (conferences: any[]) => {
         (conferences || []).forEach((c: any) => {
@@ -71,35 +75,37 @@ export class AdminStatisticsComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
   ngAfterViewInit(): void { }
+
   getAbstractCountFor(conferenceName: string): number {
     const match = this.stats?.AbstractsByConference?.find((a: any) => a.ConferenceName === conferenceName);
     return match ? match.Count : 0;
   }
-  // ⭐ חדש: רשימת הכנסים בפועל שמוצגת בכרטיסים, מסוננת לפי searchText
-  // (חיפוש לא רגיש לאותיות גדולות/קטנות, על שם הכנס בלבד)
+
   get filteredConferences(): any[] {
     const list = this.stats?.RegistrationsByConference || [];
     const term = this.searchText.trim().toLowerCase();
     if (!term) return list;
     return list.filter((conf: any) => (conf.ConferenceName || '').toLowerCase().includes(term));
   }
+
   private getAmount(a: Attendee): number {
     const amount = a.Amount !== undefined && a.Amount !== null ? a.Amount : a.amount;
     return typeof amount === 'number' ? amount : 0;
   }
+
   private getCurrency(a: Attendee): string {
     const currency = a.Currency || a.currency;
     return currency === 'USD' ? 'USD' : 'ILS';
   }
+
   private computeMoneyStats(attendees: Attendee[]): void {
     const relevantAttendees = attendees.filter(a =>
       !a.ConferenceId || !this.externalConferenceIds.has(a.ConferenceId)
     );
     const paidAttendees = relevantAttendees.filter(a => a.PaymentStatus === 'success');
 
-    // אותו סכום, אבל מפוצל לפי מטבע - כל אחד מחושב בנפרד על בסיס
-    // getCurrency, בלי לערבב שקלים ודולרים באותו סכום
     this.totalRaisedILS = paidAttendees
       .filter(a => this.getCurrency(a) === 'ILS')
       .reduce((sum, a) => sum + this.getAmount(a), 0);
@@ -132,4 +138,35 @@ export class AdminStatisticsComponent implements OnInit, AfterViewInit {
       return this.getCurrency(a) === 'USD' && amount >= 200 && amount <= 300;
     }).length;
   }
+
+  // ⭐ חדש: ייצוא כל הסטטיסטיקה ל-CSV - כולל סיכום כללי ופירוט מלא לפי כנס
+  // (כל הרשימה מ-stats.RegistrationsByConference, לא רק מה שמסונן כרגע בחיפוש)
+// ⭐ שונה: מייצא רק פירוט לפי כנס - שם, מספר נרשמים, מספר הגשות תקציר
+// (הוסרו הסיכום הכספי והפילוח לפי תעריף)
+exportStatsToCSV(): void {
+  if (!this.stats) {
+    alert('אין נתונים לייצוא');
+    return;
+  }
+
+  const lines: string[] = [];
+
+  lines.push('שם הכנס,נרשמים,הגשות תקציר');
+  const allConferences = this.stats.RegistrationsByConference || [];
+  allConferences.forEach((conf: any) => {
+    const name = String(conf.ConferenceName || '').replace(/"/g, '""');
+    const abstractCount = this.getAbstractCountFor(conf.ConferenceName);
+    lines.push(`"${name}",${conf.Count},${abstractCount}`);
+  });
+
+  const csvContent = '\uFEFF' + lines.join('\n');
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  link.setAttribute('href', url);
+  link.setAttribute('download', 'conference-statistics.csv');
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
 }

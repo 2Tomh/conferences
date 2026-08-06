@@ -1,14 +1,18 @@
 <div class="stats-page" dir="rtl">
   <div class="page-header">
-    <h2>📊 דשבורד סטטיסטיקות</h2>
-    <p>סקירה כללית של הרשמות, תשלומים והגשות תקציר בכל הכנסים</p>
+    <div class="page-header-text">
+      <h2>📊 דשבורד סטטיסטיקות</h2>
+      <p>סקירה כללית של הרשמות, תשלומים והגשות תקציר בכל הכנסים</p>
+    </div>
   </div>
+
   <div class="loading" *ngIf="isLoading">טוען נתונים...</div>
   <div class="error-msg" *ngIf="error">{{ error }}</div>
+
   <ng-container *ngIf="!isLoading && !error && stats">
     <!-- ══ כרטיסי סיכום ══ -->
     <div class="summary-cards">
-      <div class="summary-card"> 
+      <div class="summary-card">
         <span class="card-value">{{ stats.TotalRegistrations }}</span>
         <span class="card-label">סה"כ נרשמים</span>
       </div>
@@ -29,7 +33,7 @@
         <span class="card-label">סה"כ בדולרים</span>
       </div>
     </div>
-    <!-- ⭐ תוקן: מציג כמות אנשים בפועל בכל תעריף, במקום אחוז -->
+
     <div class="summary-cards">
       <div class="summary-card tier">
         <span class="card-value">{{ tier150Count }}</span>
@@ -48,12 +52,15 @@
         <span class="card-label">שילמו 250$</span>
       </div>
     </div>
-    <!-- ⭐ תוקן: פירוט לפי כנס - כרטיסים במקום טבלה, עם חיפוש -->
+
     <div class="conference-detail-section">
       <h3>פירוט מלא לפי כנס</h3>
-      <!-- ⭐ חדש: שדה חיפוש - מסנן את הכרטיסים למטה לפי שם הכנס -->
       <div class="conference-search-container">
         <input type="text" placeholder="חיפוש כנס..." [(ngModel)]="searchText">
+        <!-- ⭐ חדש: כפתור ייצוא ל-CSV -->
+        <button class="btn-export" *ngIf="!isLoading && !error && stats" (click)="exportStatsToCSV()">
+          ⬇ ייצוא ל-CSV
+        </button>
       </div>
       <div class="conference-cards-grid">
         <div class="conference-card" *ngFor="let conf of filteredConferences">
@@ -72,7 +79,6 @@
             </div>
           </div>
         </div>
-        <!-- ⭐ חדש: הודעה כשהחיפוש לא מוצא שום כנס -->
         <p class="no-results" *ngIf="filteredConferences.length === 0">לא נמצאו כנסים תואמים לחיפוש</p>
       </div>
     </div>
