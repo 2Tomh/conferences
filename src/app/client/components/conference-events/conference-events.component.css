@@ -164,6 +164,21 @@
   align-items: revert-layer;
 }
 
+/* ⭐ חדש: מיקום הכנס */
+.conf-card-location {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.65);
+  flex-shrink: 0;
+}
+
+.location-icon {
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
 .conf-card {
   background: #0F1B4C;
   border-radius: 14px;
@@ -172,7 +187,7 @@
   flex-direction: column;
   box-shadow: 0 4px 20px rgba(15, 27, 76, 0.15);
   transition: transform 0.2s;
-  min-height: 430px;
+  min-height: 450px;
 }
 
 .conf-card:hover {

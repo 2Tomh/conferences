@@ -42,6 +42,12 @@
 
         <strong class="conf-card-name">{{ conf.Name }}</strong>
 
+        <!-- ⭐ חדש: מיקום הכנס, אם קיים -->
+        <div class="conf-card-location" *ngIf="conf.Location">
+          <span class="location-icon">📍</span>
+          <span>{{ conf.Location }}</span>
+        </div>
+
         <!-- ⭐ שונה: הועבר לכאן - מיד מתחת לשם הכנס, לפני רשימת המארגנים -->
         <div class="conf-card-deadlines"
           *ngIf="!isExternalOnlyConference(conf) && (conf.RegistrationDeadline || conf.AbstractDeadline)">
