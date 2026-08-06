@@ -1,0 +1,297 @@
+:host {
+  font-family: 'Inter', Arial, sans-serif;
+  display: block;
+}
+
+.partners-page {
+  padding: 24px 28px 48px;
+}
+
+.partners-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.partners-eyebrow {
+  color: #C9A84C;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.partners-header-text h2 {
+  color: #0F1B4C;
+  margin: 4px 0 0;
+}
+
+.btn-add {
+  background: #0F1B4C;
+  color: #C9A84C;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.loading, .error-msg {
+  padding: 24px;
+  text-align: center;
+  color: #8a8aa0;
+}
+
+.error-msg { color: #e74c3c; }
+
+.partners-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.partner-card {
+  background: #fff;
+  border: 1px solid #E8E8ED;
+  border-radius: 14px;
+  padding: 18px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.partner-order {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #C9A84C;
+  background: #0F1B4C;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.partner-logo-wrap {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F8F6F0;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.partner-logo-img {
+  max-width: 100%;
+  max-height: 60px;
+  object-fit: contain;
+}
+
+.partner-info h3 {
+  margin: 0 0 4px;
+  font-size: 0.95rem;
+  color: #0F1B4C;
+}
+
+.partner-url {
+  font-size: 0.78rem;
+  color: #8a8aa0;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.partner-url:hover {
+  color: #C9A84C;
+}
+
+.partner-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.btn-edit, .btn-delete {
+  flex: 1;
+  padding: 7px;
+  border-radius: 7px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-edit {
+  background: #F0F1F8;
+  color: #0F1B4C;
+}
+
+.btn-delete {
+  background: #FCE8E6;
+  color: #e74c3c;
+}
+
+.no-data {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  color: #8a8aa0;
+}
+
+/* ══ פופ-אפים ══ */
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 27, 76, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4000;
+  padding: 20px;
+}
+
+.popup-box {
+  background: #fff;
+  border-radius: 16px;
+  max-width: 480px;
+  width: 100%;
+  max-height: 88vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 60px rgba(15, 27, 76, 0.3);
+}
+
+.confirm-popup {
+  padding: 28px;
+  text-align: center;
+}
+
+.confirm-popup h3 {
+  color: #0F1B4C;
+  margin: 0 0 8px;
+}
+
+.confirm-popup p {
+  color: #5a5a7a;
+  font-size: 0.88rem;
+  margin: 0 0 20px;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #0F1B4C;
+  color: #fff;
+  padding: 18px 24px;
+  border-radius: 16px 16px 0 0;
+}
+
+.popup-header h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.btn-close {
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: #fff;
+  font-size: 0.95rem;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+
+.form-body {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-row label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #4a4a6a;
+}
+
+.form-control {
+  padding: 9px 12px;
+  border: 1.5px solid #E8E8ED;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  outline: none;
+}
+
+.form-control:focus {
+  border-color: #C9A84C;
+}
+
+.logo-preview-wrap {
+  margin-top: 8px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  background: #F8F6F0;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.logo-preview-img {
+  max-height: 54px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.form-error {
+  color: #e74c3c;
+  font-size: 0.82rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-submit, .btn-delete-confirm {
+  flex: 1;
+  background: #0F1B4C;
+  color: #C9A84C;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-delete-confirm {
+  background: #e74c3c;
+  color: #fff;
+}
+
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-cancel {
+  flex: 1;
+  background: #F0F1F8;
+  color: #5a5a7a;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}

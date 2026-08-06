@@ -1,0 +1,89 @@
+<div class="partners-page">
+  <div class="partners-header">
+    <div class="partners-header-text">
+      <span class="partners-eyebrow">Mind-IL · Admin</span>
+      <h2>Partners</h2>
+    </div>
+    <button class="btn-add" (click)="openAddForm()">+ Add Partner</button>
+  </div>
+
+  <div class="loading" *ngIf="isLoading">Loading partners...</div>
+  <div class="error-msg" *ngIf="error">{{ error }}</div>
+
+  <div class="partners-grid" *ngIf="!isLoading && !error">
+    <div class="partner-card" *ngFor="let p of partners">
+      <div class="partner-order">#{{ p.order || p.Order }}</div>
+      <div class="partner-logo-wrap">
+        <img [src]="p.logo || p.Logo" [alt]="p.name || p.Name" class="partner-logo-img">
+      </div>
+      <div class="partner-info">
+        <h3>{{ p.name || p.Name }}</h3>
+        <a [href]="p.url || p.Url" target="_blank" rel="noopener" class="partner-url">
+          {{ p.url || p.Url }}
+        </a>
+      </div>
+      <div class="partner-actions">
+        <button class="btn-edit" (click)="openEditForm(p)">Edit</button>
+        <button class="btn-delete" (click)="confirmDelete(p)">Delete</button>
+      </div>
+    </div>
+
+    <div class="no-data" *ngIf="partners.length === 0">No partners yet — add your first one.</div>
+  </div>
+</div>
+
+<!-- פופ-אפ טופס הוספה/עריכה -->
+<div class="popup-overlay" *ngIf="showForm" (click)="closeForm()">
+  <div class="popup-box form-popup" (click)="$event.stopPropagation()">
+    <div class="popup-header">
+      <h3>{{ editingId ? 'Edit Partner' : 'Add Partner' }}</h3>
+      <button class="btn-close" (click)="closeForm()">✕</button>
+    </div>
+
+    <div class="form-body">
+      <div class="form-row">
+        <label>Partner Name</label>
+        <input type="text" class="form-control" [(ngModel)]="formName" placeholder="e.g. Fulbright">
+      </div>
+
+      <div class="form-row">
+        <label>Website URL</label>
+        <input type="text" class="form-control" [(ngModel)]="formUrl" placeholder="https://example.org">
+      </div>
+
+      <div class="form-row">
+        <label>Display Order</label>
+        <input type="number" class="form-control" [(ngModel)]="formOrder">
+      </div>
+
+      <div class="form-row">
+        <label>Logo {{ editingId ? '(leave empty to keep current)' : '' }}</label>
+        <input type="file" accept="image/*" (change)="onLogoFileSelected($event)">
+        <div class="logo-preview-wrap" *ngIf="formLogoPreview">
+          <img [src]="formLogoPreview" class="logo-preview-img" alt="Logo preview">
+        </div>
+      </div>
+
+      <div class="form-error" *ngIf="formError">{{ formError }}</div>
+
+      <div class="form-actions">
+        <button class="btn-submit" [disabled]="isSaving" (click)="savePartner()">
+          {{ isSaving ? 'Saving...' : (editingId ? 'Save Changes' : 'Add Partner') }}
+        </button>
+        <button class="btn-cancel" (click)="closeForm()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- פופ-אפ אישור מחיקה -->
+<div class="popup-overlay" *ngIf="deletingId" (click)="cancelDelete()">
+  <div class="popup-box confirm-popup" (click)="$event.stopPropagation()">
+    <h3>Delete Partner?</h3>
+    <p>This action cannot be undone.</p>
+    <div class="form-actions">
+      <button class="btn-delete-confirm" (click)="deletePartner()">Delete</button>
+      <button class="btn-cancel" (click)="cancelDelete()">Cancel</button>
+    </div>
+  </div>
+</div>
