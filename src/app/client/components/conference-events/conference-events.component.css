@@ -159,16 +159,9 @@
 /* ══ CARDS GRID ══ */
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
-  /* ⭐ תוקן: "start" גרם לכל כרטיס לקבל בדיוק את הגובה שהתוכן שלו דורש,
-     כך שכרטיסים באותה שורה נראו בגבהים שונים (חלקם עם note/הרבה
-     מארגנים היו גבוהים יותר מהשכנים שלהם). "stretch" (ברירת המחדל של
-     גריד) גורם לכל הכרטיסים באותה שורה להתמתח לגובה הכרטיס הגבוה
-     ביותר באותה שורה - כך השורה נראית אחידה, ועדיין אין חיתוך תוכן
-     כי min-height (לא height קבוע) ממשיך לאפשר לתוכן ארוך לדחוף
-     כרטיס בודד לגובה גדול יותר, וכל שאר הכרטיסים בשורה יתמתחו יחד איתו. */
-  align-items: stretch;
+  align-items: revert-layer;
 }
 
 .conf-card {
@@ -179,11 +172,7 @@
   flex-direction: column;
   box-shadow: 0 4px 20px rgba(15, 27, 76, 0.15);
   transition: transform 0.2s;
-  /* ⭐ תוקן: height קבוע (350px) גרם לחיתוך תוכן בכרטיסים עם הרבה מארגנים
-     (למשל "Mid-Chain DeFi Conference" - השם האחרון של מארגן נחתך, וה-note
-     החיצוני התנגש איתו). min-height שומר על אחידות גובה כרטיסים ריקים
-     יחסית, אבל מאפשר לכרטיס לגדול כשצריך, בלי לחתוך תוכן. */
-  min-height: 390px;
+  min-height: 430px;
 }
 
 .conf-card:hover {
@@ -234,9 +223,42 @@
   flex-shrink: 0;
   min-height: 44px;
   display: -webkit-box;
-  /* -webkit-line-clamp: 2; */
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* ⭐ חדש: תאריכי דדליין - ממוקם ב-HTML מיד אחרי conf-card-name.
+   צבע לבן, עם רקע/padding עדינים כדי שהטקסט לא "ידרוס" תוכן שכן -
+   בלי הבלוק הזה, div גולמי בלי background/padding עלול להצטופף
+   ולחפוף עם רשימת המארגנים שמתחתיו. */
+.conf-card-deadlines {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+}
+
+.deadline-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.76rem;
+  color: #ffffff;
+}
+
+.deadline-label {
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 600;
+}
+
+.deadline-value {
+  color: #ffffff;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .conf-card .organizers-list {
@@ -247,7 +269,6 @@
   flex-direction: column;
   gap: 4px;
   max-height: 128px;
-  /* overflow-y: auto; */
   flex-shrink: 0;
 }
 
@@ -297,11 +318,6 @@
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  /* ⭐ תוקן: זו הייתה הבעיה המרכזית. "margin: auto" בתוך flex column
-     גורם לתיבה לספוג את כל המרחב הפנוי ולהתמקם באמצע, כך שהמיקום
-     שלה השתנה מכרטיס לכרטיס לפי כמות המארגנים (למעלה/באמצע/מוצמד
-     לכפתור/חופף לרשימה). "margin-top: auto" בלבד מצמיד אותה תמיד
-     ישירות מעל הכפתור, כמו הכפתור עצמו - כך המיקום עקבי בכל כרטיס. */
   margin-top: auto;
   margin-bottom: 0;
 }
@@ -325,10 +341,7 @@
   transition: all 0.2s;
 }
 
-/* ⭐ חדש: כשהכפתור מגיע ישירות אחרי ה-note (כנס חיצוני), לא צריך לו
-   margin-top:auto משלו - ה-note כבר "ספג" את כל המרחב הפנוי ודחף
-   את שניהם (note+button) יחד לתחתית הכרטיס. מרווח קבוע וקטן ביניהם. */
-.conf-card .external-conference-note + .conf-card-btn {
+.conf-card .external-conference-note+.conf-card-btn {
   margin-top: 10px;
 }
 
@@ -404,8 +417,13 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .popup-content {
@@ -433,8 +451,15 @@
 }
 
 @keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .popup-header {
@@ -500,6 +525,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .popup-overlay,
   .popup-content {
     animation: none;

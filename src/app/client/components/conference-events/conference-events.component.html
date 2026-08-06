@@ -42,6 +42,19 @@
 
         <strong class="conf-card-name">{{ conf.Name }}</strong>
 
+        <!-- ⭐ שונה: הועבר לכאן - מיד מתחת לשם הכנס, לפני רשימת המארגנים -->
+        <div class="conf-card-deadlines"
+          *ngIf="!isExternalOnlyConference(conf) && (conf.RegistrationDeadline || conf.AbstractDeadline)">
+          <div class="deadline-row" *ngIf="conf.RegistrationDeadline">
+            <span class="deadline-label">Registration Deadline</span>
+            <span class="deadline-value">{{ formatDate(conf.RegistrationDeadline) }}</span>
+          </div>
+          <div class="deadline-row" *ngIf="conf.AbstractDeadline">
+            <span class="deadline-label">Abstract Deadline</span>
+            <span class="deadline-value">{{ formatDate(conf.AbstractDeadline) }}</span>
+          </div>
+        </div>
+
         <ul class="organizers-list" *ngIf="conf.Organizers && conf.Organizers.length > 0">
           <li *ngFor="let org of conf.Organizers">{{ org }}</li>
         </ul>
