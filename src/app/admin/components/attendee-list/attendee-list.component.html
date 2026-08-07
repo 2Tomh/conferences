@@ -63,7 +63,11 @@
                     <td>{{ a.Role || a.role || '—' }}</td>
                     <td class="conference-cell" [title]="a.ConferenceName">{{ a.ConferenceName }}</td>
                     <td>
-                        <span class="badge no-abstract" *ngIf="!a.HasAbstract && !a.hasAbstract">No</span>
+                        <!-- ⭐ שונה: כשאין תקציר, מציג גם "No" וגם כפתור "+ Add" -->
+                        <div class="abstract-cell" *ngIf="!a.HasAbstract && !a.hasAbstract">
+                            <span class="badge no-abstract">No</span>
+                            <button class="btn-add-abstract" (click)="openAddAbstract(a)">+ Add</button>
+                        </div>
                         <button class="btn-details" *ngIf="a.HasAbstract || a.hasAbstract" (click)="openAbstractDetails(a)">View</button>
                     </td>
                     <td>
@@ -169,6 +173,40 @@
         </div>
         <div class="abstract-view-footer">
             <button class="btn-close-wide" (click)="closeAbstractDetails()">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- ⭐ חדש: פופ-אפ הוספת תקציר ע"י מנהל -->
+<div class="popup-overlay" *ngIf="addAbstractTarget" (click)="closeAddAbstract()">
+    <div class="popup-box abstract-view-popup" (click)="$event.stopPropagation()" dir="ltr">
+        <div class="popup-header abstract-view-header">
+            <div class="abstract-view-header-text">
+                <span class="abstract-view-eyebrow">Add Abstract (Admin)</span>
+                <h3>{{ addAbstractTarget.FullName }}</h3>
+            </div>
+            <button class="btn-close" (click)="closeAddAbstract()">✕</button>
+        </div>
+        <div class="abstract-view-block">
+            <span class="abstract-view-label">Abstract Title</span>
+            <input type="text" class="form-control" [(ngModel)]="addAbstractTitle" placeholder="Abstract title">
+        </div>
+        <div class="abstract-view-block">
+            <span class="abstract-view-label">Abstract Body</span>
+            <textarea class="form-control" rows="6" [(ngModel)]="addAbstractBody" placeholder="Abstract content..."></textarea>
+        </div>
+        <div class="abstract-view-block">
+            <span class="abstract-view-label">Additional Notes (optional)</span>
+            <textarea class="form-control" rows="2" [(ngModel)]="addAbstractNotes" placeholder="Any additional notes..."></textarea>
+        </div>
+        <div class="abstract-view-block" *ngIf="addAbstractError">
+            <span class="form-error">{{ addAbstractError }}</span>
+        </div>
+        <div class="abstract-view-footer">
+            <button class="btn-close-wide" [disabled]="isSavingAbstract" (click)="saveAddAbstract()">
+                {{ isSavingAbstract ? 'Saving...' : 'Save Abstract' }}
+            </button>
+            <button class="btn-close-wide btn-cancel-abstract" (click)="closeAddAbstract()">Cancel</button>
         </div>
     </div>
 </div>

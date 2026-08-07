@@ -119,6 +119,12 @@ export class ApiService {
     return this.http.post(`${this.apiUrl}/registration/register`, attendee);
   }
 
+  // ⭐ חדש: מוסיף/מעדכן תקציר עבור נרשם קיים, ע"י מנהל (למקרה ששכח לצרף
+  // תקציר בזמן ההרשמה עצמה)
+  addAbstractForAttendee(attendeeId: string, data: { title: string; body: string; notes?: string }): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/registration/abstract/${attendeeId}`, data);
+  }
+
   getPartners(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/partners`);
   }
@@ -162,6 +168,11 @@ export class ApiService {
     if (filters?.status) params = params.set('status', filters.status);
     if (filters?.search) params = params.set('search', filters.search);
     return this.http.get<any[]>(`${this.apiUrl}/payment/transactions`, { params });
+  }
+
+  // ⭐ חדש: מוחק עסקה לפי OrderId
+  deleteTransaction(orderId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/payment/transactions/${encodeURIComponent(orderId)}`);
   }
 
   // ==========================================
