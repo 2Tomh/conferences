@@ -68,7 +68,6 @@
   margin: 0;
 }
 
-/* מכיל את כפתורי הייצוא ואת שורת הסטטיסטיקה יחד, באותה שורה */
 .header-actions {
   display: flex;
   align-items: center;
@@ -274,9 +273,6 @@
   border-bottom: none;
 }
 
-/* ⭐ תוקן: העמודות זזו ימינה ב-1 בגלל עמודת ה-Role החדשה שנוספה כעמודה רביעית.
-   Amount ו-Registration Date הן עכשיו nth-child(8) ו-(9), לא (7) ו-(8) כמו קודם —
-   בלי התיקון הזה, עמודת ה-Payment הייתה מקבלת בטעות את הסגנון המונו/אפור. */
 .attendee-table td:nth-child(8),
 .attendee-table td:nth-child(9) {
   font-family: 'IBM Plex Mono', monospace;
@@ -284,18 +280,12 @@
   color: var(--muted);
 }
 
-/* ⭐ חדש: מאפשר לעמודות טקסט ארוכות (Affiliation, Role) לעטוף שורות
-   במקום להישאר ב-nowrap גורף, כדי שהטבלה כולה תהיה צרה יותר ותצטרך
-   פחות גלילה אופקית אחרי הוספת עמודת ה-Role. */
 .attendee-table td:nth-child(3),
 .attendee-table td:nth-child(4) {
   white-space: normal;
   max-width: 220px;
 }
 
-/* ⭐ חדש: עמודת הכנס (Conference) - הגבלת רוחב וגלישת טקסט לכמה שורות (wrap)
-   במקום קיצור עם "...", כך שהשם המלא תמיד גלוי בלי צורך ב-hover.
-   ה-[title] נשאר ב-HTML כ-tooltip משני, לא הכרחי אבל לא מזיק. */
 .attendee-table td.conference-cell {
   max-width: 260px;
   white-space: normal;
@@ -304,7 +294,7 @@
   line-height: 1.5;
 }
 
-/* ⭐ חדש: פס ה-pagination מתחת לטבלה */
+/* ===== Pagination ===== */
 .pagination-bar {
   display: flex;
   justify-content: center;
@@ -411,7 +401,7 @@
   white-space: normal;
 }
 
-/* ===== Stamp-style badges (signature element) ===== */
+/* ===== Stamp-style badges ===== */
 .badge {
   position: relative;
   display: inline-block;
@@ -622,7 +612,7 @@
   overflow-wrap: anywhere;
 }
 
-/* ⭐ חדש: תא Abstract כשאין תקציר - "No" + כפתור הוספה */
+/* ===== Abstract cell (table) - "No" + Add button ===== */
 .abstract-cell {
   display: flex;
   align-items: center;
@@ -630,48 +620,53 @@
 }
 
 .btn-add-abstract {
-  background: #0F1B4C;
-  color: #C9A84C;
+  font-family: 'Inter', sans-serif;
+  background: var(--brass);
+  color: #14152b;
   border: none;
-  padding: 3px 10px;
+  padding: 4px 11px;
   border-radius: 6px;
   font-size: 0.74rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
+  transition: background 0.15s ease;
 }
 
 .btn-add-abstract:hover {
-  background: #1a2a6b;
+  background: #f2c169;
 }
 
-/* ⭐ חדש: שדות טופס בתוך פופ-אפ הוספת התקציר */
+/* ===== Abstract add/edit form fields ===== */
 .abstract-view-block .form-control {
   width: 100%;
   padding: 9px 12px;
-  border: 1.5px solid #E8E8ED;
+  border: 1px solid var(--border);
   border-radius: 8px;
-  font-size: 0.88rem;
-  font-family: inherit;
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
   outline: none;
   box-sizing: border-box;
   resize: vertical;
+  background: var(--bg);
+  color: var(--paper);
+}
+
+.abstract-view-block .form-control::placeholder {
+  color: #5c5d7c;
 }
 
 .abstract-view-block .form-control:focus {
-  border-color: #C9A84C;
+  border-color: var(--brass);
+  box-shadow: 0 0 0 3px rgba(232, 179, 77, 0.15);
 }
 
 .form-error {
-  color: #e74c3c;
-  font-size: 0.82rem;
+  color: var(--failed);
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
-.btn-cancel-abstract {
-  background: #F0F1F8 !important;
-  color: #5a5a7a !important;
-}
-
-/* ===== Abstract-only viewer popup ===== */
+/* ===== Abstract-only viewer / add-edit popup ===== */
 .abstract-view-popup {
   max-width: 560px;
   padding: 0;
@@ -770,12 +765,16 @@
   overflow-wrap: anywhere;
 }
 
+/* ⭐ שונה: הפוטר עכשיו flex-row כדי להכיל כמה כפתורים זה-לצד-זה
+   (Edit / Delete / Close, או Save / Cancel), במקום כפתור בודד ברוחב מלא */
 .abstract-view-footer {
+  display: flex;
+  gap: 10px;
   padding: 16px 28px 24px;
 }
 
 .btn-close-wide {
-  width: 100%;
+  flex: 1;
   padding: 12px;
   background: var(--brass);
   color: #14152b;
@@ -784,11 +783,99 @@
   font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, opacity 0.15s ease;
 }
 
 .btn-close-wide:hover {
   background: #f2c169;
+}
+
+.btn-close-wide:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ⭐ חדש: וריאציות צבע לכפתורי Edit/Delete/Cancel בתוך אותו פוטר */
+.btn-edit-abstract {
+  background: var(--surface-2);
+  color: var(--paper);
+  border: 1px solid var(--border);
+}
+
+.btn-edit-abstract:hover {
+  background: var(--border);
+}
+
+.btn-delete-abstract {
+  background: rgba(242, 84, 91, 0.12);
+  color: var(--failed);
+  border: 1px solid var(--failed-dim);
+}
+
+.btn-delete-abstract:hover {
+  background: rgba(242, 84, 91, 0.22);
+}
+
+.btn-cancel-abstract {
+  background: var(--surface-2) !important;
+  color: var(--muted) !important;
+  border: 1px solid var(--border);
+}
+
+.btn-cancel-abstract:hover {
+  background: var(--border) !important;
+  color: var(--paper) !important;
+}
+
+/* ===== Delete confirmation popup ===== */
+.confirm-popup {
+  max-width: 420px;
+  text-align: center;
+}
+
+.confirm-popup h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--paper);
+  font-size: 1.15rem;
+  margin: 0 0 12px;
+}
+
+.confirm-popup p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  margin: 0 0 22px;
+}
+
+.confirm-popup p strong {
+  color: var(--paper);
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-delete-confirm {
+  flex: 1;
+  background: var(--failed);
+  color: #ffffff;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.btn-delete-confirm:hover {
+  opacity: 0.88;
+}
+
+.btn-delete-confirm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 @media (max-width: 640px) {
@@ -829,5 +916,9 @@
   .abstract-view-footer {
     padding-left: 18px;
     padding-right: 18px;
+  }
+
+  .abstract-view-footer {
+    flex-direction: column;
   }
 }

@@ -125,6 +125,11 @@ export class ApiService {
     return this.http.patch(`${this.apiUrl}/registration/abstract/${attendeeId}`, data);
   }
 
+  // ⭐ חדש: מוחק תקציר קיים (משאיר את הנרשם עצמו)
+  deleteAbstractForAttendee(attendeeId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/registration/abstract/${attendeeId}`);
+  }
+
   getPartners(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/partners`);
   }

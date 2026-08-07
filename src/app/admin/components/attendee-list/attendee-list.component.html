@@ -172,17 +172,20 @@
             <p class="abstract-view-notes">{{ selectedAbstractAttendee.AbstractNotes || selectedAbstractAttendee.abstractNotes }}</p>
         </div>
         <div class="abstract-view-footer">
+            <button class="btn-close-wide btn-edit-abstract" (click)="openAddAbstract(selectedAbstractAttendee)">Edit</button>
+            <button class="btn-close-wide btn-delete-abstract" (click)="confirmDeleteAbstract(selectedAbstractAttendee)">Delete</button>
             <button class="btn-close-wide" (click)="closeAbstractDetails()">Close</button>
         </div>
     </div>
 </div>
 
 <!-- ⭐ חדש: פופ-אפ הוספת תקציר ע"י מנהל -->
+<!-- ⭐ שונה: אותו פופ-אפ משמש גם להוספה וגם לעריכה -->
 <div class="popup-overlay" *ngIf="addAbstractTarget" (click)="closeAddAbstract()">
     <div class="popup-box abstract-view-popup" (click)="$event.stopPropagation()" dir="ltr">
         <div class="popup-header abstract-view-header">
             <div class="abstract-view-header-text">
-                <span class="abstract-view-eyebrow">Add Abstract (Admin)</span>
+                <span class="abstract-view-eyebrow">{{ isEditingAbstract ? 'Edit Abstract (Admin)' : 'Add Abstract (Admin)' }}</span>
                 <h3>{{ addAbstractTarget.FullName }}</h3>
             </div>
             <button class="btn-close" (click)="closeAddAbstract()">✕</button>
@@ -204,9 +207,27 @@
         </div>
         <div class="abstract-view-footer">
             <button class="btn-close-wide" [disabled]="isSavingAbstract" (click)="saveAddAbstract()">
-                {{ isSavingAbstract ? 'Saving...' : 'Save Abstract' }}
+                {{ isSavingAbstract ? 'Saving...' : (isEditingAbstract ? 'Save Changes' : 'Save Abstract') }}
             </button>
             <button class="btn-close-wide btn-cancel-abstract" (click)="closeAddAbstract()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- ⭐ חדש: פופ-אפ אישור מחיקת תקציר -->
+<div class="popup-overlay" *ngIf="deletingAbstractTarget" (click)="cancelDeleteAbstract()">
+    <div class="popup-box confirm-popup" (click)="$event.stopPropagation()" dir="ltr">
+        <h3>Delete Abstract?</h3>
+        <p>
+            Are you sure you want to delete the abstract submitted by
+            <strong>{{ deletingAbstractTarget.FullName }}</strong>?
+            This action cannot be undone.
+        </p>
+        <div class="confirm-actions">
+            <button class="btn-delete-confirm" [disabled]="isDeletingAbstract" (click)="deleteAbstract()">
+                {{ isDeletingAbstract ? 'Deleting...' : 'Delete' }}
+            </button>
+            <button class="btn-cancel-abstract" (click)="cancelDeleteAbstract()">Cancel</button>
         </div>
     </div>
 </div>

@@ -171,13 +171,18 @@ export class AttendeeListComponent implements OnInit {
   }
   closeAbstractDetails() { this.selectedAbstractAttendee = null; }
 
-  // ⭐ חדש: פתיחת/סגירת פופ-אפ "הוספת תקציר" ע"י מנהל
+  // ⭐ שונה: פותח את אותו טופס גם להוספה וגם לעריכה - אם כבר יש תקציר,
+  // השדות מתמלאים מראש עם הערכים הקיימים
   openAddAbstract(attendee: any): void {
     this.addAbstractTarget = attendee;
-    this.addAbstractTitle = '';
-    this.addAbstractBody = '';
-    this.addAbstractNotes = '';
+    this.addAbstractTitle = attendee.AbstractTitle || attendee.abstractTitle || '';
+    this.addAbstractBody = attendee.AbstractBody || attendee.abstractBody || '';
+    this.addAbstractNotes = attendee.AbstractNotes || attendee.abstractNotes || '';
     this.addAbstractError = '';
+  }
+
+  get isEditingAbstract(): boolean {
+    return !!(this.addAbstractTarget?.HasAbstract || this.addAbstractTarget?.hasAbstract);
   }
 
   closeAddAbstract(): void {
@@ -215,6 +220,45 @@ export class AttendeeListComponent implements OnInit {
         this.isSavingAbstract = false;
         this.addAbstractError = 'Failed to save abstract';
         console.error('Error adding abstract:', err);
+      }
+    });
+  }
+
+  // ⭐ חדש: state ולוגיקת מחיקת תקציר, עם אישור לפני
+  deletingAbstractTarget: any = null;
+  isDeletingAbstract = false;
+
+  confirmDeleteAbstract(attendee: any): void {
+    this.deletingAbstractTarget = attendee;
+  }
+
+  cancelDeleteAbstract(): void {
+    this.deletingAbstractTarget = null;
+  }
+
+  deleteAbstract(): void {
+    if (!this.deletingAbstractTarget?.Id || this.isDeletingAbstract) return;
+
+    this.isDeletingAbstract = true;
+    const target = this.deletingAbstractTarget;
+
+    this.apiService.deleteAbstractForAttendee(target.Id).subscribe({
+      next: () => {
+        this.isDeletingAbstract = false;
+        target.HasAbstract = false;
+        target.AbstractTitle = null;
+        target.AbstractBody = null;
+        target.AbstractNotes = null;
+        this.deletingAbstractTarget = null;
+        // אם התקציר שנמחק היה פתוח כרגע בפופ-אפ הצפייה, סוגרים אותו
+        if (this.selectedAbstractAttendee?.Id === target.Id) {
+          this.selectedAbstractAttendee = null;
+        }
+      },
+      error: (err) => {
+        this.isDeletingAbstract = false;
+        console.error('Error deleting abstract:', err);
+        alert('Failed to delete abstract');
       }
     });
   }
