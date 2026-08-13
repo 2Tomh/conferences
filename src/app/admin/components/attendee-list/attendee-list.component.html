@@ -63,7 +63,6 @@
                     <td>{{ a.Role || a.role || '—' }}</td>
                     <td class="conference-cell" [title]="a.ConferenceName">{{ a.ConferenceName }}</td>
                     <td>
-                        <!-- ⭐ שונה: כשאין תקציר, מציג גם "No" וגם כפתור "+ Add" -->
                         <div class="abstract-cell" *ngIf="!a.HasAbstract && !a.hasAbstract">
                             <span class="badge no-abstract">No</span>
                             <button class="btn-add-abstract" (click)="openAddAbstract(a)">+ Add</button>
@@ -77,8 +76,11 @@
                     </td>
                     <td>{{ (a.Amount || a.amount) | number }} {{ getCurrencySymbol(a) }}</td>
                     <td>{{ a.RegisteredAt | date:'dd/MM/yy HH:mm' }}</td>
-                    <td>
+                    <td class="actions-cell">
                         <button class="btn-details" (click)="openDetails(a)">View</button>
+                        <!-- ⭐⭐ חדש: כפתור עריכה - Admin בלבד -->
+                        <button class="btn-details" *ngIf="isAdmin" (click)="openEditAttendee(a)">Edit</button>
+                        <button class="btn-details btn-delete-row" *ngIf="isAdmin" (click)="confirmDeleteAttendee(a)">Delete</button>
                     </td>
                 </tr>
                 <tr *ngIf="filteredAttendees.length === 0">
@@ -148,6 +150,11 @@
                 <span>{{ selectedAttendee.RegisteredAt | date:'dd/MM/yyyy HH:mm' }}</span>
             </div>
         </div>
+        <!-- ⭐⭐ הוסף כפתור Edit ליד Delete - שניהם Admin בלבד -->
+        <div class="abstract-view-footer" style="padding: 20px 0 0;" *ngIf="isAdmin">
+            <button class="btn-close-wide btn-edit-abstract" (click)="openEditAttendee(selectedAttendee)">Edit Attendee</button>
+            <button class="btn-close-wide btn-delete-abstract" (click)="confirmDeleteAttendee(selectedAttendee)">Delete Attendee</button>
+        </div>
     </div>
 </div>
 <div class="popup-overlay" *ngIf="selectedAbstractAttendee" (click)="closeAbstractDetails()">
@@ -179,8 +186,6 @@
     </div>
 </div>
 
-<!-- ⭐ חדש: פופ-אפ הוספת תקציר ע"י מנהל -->
-<!-- ⭐ שונה: אותו פופ-אפ משמש גם להוספה וגם לעריכה -->
 <div class="popup-overlay" *ngIf="addAbstractTarget" (click)="closeAddAbstract()">
     <div class="popup-box abstract-view-popup" (click)="$event.stopPropagation()" dir="ltr">
         <div class="popup-header abstract-view-header">
@@ -214,7 +219,6 @@
     </div>
 </div>
 
-<!-- ⭐ חדש: פופ-אפ אישור מחיקת תקציר -->
 <div class="popup-overlay" *ngIf="deletingAbstractTarget" (click)="cancelDeleteAbstract()">
     <div class="popup-box confirm-popup" (click)="$event.stopPropagation()" dir="ltr">
         <h3>Delete Abstract?</h3>
@@ -228,6 +232,69 @@
                 {{ isDeletingAbstract ? 'Deleting...' : 'Delete' }}
             </button>
             <button class="btn-cancel-abstract" (click)="cancelDeleteAbstract()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<div class="popup-overlay" *ngIf="deletingAttendeeTarget" (click)="cancelDeleteAttendee()">
+    <div class="popup-box confirm-popup" (click)="$event.stopPropagation()" dir="ltr">
+        <h3>Delete Attendee?</h3>
+        <p>
+            Are you sure you want to permanently delete
+            <strong>{{ deletingAttendeeTarget.FullName }}</strong>
+            ({{ deletingAttendeeTarget.Email }})?
+            This will remove their registration entirely and cannot be undone.
+        </p>
+        <p class="form-error" *ngIf="deleteAttendeeError">{{ deleteAttendeeError }}</p>
+        <div class="confirm-actions">
+            <button class="btn-delete-confirm" [disabled]="isDeletingAttendee" (click)="deleteAttendee()">
+                {{ isDeletingAttendee ? 'Deleting...' : 'Delete' }}
+            </button>
+            <button class="btn-cancel-abstract" (click)="cancelDeleteAttendee()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- ⭐⭐ חדש: פופ-אפ עריכת נרשם - Admin בלבד -->
+<div class="popup-overlay" *ngIf="editingAttendeeTarget" (click)="closeEditAttendee()">
+    <div class="popup-box abstract-view-popup" (click)="$event.stopPropagation()" dir="ltr">
+        <div class="popup-header abstract-view-header">
+            <div class="abstract-view-header-text">
+                <span class="abstract-view-eyebrow">Edit Attendee (Admin)</span>
+                <h3>{{ editingAttendeeTarget.FullName }}</h3>
+            </div>
+            <button class="btn-close" (click)="closeEditAttendee()">✕</button>
+        </div>
+        <div class="abstract-view-block">
+            <span class="abstract-view-label">Full Name</span>
+            <input type="text" class="form-control" [(ngModel)]="editFullName">
+        </div>
+        <div class="abstract-view-block">
+            <span class="abstract-view-label">Email</span>
+            <input type="text" class="form-control" [(ngModel)]="editEmail">
+        </div>
+        <div class="abstract-view-block">
+            <span class="abstract-view-label">Affiliation</span>
+            <input type="text" class="form-control" [(ngModel)]="editAffiliation">
+        </div>
+        <div class="abstract-view-block">
+            <span class="abstract-view-label">Role</span>
+            <input type="text" class="form-control" [(ngModel)]="editRole">
+        </div>
+        <div class="abstract-view-block">
+            <span class="abstract-view-label">Conference</span>
+            <select class="form-control" [(ngModel)]="editConferenceId">
+                <option *ngFor="let c of allConferences" [value]="c.Id || c.id">{{ c.Name || c.name }}</option>
+            </select>
+        </div>
+        <div class="abstract-view-block" *ngIf="editAttendeeError">
+            <span class="form-error">{{ editAttendeeError }}</span>
+        </div>
+        <div class="abstract-view-footer">
+            <button class="btn-close-wide" [disabled]="isSavingAttendee" (click)="saveEditAttendee()">
+                {{ isSavingAttendee ? 'Saving...' : 'Save Changes' }}
+            </button>
+            <button class="btn-close-wide btn-cancel-abstract" (click)="closeEditAttendee()">Cancel</button>
         </div>
     </div>
 </div>

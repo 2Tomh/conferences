@@ -922,3 +922,29 @@
     flex-direction: column;
   }
 }
+
+/* ⭐⭐ תוקן: הכפתורים בעמודת Details (View/Edit/Delete) עוטפים לשתי שורות
+   כדי שלא ייחתכו בקצה הטבלה, ומוקטנים מעט כדי להתאים יותר בכל שורה */
+.actions-cell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-width: 175px;
+}
+
+.actions-cell .btn-details {
+  padding: 5px 10px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.btn-delete-row {
+  color: var(--failed);
+  border-color: var(--failed-dim);
+}
+
+.btn-delete-row:hover {
+  background: var(--failed);
+  border-color: var(--failed);
+  color: #ffffff;
+}

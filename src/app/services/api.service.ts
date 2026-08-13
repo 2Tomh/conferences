@@ -119,22 +119,28 @@ export class ApiService {
     return this.http.post(`${this.apiUrl}/registration/register`, attendee);
   }
 
-  // ⭐ חדש: מוסיף/מעדכן תקציר עבור נרשם קיים, ע"י מנהל (למקרה ששכח לצרף
+  // ⭐ מוסיף/מעדכן תקציר עבור נרשם קיים, ע"י מנהל (למקרה ששכח לצרף
   // תקציר בזמן ההרשמה עצמה)
   addAbstractForAttendee(attendeeId: string, data: { title: string; body: string; notes?: string }): Observable<any> {
     return this.http.patch(`${this.apiUrl}/registration/abstract/${attendeeId}`, data);
   }
 
-  // ⭐ חדש: מוחק תקציר קיים (משאיר את הנרשם עצמו)
+  // ⭐ מוחק תקציר קיים (משאיר את הנרשם עצמו)
   deleteAbstractForAttendee(attendeeId: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/registration/abstract/${attendeeId}`);
+  }
+
+  // ⭐⭐ חדש: מוחק נרשם לגמרי (Admin או FacultyManager - מוגבל לכנס שהוא מנהל,
+  // נבדק ונאכף בצד השרת)
+  deleteAttendee(attendeeId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/registration/${attendeeId}`);
   }
 
   getPartners(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/partners`);
   }
 
-  // ⭐ חדש: ניהול שותפים (Create/Update/Delete) - GET כבר קיים למעלה
+  // ⭐ ניהול שותפים (Create/Update/Delete) - GET כבר קיים למעלה
   createPartner(data: { name: string; logo: string; url: string; order: number }): Observable<any> {
     return this.http.post(`${this.apiUrl}/partners`, data);
   }
@@ -147,7 +153,7 @@ export class ApiService {
     return this.http.delete(`${this.apiUrl}/partners/${id}`);
   }
 
-  // ⭐ חדש: מאמת סיסמת-עמוד (כמו Transactions) מול hash שמור ב-Mongo,
+  // ⭐ מאמת סיסמת-עמוד (כמו Transactions) מול hash שמור ב-Mongo,
   // בלי שהסיסמה עצמה תישמר בקוד ה-Frontend
   verifyPageAccess(pageKey: string, password: string): Observable<{ success: boolean }> {
     return this.http.post<{ success: boolean }>(`${this.apiUrl}/page-access/verify`, { pageKey, password });
@@ -160,14 +166,10 @@ export class ApiService {
   // ==========================================
   // PAYMENT
   // ==========================================
-  // ⭐ עודכן: נוסף פרמטר force אופציונלי - כשהוא true, השרת שולח מחדש
-  // גם אם EmailSent כבר true (למקרה של כפתור "Resend" ידני ע"י אדמין).
-  // בשימוש הרגיל (בלי force) ההתנהגות זהה למה שהיה קודם.
   sendPaymentConfirmation(orderId: string, force: boolean = false): Observable<any> {
     return this.http.post(`${this.apiUrl}/payment/send-confirmation`, { orderId, force });
   }
 
-  // ⭐ שולף את כל רשומות ה-Transactions, עם תמיכה בסינון לפי סטטוס/חיפוש
   getAllTransactions(filters?: { status?: string; search?: string }): Observable<any[]> {
     let params = new HttpParams();
     if (filters?.status) params = params.set('status', filters.status);
@@ -175,7 +177,6 @@ export class ApiService {
     return this.http.get<any[]>(`${this.apiUrl}/payment/transactions`, { params });
   }
 
-  // ⭐ חדש: מוחק עסקה לפי OrderId
   deleteTransaction(orderId: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/payment/transactions/${encodeURIComponent(orderId)}`);
   }
@@ -185,5 +186,11 @@ export class ApiService {
   // ==========================================
   getStatistics(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/registration/statistics`);
+  }
+  updateAttendee(attendeeId: string, data: { fullName?: string; email?: string; affiliation?: string; role?: string; conferenceId?: string }): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/registration/${attendeeId}`, data);
+  }
+  updateTransaction(orderId: string, data: { fullName?: string; email?: string; conferenceId?: string; conferenceName?: string }): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/payment/transactions/${encodeURIComponent(orderId)}`, data);
   }
 }

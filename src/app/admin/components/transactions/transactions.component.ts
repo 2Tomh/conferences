@@ -7,14 +7,11 @@ import { ApiService } from '../../../services/api.service';
   styleUrls: ['./transactions.component.css']
 })
 export class TransactionsComponent implements OnInit {
-  // ⭐ שכבת סיסמה נוספת - בנפרד ומעבר להתחברות ה-Admin הרגילה
   isUnlocked = false;
   passwordInput = '';
   passwordError = '';
   isVerifying = false;
 
-  // ⭐ שונה: הסיסמה כבר לא כתובה כאן - מאומתת מול hash שמור ב-Mongo
-  // דרך apiService.verifyPageAccess. PAGE_KEY מזהה איזה עמוד זה בצד השרת.
   private readonly PAGE_KEY = 'transactions';
   private readonly SESSION_KEY = 'txPageUnlocked';
 
@@ -31,25 +28,64 @@ export class TransactionsComponent implements OnInit {
   currentPage = 1;
   pageSize = 20;
 
-  // ⭐ state לפופ-אפ הפרטים המלאים
   selectedTransaction: any = null;
 
-  // ⭐ מעקב אחרי בקשות "Resend" בתהליך, לפי OrderId
   resendingOrderIds = new Set<string>();
   resendFeedback: { [orderId: string]: string } = {};
+
+  // ⭐⭐ חדש: לעריכת transaction (רשימת כנסים לבחירה + role check)
+  allConferences: any[] = [];
+  isAdmin = false;
 
   constructor(private apiService: ApiService) { }
 
   ngOnInit(): void {
-    // נשאר "פתוח" רק לטאב הנוכחי (sessionStorage), לא לצמיתות במחשב -
-    // כל פתיחה חדשה של האתר/טאב תבקש סיסמה מחדש
     if (sessionStorage.getItem(this.SESSION_KEY) === 'true') {
       this.isUnlocked = true;
       this.loadTransactions();
     }
+    this.loadConferences();
+    this.isAdmin = this.checkIsAdmin();
   }
 
-  // ⭐ שונה: שולח את הסיסמה לשרת לאימות, במקום להשוות מחרוזת מקומית
+  private loadConferences(): void {
+    this.apiService.getAllConferences().subscribe({
+      next: (data) => this.allConferences = data,
+      error: () => { }
+    });
+  }
+
+  // ⭐⭐ אותה לוגיקת בדיקת role כמו ב-attendee-list.component.ts
+  private checkIsAdmin(): boolean {
+    const directRole = localStorage.getItem('role');
+    if (directRole) {
+      return directRole === 'Admin';
+    }
+
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        if (user?.role) return user.role === 'Admin';
+        if (user?.Role) return user.Role === 'Admin';
+      } catch { }
+    }
+
+    const token = localStorage.getItem('token') || localStorage.getItem('authToken') || localStorage.getItem('jwt');
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const role =
+          payload['role'] ||
+          payload['Role'] ||
+          payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+        return role === 'Admin';
+      } catch { }
+    }
+
+    return false;
+  }
+
   submitPassword(): void {
     if (!this.passwordInput || this.isVerifying) return;
 
@@ -198,7 +234,64 @@ export class TransactionsComponent implements OnInit {
     return this.resendingOrderIds.has(orderId);
   }
 
-  // ══ סטטיסטיקות מהירות ══
+  // ⭐⭐ חדש: state ולוגיקת עריכת transaction - Admin בלבד
+  editingTransactionTarget: any = null;
+  editTxFullName = '';
+  editTxEmail = '';
+  editTxConferenceId = '';
+  editTxError = '';
+  isSavingTransaction = false;
+
+  openEditTransaction(tx: any): void {
+    this.editingTransactionTarget = tx;
+    this.editTxFullName = tx.FullName || '';
+    this.editTxEmail = tx.Email || '';
+    this.editTxConferenceId = tx.ConferenceId || '';
+    this.editTxError = '';
+  }
+
+  closeEditTransaction(): void {
+    this.editingTransactionTarget = null;
+  }
+
+  saveEditTransaction(): void {
+    if (!this.editingTransactionTarget?.OrderId || this.isSavingTransaction) return;
+
+    this.isSavingTransaction = true;
+    this.editTxError = '';
+    const target = this.editingTransactionTarget;
+
+    const conf = this.allConferences.find(c => (c.Id || c.id) === this.editTxConferenceId);
+    const conferenceName = conf ? (conf.Name || conf.name) : target.ConferenceName;
+
+    this.apiService.updateTransaction(target.OrderId, {
+      fullName: this.editTxFullName.trim(),
+      email: this.editTxEmail.trim(),
+      conferenceId: this.editTxConferenceId,
+      conferenceName: conferenceName
+    }).subscribe({
+      next: () => {
+        this.isSavingTransaction = false;
+        target.FullName = this.editTxFullName.trim();
+        target.Email = this.editTxEmail.trim();
+        target.ConferenceId = this.editTxConferenceId;
+        target.ConferenceName = conferenceName;
+        if (this.selectedTransaction?.OrderId === target.OrderId) {
+          this.selectedTransaction.FullName = target.FullName;
+          this.selectedTransaction.Email = target.Email;
+          this.selectedTransaction.ConferenceId = target.ConferenceId;
+          this.selectedTransaction.ConferenceName = target.ConferenceName;
+        }
+        this.editingTransactionTarget = null;
+      },
+      error: (err) => {
+        this.isSavingTransaction = false;
+        console.error('Error updating transaction:', err);
+        this.editTxError = 'Failed to update transaction';
+      }
+    });
+  }
+
   get totalCount(): number { return this.filteredTransactions.length; }
   get successCount(): number { return this.filteredTransactions.filter(t => t.Status === 'success').length; }
   get failedCount(): number { return this.filteredTransactions.filter(t => t.Status === 'failed').length; }
@@ -209,7 +302,6 @@ export class TransactionsComponent implements OnInit {
       .reduce((sum, t) => sum + this.getAmount(t), 0);
   }
 
-  // ══ Pagination ══
   get pagedTransactions(): any[] {
     const start = (this.currentPage - 1) * this.pageSize;
     return this.filteredTransactions.slice(start, start + this.pageSize);

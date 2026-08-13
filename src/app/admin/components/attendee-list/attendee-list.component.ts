@@ -22,7 +22,6 @@ export class AttendeeListComponent implements OnInit {
   currentPage = 1;
   pageSize = 15;
 
-  // ⭐ חדש: state לפופ-אפ "הוספת תקציר" ע"י מנהל
   addAbstractTarget: any = null;
   addAbstractTitle = '';
   addAbstractBody = '';
@@ -34,6 +33,37 @@ export class AttendeeListComponent implements OnInit {
   ngOnInit(): void {
     this.loadAttendees();
     this.loadConferences();
+    this.isAdmin = this.checkIsAdmin();
+  }
+
+  private checkIsAdmin(): boolean {
+    const directRole = localStorage.getItem('role');
+    if (directRole) {
+      return directRole === 'Admin';
+    }
+
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        if (user?.role) return user.role === 'Admin';
+        if (user?.Role) return user.Role === 'Admin';
+      } catch { }
+    }
+
+    const token = localStorage.getItem('token') || localStorage.getItem('authToken') || localStorage.getItem('jwt');
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const role =
+          payload['role'] ||
+          payload['Role'] ||
+          payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+        return role === 'Admin';
+      } catch { }
+    }
+
+    return false;
   }
 
   getCurrencySymbol(attendee: any): string {
@@ -171,8 +201,6 @@ export class AttendeeListComponent implements OnInit {
   }
   closeAbstractDetails() { this.selectedAbstractAttendee = null; }
 
-  // ⭐ שונה: פותח את אותו טופס גם להוספה וגם לעריכה - אם כבר יש תקציר,
-  // השדות מתמלאים מראש עם הערכים הקיימים
   openAddAbstract(attendee: any): void {
     this.addAbstractTarget = attendee;
     this.addAbstractTitle = attendee.AbstractTitle || attendee.abstractTitle || '';
@@ -209,7 +237,6 @@ export class AttendeeListComponent implements OnInit {
     }).subscribe({
       next: () => {
         this.isSavingAbstract = false;
-        // עדכון מקומי מיידי - כדי לא לחכות לטעינה מחדש מלאה מהשרת
         this.addAbstractTarget.HasAbstract = true;
         this.addAbstractTarget.AbstractTitle = this.addAbstractTitle.trim();
         this.addAbstractTarget.AbstractBody = this.addAbstractBody.trim();
@@ -224,7 +251,6 @@ export class AttendeeListComponent implements OnInit {
     });
   }
 
-  // ⭐ חדש: state ולוגיקת מחיקת תקציר, עם אישור לפני
   deletingAbstractTarget: any = null;
   isDeletingAbstract = false;
 
@@ -250,7 +276,6 @@ export class AttendeeListComponent implements OnInit {
         target.AbstractBody = null;
         target.AbstractNotes = null;
         this.deletingAbstractTarget = null;
-        // אם התקציר שנמחק היה פתוח כרגע בפופ-אפ הצפייה, סוגרים אותו
         if (this.selectedAbstractAttendee?.Id === target.Id) {
           this.selectedAbstractAttendee = null;
         }
@@ -259,6 +284,107 @@ export class AttendeeListComponent implements OnInit {
         this.isDeletingAbstract = false;
         console.error('Error deleting abstract:', err);
         alert('Failed to delete abstract');
+      }
+    });
+  }
+
+  deletingAttendeeTarget: any = null;
+  isDeletingAttendee = false;
+  deleteAttendeeError = '';
+  isAdmin = false;
+
+  confirmDeleteAttendee(attendee: any): void {
+    this.deletingAttendeeTarget = attendee;
+    this.deleteAttendeeError = '';
+  }
+
+  cancelDeleteAttendee(): void {
+    this.deletingAttendeeTarget = null;
+    this.deleteAttendeeError = '';
+  }
+
+  deleteAttendee(): void {
+    if (!this.deletingAttendeeTarget?.Id || this.isDeletingAttendee) return;
+
+    this.isDeletingAttendee = true;
+    this.deleteAttendeeError = '';
+    const target = this.deletingAttendeeTarget;
+
+    this.apiService.deleteAttendee(target.Id).subscribe({
+      next: () => {
+        this.isDeletingAttendee = false;
+        this.attendees = this.attendees.filter(a => a.Id !== target.Id);
+        this.applyFilters();
+        this.deletingAttendeeTarget = null;
+        if (this.selectedAttendee?.Id === target.Id) {
+          this.selectedAttendee = null;
+        }
+        if (this.selectedAbstractAttendee?.Id === target.Id) {
+          this.selectedAbstractAttendee = null;
+        }
+      },
+      error: (err) => {
+        this.isDeletingAttendee = false;
+        console.error('Error deleting attendee:', err);
+        this.deleteAttendeeError = 'Failed to delete attendee';
+      }
+    });
+  }
+
+  // ⭐⭐ חדש: state ולוגיקת עריכת נרשם - Admin בלבד
+  editingAttendeeTarget: any = null;
+  editFullName = '';
+  editEmail = '';
+  editAffiliation = '';
+  editRole = '';
+  editConferenceId = '';
+  editAttendeeError = '';
+  isSavingAttendee = false;
+
+  openEditAttendee(attendee: any): void {
+    this.editingAttendeeTarget = attendee;
+    this.editFullName = attendee.FullName || '';
+    this.editEmail = attendee.Email || '';
+    this.editAffiliation = attendee.Affiliation || attendee.affiliation || '';
+    this.editRole = attendee.Role || attendee.role || '';
+    this.editConferenceId = attendee.ConferenceId || '';
+    this.editAttendeeError = '';
+  }
+
+  closeEditAttendee(): void {
+    this.editingAttendeeTarget = null;
+  }
+
+  saveEditAttendee(): void {
+    if (!this.editingAttendeeTarget?.Id || this.isSavingAttendee) return;
+
+    this.isSavingAttendee = true;
+    this.editAttendeeError = '';
+    const target = this.editingAttendeeTarget;
+
+    this.apiService.updateAttendee(target.Id, {
+      fullName: this.editFullName.trim(),
+      email: this.editEmail.trim(),
+      affiliation: this.editAffiliation.trim(),
+      role: this.editRole.trim(),
+      conferenceId: this.editConferenceId
+    }).subscribe({
+      next: () => {
+        this.isSavingAttendee = false;
+        // עדכון מקומי מיידי - כדי לא לחכות לטעינה מחדש מלאה מהשרת
+        target.FullName = this.editFullName.trim();
+        target.Email = this.editEmail.trim();
+        target.Affiliation = this.editAffiliation.trim();
+        target.Role = this.editRole.trim();
+        target.ConferenceId = this.editConferenceId;
+        const conf = this.allConferences.find(c => (c.Id || c.id) === this.editConferenceId);
+        target.ConferenceName = conf ? (conf.Name || conf.name) : target.ConferenceName;
+        this.editingAttendeeTarget = null;
+      },
+      error: (err) => {
+        this.isSavingAttendee = false;
+        console.error('Error updating attendee:', err);
+        this.editAttendeeError = 'Failed to update attendee';
       }
     });
   }
