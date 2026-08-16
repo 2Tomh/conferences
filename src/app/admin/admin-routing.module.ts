@@ -8,12 +8,15 @@ import { ManageConferenceComponent } from './components/manage-conference/manage
 import { CreateUserComponent } from './components/create-user/create-user.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
 import { AttendeeListComponent } from '../admin/components/attendee-list/attendee-list.component';
-import { ConferenceEditComponent } from './components/conference-edit/conference-edit.component'
+import { ConferenceEditComponent } from './components/conference-edit/conference-edit.component';
 import { AdminStatisticsComponent } from './components/admin-statistics/admin-statistics.component';
 import { TransactionsComponent } from './components/transactions/transactions.component';
 import { PartnersManagementComponent } from './components/partners-management/partners-management.component';
 // ⭐⭐ חדש: קומפוננטת שליחת מייל המוני
 import { AnnouncementEmailComponent } from './components/announcement-email/announcement-email.component';
+// ⭐⭐ חדש: קומפוננטת מעקב שליחת הודעות
+import { AnnouncementTrackingComponent } from './components/announcement-tracking/announcement-tracking.component';
+
 const routes: Routes = [
   {
     path: '',
@@ -34,10 +37,13 @@ const routes: Routes = [
       { path: 'partners', component: PartnersManagementComponent, canActivate: [AuthGuard] },
       // ⭐⭐ חדש: route לעמוד שליחת מייל המוני
       { path: 'announcement-email', component: AnnouncementEmailComponent, canActivate: [AuthGuard] },
+      // ⭐⭐ חדש: route לעמוד מעקב שליחת הודעות
+      { path: 'announcement-tracking', component: AnnouncementTrackingComponent, canActivate: [AuthGuard] },
       { path: '', redirectTo: 'login', pathMatch: 'full' }
     ]
   }
 ];
+
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]

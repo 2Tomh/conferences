@@ -14,11 +14,6 @@ export class AnnouncementEmailComponent implements OnInit, AfterViewInit {
 
   @ViewChild('editor') editorRef!: ElementRef<HTMLDivElement>;
 
-  testEmail = '';
-  isSendingTest = false;
-  testResultMessage = '';
-  testErrorMessage = '';
-
   isSending = false;
   isConfirming = false;
   resultMessage = '';
@@ -39,10 +34,7 @@ export class AnnouncementEmailComponent implements OnInit, AfterViewInit {
 
   private checkIsAdmin(): boolean {
     const directRole = localStorage.getItem('role');
-    if (directRole) {
-      return directRole === 'Admin';
-    }
-
+    if (directRole) return directRole === 'Admin';
     const userStr = localStorage.getItem('user');
     if (userStr) {
       try {
@@ -51,19 +43,14 @@ export class AnnouncementEmailComponent implements OnInit, AfterViewInit {
         if (user?.Role) return user.Role === 'Admin';
       } catch { }
     }
-
     const token = localStorage.getItem('token') || localStorage.getItem('authToken') || localStorage.getItem('jwt');
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
-        const role =
-          payload['role'] ||
-          payload['Role'] ||
-          payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+        const role = payload['role'] || payload['Role'] || payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
         return role === 'Admin';
       } catch { }
     }
-
     return false;
   }
 
@@ -156,35 +143,6 @@ export class AnnouncementEmailComponent implements OnInit, AfterViewInit {
 
   get isFormValid(): boolean {
     return this.subject.trim().length > 0 && this.body.trim().length > 0 && this.body.trim() !== '<br>';
-  }
-
-  get isTestFormValid(): boolean {
-    return this.isFormValid && this.testEmail.trim().length > 0;
-  }
-
-  // ⭐⭐ עודכן: מציג בהודעת התוצאה אם נמצא attendee תואם ב-DB, ומה השם
-  // ששימש בפועל בפרסונליזציה
-  sendTest(): void {
-    if (!this.isTestFormValid || this.isSendingTest) return;
-
-    this.isSendingTest = true;
-    this.testResultMessage = '';
-    this.testErrorMessage = '';
-
-    this.apiService.sendTestEmail(this.testEmail.trim(), this.subject.trim(), this.body).subscribe({
-      next: (res: any) => {
-        this.isSendingTest = false;
-        const foundNote = res.foundInDatabase
-          ? ` (used real name: "${res.usedName}")`
-          : ` (no matching attendee found — used sample name "${res.usedName}")`;
-        this.testResultMessage = `Test email sent to ${this.testEmail.trim()}${foundNote}`;
-      },
-      error: (err) => {
-        this.isSendingTest = false;
-        console.error('Error sending test email:', err);
-        this.testErrorMessage = 'Failed to send test email';
-      }
-    });
   }
 
   askToSend(): void {

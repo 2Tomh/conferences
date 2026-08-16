@@ -42,18 +42,6 @@
       </div>
     </div>
 
-    <div class="test-section">
-      <label>Send a test to yourself first</label>
-      <div class="test-row">
-        <input type="email" class="form-control" [(ngModel)]="testEmail" placeholder="your.email@example.com">
-        <button class="btn-test" [disabled]="!isTestFormValid || isSendingTest" (click)="sendTest()">
-          {{ isSendingTest ? 'Sending...' : 'Send Test' }}
-        </button>
-      </div>
-      <p class="test-success" *ngIf="testResultMessage">{{ testResultMessage }}</p>
-      <p class="test-error" *ngIf="testErrorMessage">{{ testErrorMessage }}</p>
-    </div>
-
     <div class="error-msg" *ngIf="errorMessage">{{ errorMessage }}</div>
 
     <button class="btn-send" [disabled]="!isFormValid || isSending" (click)="askToSend()">

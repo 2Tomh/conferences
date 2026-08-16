@@ -23,6 +23,7 @@ import { AdminStatisticsComponent } from './components/admin-statistics/admin-st
 import { TransactionsComponent } from './components/transactions/transactions.component';
 import { PartnersManagementComponent } from './components/partners-management/partners-management.component';
 import { AnnouncementEmailComponent } from './components/announcement-email/announcement-email.component';
+import { AnnouncementTrackingComponent } from './components/announcement-tracking/announcement-tracking.component';
 @NgModule({
   declarations: [
     AdminRootComponent,
@@ -38,6 +39,7 @@ import { AnnouncementEmailComponent } from './components/announcement-email/anno
     TransactionsComponent,
     PartnersManagementComponent,
     AnnouncementEmailComponent,
+    AnnouncementTrackingComponent,
   ],
   imports: [
     CommonModule,

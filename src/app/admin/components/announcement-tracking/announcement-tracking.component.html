@@ -1,0 +1,80 @@
+<div class="tracking-page" dir="ltr" *ngIf="isAdmin">
+  <div class="page-header">
+    <span class="page-eyebrow">Mind-IL · Admin</span>
+    <h2>Announcement Delivery Tracking</h2>
+    <p class="page-subtitle" *ngIf="latestAnnouncement">{{ latestAnnouncement.Subject }} — {{ latestAnnouncement.CreatedAt | date:'dd/MM/yy HH:mm' }}</p>
+  </div>
+
+  <div class="loading" *ngIf="isLoading">Loading attendees...</div>
+
+  <div class="tracking-content" *ngIf="!isLoading && latestAnnouncement">
+    <div class="filters-row">
+      <input class="search-input" type="text" placeholder="Search by name or email..." [(ngModel)]="searchTerm" (input)="onSearch()">
+      <select [(ngModel)]="statusFilter" (change)="onStatusFilterChange()">
+        <option value="">All Attendees</option>
+        <option value="sent">Sent</option>
+        <option value="failed">Failed</option>
+        <option value="not_sent">Not Sent</option>
+      </select>
+      <button class="btn-resend-all" [disabled]="failedCount === 0 || isResendingAll" (click)="resendAllFailed()">
+        {{ isResendingAll ? 'Sending...' : 'Send/Resend All Unsent & Failed (' + failedCount + ')' }}
+      </button>
+    </div>
+
+    <table class="tracking-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Status</th>
+          <th>Sent At</th>
+          <th>Error</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of pagedRecipients">
+          <td>{{ r.FullName }}</td>
+          <td>{{ r.Email }}</td>
+          <td>
+            <span class="badge" [ngClass]="r.Status">{{ r.Status }}</span>
+          </td>
+          <td>{{ r.SentAt ? (r.SentAt | date:'dd/MM/yy HH:mm') : '—' }}</td>
+          <td class="error-cell">{{ r.ErrorMessage || '—' }}</td>
+          <td>
+            <button class="btn-resend"
+                    [ngClass]="{'btn-resend-secondary': r.Status === 'sent'}"
+                    [disabled]="isResending(r.Id || r.AttendeeId)"
+                    (click)="resendToOne(r)">
+              {{ isResending(r.Id || r.AttendeeId) ? 'Sending...' : (r.Status === 'sent' ? 'Resend' : (r.Status === 'failed' ? 'Resend' : 'Send')) }}
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredRecipients.length === 0">
+          <td colspan="6" class="no-data">No attendees found</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="pagination-bar" *ngIf="filteredRecipients.length > 0">
+      <span class="pagination-info">Showing {{ pageStart }}–{{ pageEnd }} of {{ filteredRecipients.length }}</span>
+      <div class="pagination-controls">
+        <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 1">‹ Prev</button>
+
+        <button class="page-btn" *ngIf="pageNumbers[0] > 1" (click)="goToPage(1)">1</button>
+        <span class="page-ellipsis" *ngIf="pageNumbers[0] > 2">…</span>
+
+        <button class="page-btn" *ngFor="let p of pageNumbers" [class.active]="p === currentPage" (click)="goToPage(p)">{{ p }}</button>
+
+        <span class="page-ellipsis" *ngIf="pageNumbers[pageNumbers.length - 1] < totalPages - 1">…</span>
+        <button class="page-btn" *ngIf="pageNumbers[pageNumbers.length - 1] < totalPages" (click)="goToPage(totalPages)">{{ totalPages }}</button>
+
+        <button class="page-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">Next ›</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-data" *ngIf="!isLoading && !latestAnnouncement">
+    No announcements sent yet
+  </div>
+</div>
