@@ -88,63 +88,60 @@ export class AnnouncementEmailComponent implements OnInit, AfterViewInit {
     this.syncBody();
   }
 
-  // ⭐⭐ תוקן: משלב את הטקסט המבוקש בתוך העיצוב המלא - קלף לבן, פס זהב
-  // עליון, כותרת כחולה כהה, קופסת הדגשה, וסיום עם חתימה. ה-placeholders
-  // {{participant_name}} / {{participant_first_name}} מוחלפים בשרת בזמן שליחה.
-loadDefaultTemplate(): void {
-  this.subject = '{{participant_first_name}}, help us spread the word about Mind-IL!';
+  loadDefaultTemplate(): void {
+    this.subject = '{{participant_first_name}}, help us spread the word about Mind-IL!';
 
-  const mindilUrl = 'https://www.mind-il.org';
-  const logoUrl = 'https://www.mind-il.org/assets/logo.jpeg';
+    const mindilUrl = 'https://www.mind-il.org';
+    const logoUrl = 'https://www.mind-il.org/assets/logo.jpeg';
 
-  const template = `
-    <table width="100%" cellpadding="0" cellspacing="0" style="background:#F8F6F0;padding:40px 20px;">
-      <tr><td align="center">
-        <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 4px 24px rgba(15,27,76,0.10);font-family:Arial,sans-serif;">
-          <tr><td style="height:4px;background:linear-gradient(90deg,#C9A84C,#E8C97A,#C9A84C);"></td></tr>
-          <tr><td align="center" style="background:#0F1B4C;padding:36px 40px 32px;">
-            <a href="${mindilUrl}"><img src="${logoUrl}" alt="Mind-IL" width="200" style="display:block;margin:0 auto 20px;border-radius:12px;"></a>
-            <h1 style="color:#C9A84C;font-size:22px;margin:0 0 8px;font-weight:700;">Help Us Spread the Word!</h1>
-            <p style="color:rgba(255,255,255,0.6);margin:0;font-size:14px;">Mind-IL – Israel's Science and Academia Week</p>
-          </td></tr>
-          <tr><td style="padding:40px;">
-            <p style="color:#2a2a4a;font-size:15px;line-height:1.7;margin:0 0 24px;">
-              Dear <strong>{{participant_name}}</strong>,
-            </p>
-            <p style="color:#4a4a6a;font-size:14px;line-height:1.75;margin:0 0 24px;">
-              We are thrilled to share that Mind-IL has grown to include more than 40 exciting conferences and academic gatherings, with over 1,000 participants already registered!
-            </p>
-            <table width="100%" cellpadding="0" cellspacing="0" style="background:#F8F6F0;border-radius:10px;padding:24px;margin-bottom:28px;">
-              <tr><td style="font-size:13px;color:#4a4a6a;line-height:1.7;">
-                Please help us expand the Mind-IL community by sharing the registration link with colleagues, professional networks, communities, friends, and anyone else who may be interested:
-                <br><br>
-                <a href="${mindilUrl}/" style="color:#C9A84C;font-weight:700;">${mindilUrl}/</a>
-              </td></tr>
-            </table>
-            <p style="font-size:13px;color:#4a4a6a;line-height:1.75;margin:0 0 16px;">
-              Every share helps us reach new participants from Israel and around the world and build an extraordinary week of science, scholarship, collaboration, and connection.
-            </p>
-            <p style="font-size:13px;color:#4a4a6a;line-height:1.75;margin:0 0 32px;">
-              Thank you for being part of Mind-IL. We look forward to welcoming you this October!
-            </p>
-            <p style="font-size:13px;color:#4a4a6a;margin:0;">
-              Warm regards,<br>
-              <strong style="color:#0F1B4C;">The Mind-IL Organizing Committee</strong>
-            </p>
-          </td></tr>
-          <tr><td style="background:#0F1B4C;padding:28px 40px;text-align:center;">
-            <p style="color:rgba(255,255,255,0.5);font-size:12px;margin:0 0 6px;">Mind-IL – Israel's Science and Academia Week</p>
-            <a href="${mindilUrl}" style="color:#C9A84C;font-size:12px;text-decoration:none;">${mindilUrl}</a>
-          </td></tr>
-          <tr><td style="height:3px;background:linear-gradient(90deg,#C9A84C,#E8C97A,#C9A84C);"></td></tr>
-        </table>
-      </td></tr>
-    </table>
-  `;
+    const template = `
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#F8F6F0;padding:40px 20px;">
+        <tr><td align="center">
+          <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 4px 24px rgba(15,27,76,0.10);font-family:Arial,sans-serif;">
+            <tr><td style="height:4px;background:linear-gradient(90deg,#C9A84C,#E8C97A,#C9A84C);"></td></tr>
+            <tr><td align="center" style="background:#0F1B4C;padding:36px 40px 32px;">
+              <a href="${mindilUrl}"><img src="${logoUrl}" alt="Mind-IL" width="200" style="display:block;margin:0 auto 20px;border-radius:12px;"></a>
+              <h1 style="color:#C9A84C;font-size:22px;margin:0 0 8px;font-weight:700;">Help Us Spread the Word!</h1>
+              <p style="color:rgba(255,255,255,0.6);margin:0;font-size:14px;">Mind-IL – Israel's Science and Academia Week</p>
+            </td></tr>
+            <tr><td style="padding:40px;">
+              <p style="color:#2a2a4a;font-size:15px;line-height:1.7;margin:0 0 24px;">
+                Dear <strong>{{participant_name}}</strong>,
+              </p>
+              <p style="color:#4a4a6a;font-size:14px;line-height:1.75;margin:0 0 24px;">
+                We are thrilled to share that Mind-IL has grown to include more than 40 exciting conferences and academic gatherings, with over 1,000 participants already registered!
+              </p>
+              <table width="100%" cellpadding="0" cellspacing="0" style="background:#F8F6F0;border-radius:10px;padding:24px;margin-bottom:28px;">
+                <tr><td style="font-size:13px;color:#4a4a6a;line-height:1.7;">
+                  Please help us expand the Mind-IL community by sharing the registration link with colleagues, professional networks, communities, friends, and anyone else who may be interested:
+                  <br><br>
+                  <a href="${mindilUrl}/" style="color:#C9A84C;font-weight:700;">${mindilUrl}/</a>
+                </td></tr>
+              </table>
+              <p style="font-size:13px;color:#4a4a6a;line-height:1.75;margin:0 0 16px;">
+                Every share helps us reach new participants from Israel and around the world and build an extraordinary week of science, scholarship, collaboration, and connection.
+              </p>
+              <p style="font-size:13px;color:#4a4a6a;line-height:1.75;margin:0 0 32px;">
+                Thank you for being part of Mind-IL. We look forward to welcoming you this October!
+              </p>
+              <p style="font-size:13px;color:#4a4a6a;margin:0;">
+                Warm regards,<br>
+                <strong style="color:#0F1B4C;">The Mind-IL Organizing Committee</strong>
+              </p>
+            </td></tr>
+            <tr><td style="background:#0F1B4C;padding:28px 40px;text-align:center;">
+              <p style="color:rgba(255,255,255,0.5);font-size:12px;margin:0 0 6px;">Mind-IL – Israel's Science and Academia Week</p>
+              <a href="${mindilUrl}" style="color:#C9A84C;font-size:12px;text-decoration:none;">${mindilUrl}</a>
+            </td></tr>
+            <tr><td style="height:3px;background:linear-gradient(90deg,#C9A84C,#E8C97A,#C9A84C);"></td></tr>
+          </table>
+        </td></tr>
+      </table>
+    `;
 
-  this.editorRef.nativeElement.innerHTML = template;
-  this.syncBody();
-}
+    this.editorRef.nativeElement.innerHTML = template;
+    this.syncBody();
+  }
 
   resetToDefault(): void {
     const hasContent = this.body.trim() && this.body.trim() !== '<br>';
@@ -165,6 +162,8 @@ loadDefaultTemplate(): void {
     return this.isFormValid && this.testEmail.trim().length > 0;
   }
 
+  // ⭐⭐ עודכן: מציג בהודעת התוצאה אם נמצא attendee תואם ב-DB, ומה השם
+  // ששימש בפועל בפרסונליזציה
   sendTest(): void {
     if (!this.isTestFormValid || this.isSendingTest) return;
 
@@ -173,9 +172,12 @@ loadDefaultTemplate(): void {
     this.testErrorMessage = '';
 
     this.apiService.sendTestEmail(this.testEmail.trim(), this.subject.trim(), this.body).subscribe({
-      next: () => {
+      next: (res: any) => {
         this.isSendingTest = false;
-        this.testResultMessage = `Test email sent to ${this.testEmail.trim()}`;
+        const foundNote = res.foundInDatabase
+          ? ` (used real name: "${res.usedName}")`
+          : ` (no matching attendee found — used sample name "${res.usedName}")`;
+        this.testResultMessage = `Test email sent to ${this.testEmail.trim()}${foundNote}`;
       },
       error: (err) => {
         this.isSendingTest = false;
