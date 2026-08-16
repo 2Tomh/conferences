@@ -22,6 +22,7 @@ import { ConferenceEditComponent } from './components/conference-edit/conference
 import { AdminStatisticsComponent } from './components/admin-statistics/admin-statistics.component';
 import { TransactionsComponent } from './components/transactions/transactions.component';
 import { PartnersManagementComponent } from './components/partners-management/partners-management.component';
+import { AnnouncementEmailComponent } from './components/announcement-email/announcement-email.component';
 @NgModule({
   declarations: [
     AdminRootComponent,
@@ -36,6 +37,7 @@ import { PartnersManagementComponent } from './components/partners-management/pa
     AdminStatisticsComponent,
     TransactionsComponent,
     PartnersManagementComponent,
+    AnnouncementEmailComponent,
   ],
   imports: [
     CommonModule,

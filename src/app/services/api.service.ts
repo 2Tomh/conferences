@@ -8,13 +8,9 @@ import { HttpParams } from '@angular/common/http';
 })
 export class ApiService {
   private apiUrl = 'https://conference-backend-8339.onrender.com/api';
-  // private apiUrl = 'https://localhost:7222/api';
 
   constructor(private http: HttpClient) { }
 
-  // ==========================================
-  // CONFERENCES ENDPOINTS
-  // ==========================================
   getAllConferences(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/surveys`);
   }
@@ -47,9 +43,6 @@ export class ApiService {
     return this.http.post(`${this.apiUrl}/Enrollments/${conferenceId}`, {});
   }
 
-  // ==========================================
-  // SURVEYS ENDPOINTS
-  // ==========================================
   getMySurveys(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/Surveys`);
   }
@@ -70,9 +63,6 @@ export class ApiService {
     return this.http.delete<any>(`${this.apiUrl}/Surveys/${id}`);
   }
 
-  // ==========================================
-  // ATTACHMENT (PDF) ENDPOINTS
-  // ==========================================
   uploadAttachment(id: string, file: File, description: string): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
@@ -88,9 +78,6 @@ export class ApiService {
     return `${this.apiUrl}/Surveys/${encodeURIComponent(id)}/attachment`;
   }
 
-  // ==========================================
-  // OTHER
-  // ==========================================
   getDepartmentReport(conferenceId: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/Registration/department-report/${conferenceId}`);
   }
@@ -119,19 +106,14 @@ export class ApiService {
     return this.http.post(`${this.apiUrl}/registration/register`, attendee);
   }
 
-  // ⭐ מוסיף/מעדכן תקציר עבור נרשם קיים, ע"י מנהל (למקרה ששכח לצרף
-  // תקציר בזמן ההרשמה עצמה)
   addAbstractForAttendee(attendeeId: string, data: { title: string; body: string; notes?: string }): Observable<any> {
     return this.http.patch(`${this.apiUrl}/registration/abstract/${attendeeId}`, data);
   }
 
-  // ⭐ מוחק תקציר קיים (משאיר את הנרשם עצמו)
   deleteAbstractForAttendee(attendeeId: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/registration/abstract/${attendeeId}`);
   }
 
-  // ⭐⭐ חדש: מוחק נרשם לגמרי (Admin או FacultyManager - מוגבל לכנס שהוא מנהל,
-  // נבדק ונאכף בצד השרת)
   deleteAttendee(attendeeId: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/registration/${attendeeId}`);
   }
@@ -140,7 +122,6 @@ export class ApiService {
     return this.http.get<any[]>(`${this.apiUrl}/partners`);
   }
 
-  // ⭐ ניהול שותפים (Create/Update/Delete) - GET כבר קיים למעלה
   createPartner(data: { name: string; logo: string; url: string; order: number }): Observable<any> {
     return this.http.post(`${this.apiUrl}/partners`, data);
   }
@@ -153,8 +134,6 @@ export class ApiService {
     return this.http.delete(`${this.apiUrl}/partners/${id}`);
   }
 
-  // ⭐ מאמת סיסמת-עמוד (כמו Transactions) מול hash שמור ב-Mongo,
-  // בלי שהסיסמה עצמה תישמר בקוד ה-Frontend
   verifyPageAccess(pageKey: string, password: string): Observable<{ success: boolean }> {
     return this.http.post<{ success: boolean }>(`${this.apiUrl}/page-access/verify`, { pageKey, password });
   }
@@ -163,9 +142,6 @@ export class ApiService {
     return this.http.get(`${this.apiUrl}/Surveys/${encodeURIComponent(id)}`);
   }
 
-  // ==========================================
-  // PAYMENT
-  // ==========================================
   sendPaymentConfirmation(orderId: string, force: boolean = false): Observable<any> {
     return this.http.post(`${this.apiUrl}/payment/send-confirmation`, { orderId, force });
   }
@@ -181,16 +157,24 @@ export class ApiService {
     return this.http.delete(`${this.apiUrl}/payment/transactions/${encodeURIComponent(orderId)}`);
   }
 
-  // ==========================================
-  // Statistics
-  // ==========================================
   getStatistics(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/registration/statistics`);
   }
+
   updateAttendee(attendeeId: string, data: { fullName?: string; email?: string; affiliation?: string; role?: string; conferenceId?: string }): Observable<any> {
     return this.http.patch(`${this.apiUrl}/registration/${attendeeId}`, data);
   }
+
   updateTransaction(orderId: string, data: { fullName?: string; email?: string; conferenceId?: string; conferenceName?: string }): Observable<any> {
     return this.http.patch(`${this.apiUrl}/payment/transactions/${encodeURIComponent(orderId)}`, data);
+  }
+
+  sendBulkEmail(subject: string, body: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/registration/send-bulk-email`, { subject, body });
+  }
+
+  // ⭐⭐ חדש: שולח מייל בדיקה לכתובת יחידה בלבד
+  sendTestEmail(toEmail: string, subject: string, body: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/registration/send-test-email`, { toEmail, subject, body });
   }
 }
