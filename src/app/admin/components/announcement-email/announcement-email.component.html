@@ -1,0 +1,84 @@
+<div class="announcement-email-page" dir="ltr" *ngIf="isAdmin">
+  <div class="page-header">
+    <span class="page-eyebrow">Mind-IL · Admin</span>
+    <h2>Send Email to All Registered Attendees</h2>
+    <p class="page-subtitle">This will send an email to every attendee who has successfully registered and paid, across all conferences.</p>
+  </div>
+
+  <div class="form-card">
+    <div class="form-group">
+      <label>Subject</label>
+      <input type="text" class="form-control" [(ngModel)]="subject" placeholder="Email subject">
+    </div>
+
+    <div class="form-group">
+      <label>Body</label>
+
+      <div class="editor-toolbar">
+        <button type="button" class="btn-template" (click)="resetToDefault()" title="Reset to default template">↺ Reset to Default</button>
+        <span class="toolbar-divider"></span>
+        <button type="button" (click)="format('bold')" title="Bold"><b>B</b></button>
+        <button type="button" (click)="format('italic')" title="Italic"><i>I</i></button>
+        <button type="button" (click)="format('underline')" title="Underline"><u>U</u></button>
+        <span class="toolbar-divider"></span>
+        <button type="button" (click)="formatBlock('h2')" title="Heading">H2</button>
+        <button type="button" (click)="formatBlock('p')" title="Paragraph">¶</button>
+        <span class="toolbar-divider"></span>
+        <button type="button" (click)="format('insertUnorderedList')" title="Bullet list">• List</button>
+        <button type="button" (click)="insertLink()" title="Insert link">🔗 Link</button>
+        <span class="toolbar-divider"></span>
+        <button type="button" (click)="format('foreColor', '#C9A84C')" title="Gold text">A</button>
+        <button type="button" (click)="format('foreColor', '#0F1B4C')" title="Dark blue text">A</button>
+        <button type="button" (click)="format('removeFormat')" title="Clear formatting">Clear</button>
+      </div>
+
+      <div
+        #editor
+        class="rich-editor"
+        contenteditable="true"
+        (input)="syncBody()"
+        (blur)="syncBody()"
+        data-placeholder="Write your message here...">
+      </div>
+    </div>
+
+    <div class="test-section">
+      <label>Send a test to yourself first</label>
+      <div class="test-row">
+        <input type="email" class="form-control" [(ngModel)]="testEmail" placeholder="your.email@example.com">
+        <button class="btn-test" [disabled]="!isTestFormValid || isSendingTest" (click)="sendTest()">
+          {{ isSendingTest ? 'Sending...' : 'Send Test' }}
+        </button>
+      </div>
+      <p class="test-success" *ngIf="testResultMessage">{{ testResultMessage }}</p>
+      <p class="test-error" *ngIf="testErrorMessage">{{ testErrorMessage }}</p>
+    </div>
+
+    <div class="error-msg" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <button class="btn-send" [disabled]="!isFormValid || isSending" (click)="askToSend()">
+      {{ isSending ? 'Sending...' : 'Send to All Paid Attendees' }}
+    </button>
+
+    <div class="result-box" *ngIf="resultDetails">
+      <p><strong>{{ resultMessage }}</strong></p>
+      <p>Total recipients: {{ resultDetails.totalRecipients }}</p>
+      <p>Sent successfully: {{ resultDetails.sent }}</p>
+      <p *ngIf="resultDetails.failed > 0">Failed: {{ resultDetails.failed }}</p>
+      <ul *ngIf="resultDetails.failedEmails.length > 0">
+        <li *ngFor="let email of resultDetails.failedEmails">{{ email }}</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="popup-overlay" *ngIf="isConfirming" (click)="cancelSend()">
+  <div class="popup-box" (click)="$event.stopPropagation()">
+    <h3>Send this email to all paid attendees?</h3>
+    <p>This action cannot be undone. The email will be sent immediately to everyone who has paid and registered, across all conferences.</p>
+    <div class="confirm-actions">
+      <button class="btn-confirm" (click)="confirmSend()">Yes, Send Now</button>
+      <button class="btn-cancel" (click)="cancelSend()">Cancel</button>
+    </div>
+  </div>
+</div>
