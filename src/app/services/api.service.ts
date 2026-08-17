@@ -389,4 +389,7 @@ export class ApiService {
   resendAllFailed(announcementId: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/registration/announcements/${announcementId}/resend-failed`, {});
   }
+  sendToAttendee(announcementId: string, attendeeId: string): Observable<any> {
+  return this.http.post(`${this.apiUrl}/registration/announcements/${announcementId}/send-to-attendee/${attendeeId}`, {});
+}
 }

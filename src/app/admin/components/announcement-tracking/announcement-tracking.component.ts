@@ -115,11 +115,11 @@ export class AnnouncementTrackingComponent implements OnInit {
   }
 
   resendToOne(recipient: any): void {
-    const targetId = recipient.Id || recipient.AttendeeId;
+    const targetId = recipient.AttendeeId; // ⭐ תמיד קיים, בשונה מ-Id
     if (this.resendingRecipientIds.has(targetId)) return;
     this.resendingRecipientIds.add(targetId);
 
-    this.apiService.resendToRecipient(this.latestAnnouncement.Id, targetId).subscribe({
+    this.apiService.sendToAttendee(this.latestAnnouncement.Id, targetId).subscribe({
       next: () => {
         this.resendingRecipientIds.delete(targetId);
         recipient.Status = 'sent';
