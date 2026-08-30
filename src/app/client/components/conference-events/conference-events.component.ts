@@ -21,7 +21,7 @@ export class ConferenceEventsComponent implements OnInit {
     'Network Dynamics in Socio-Technical Systems: From Resilient Control to Incentives and Information Design',
     'Mid-Chain DeFi Conference',
     'Applied Mathematics',
-    'ARC Summit 2026'
+    'ARC Summit 2026',
   ];
 
   private readonly CATEGORY_CLASS_MAP: { [key: string]: string } = {
@@ -29,7 +29,7 @@ export class ConferenceEventsComponent implements OnInit {
     'social sciences & law': 'cat-social-sciences-law',
     'biomed': 'cat-biomed',
     'engineering': 'cat-engineering',
-    'exact sciences': 'cat-exact-sciences'
+    'exact sciences': 'cat-exact-sciences',
   };
 
   constructor(
