@@ -29,7 +29,7 @@ export class ConferenceEventsComponent implements OnInit {
     'social sciences & law': 'cat-social-sciences-law',
     'biomed': 'cat-biomed',
     'engineering': 'cat-engineering',
-    'exact sciences': 'cat-exact-sciences',
+    'exact sciences': 'cat-exact-sciences'
   };
 
   constructor(
