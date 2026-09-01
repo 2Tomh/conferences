@@ -25,8 +25,7 @@ export class ConferenceDetailsComponent implements OnInit {
   private readonly EXCLUDED_CONFERENCE_NAMES: string[] = [
     'Law',
     'Network Dynamics in Socio-Technical Systems: From Resilient Control to Incentives and Information Design',
-    'Cancer Biology Across Scales',
-    'Genomics & Computational Biology'
+    'Cancer Biology Across Scales'
   ];
 
   constructor(

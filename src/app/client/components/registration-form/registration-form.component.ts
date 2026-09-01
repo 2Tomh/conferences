@@ -635,8 +635,7 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
     'Cancer Biology Across Scales',
     'Mid-Chain DeFi Conference',
     'Applied Mathematics',
-    'ARC Summit 2026',
-    // 'Genomics & Computational Biology'
+    'ARC Summit 2026'
   ];
   constructor(
     private fb: FormBuilder,
