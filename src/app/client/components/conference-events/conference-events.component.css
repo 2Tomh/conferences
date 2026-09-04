@@ -164,7 +164,7 @@
   align-items: revert-layer;
 }
 
-/* ⭐ חדש: מיקום הכנס */
+/* מיקום הכנס */
 .conf-card-location {
   display: flex;
   align-items: center;
@@ -175,6 +175,21 @@
 }
 
 .location-icon {
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+/* ⭐ חדש: תאריך האירוע עצמו - אותו סגנון כמו המיקום, מופיע גם לכנסים חיצוניים */
+.conf-card-event-date {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.65);
+  flex-shrink: 0;
+}
+
+.date-icon {
   font-size: 0.85rem;
   flex-shrink: 0;
 }
@@ -242,7 +257,7 @@
   overflow: hidden;
 }
 
-/* ⭐ חדש: תאריכי דדליין - ממוקם ב-HTML מיד אחרי conf-card-name.
+/* תאריכי דדליין - ממוקם ב-HTML מיד אחרי תאריך האירוע.
    צבע לבן, עם רקע/padding עדינים כדי שהטקסט לא "ידרוס" תוכן שכן -
    בלי הבלוק הזה, div גולמי בלי background/padding עלול להצטופף
    ולחפוף עם רשימת המארגנים שמתחתיו. */
