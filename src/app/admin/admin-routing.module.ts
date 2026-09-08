@@ -16,6 +16,8 @@ import { PartnersManagementComponent } from './components/partners-management/pa
 import { AnnouncementEmailComponent } from './components/announcement-email/announcement-email.component';
 // ⭐⭐ חדש: קומפוננטת מעקב שליחת הודעות
 import { AnnouncementTrackingComponent } from './components/announcement-tracking/announcement-tracking.component';
+// ⭐ חדש: קומפוננטת ניהול Plenary Events
+import { AdminPlenaryEventsComponent } from './components/admin-plenary-events/admin-plenary-events.component';
 
 const routes: Routes = [
   {
@@ -39,6 +41,8 @@ const routes: Routes = [
       { path: 'announcement-email', component: AnnouncementEmailComponent, canActivate: [AuthGuard] },
       // ⭐⭐ חדש: route לעמוד מעקב שליחת הודעות
       { path: 'announcement-tracking', component: AnnouncementTrackingComponent, canActivate: [AuthGuard] },
+      // ⭐ חדש: route לניהול Plenary Events
+      { path: 'plenary-events', component: AdminPlenaryEventsComponent, canActivate: [AuthGuard] },
       { path: '', redirectTo: 'login', pathMatch: 'full' }
     ]
   }

@@ -1,0 +1,105 @@
+<div class="plenary-wrapper">
+
+  <!-- INTRO SECTION -->
+  <section class="snap-section intro-section" #snapSection>
+    <div class="plenary-intro">
+      <span class="plenary-badge">Mind-IL Community</span>
+      <h1 class="plenary-title">Plenary Events</h1>
+      <p class="plenary-lede">
+        Alongside its disciplinary conferences and academic gatherings, Mind-IL brings the entire
+        community together for special plenary events. These events offer opportunities to
+        exchange ideas, build connections, and celebrate Israeli science and academia.
+      </p>
+    </div>
+  </section>
+
+  <!-- EVENT SECTIONS -->
+  <section
+    class="snap-section event-section"
+    #snapSection
+    *ngFor="let event of events; let i = index"
+    [id]="event.Id">
+
+    <article class="event" [class.event--reverse]="i % 2 === 1">
+
+      <div class="event-media">
+        <img *ngIf="event.ImageData" [src]="event.ImageData" [alt]="event.ImageAlt || event.Title" loading="lazy">
+        <div class="event-media-placeholder" *ngIf="!event.ImageData">
+          <span>{{ event.Title }}</span>
+        </div>
+        <div class="media-overlay"></div>
+      </div>
+
+      <div class="event-body">
+        <div>
+          <p class="event-kicker" *ngIf="event.Kicker">{{ event.Kicker }}</p>
+          <h2 class="event-title">{{ event.Title }}</h2>
+          <p class="event-description">{{ event.Description }}</p>
+        </div>
+
+        <ol class="event-schedule" *ngIf="hasSequence(event)">
+          <li class="schedule-item" *ngFor="let item of event.Schedule">
+            <span class="schedule-time">{{ item.Time }}</span>
+            <span class="schedule-label">{{ item.Label }}</span>
+          </li>
+        </ol>
+
+        <dl class="event-facts">
+          <div class="fact">
+            <dt>Date</dt>
+            <dd>{{ event.Date }}</dd>
+          </div>
+          <div class="fact" *ngIf="!hasSequence(event) && event.Schedule?.length">
+            <dt>{{ event.Schedule[0].Label }}</dt>
+            <dd>{{ event.Schedule[0].Time }}</dd>
+          </div>
+          <div class="fact">
+            <dt>Venue</dt>
+            <dd>{{ event.Venue }}</dd>
+          </div>
+          <div class="fact" *ngIf="event.Address">
+            <dt>Address</dt>
+            <dd>{{ event.Address }}</dd>
+          </div>
+        </dl>
+
+        <div class="event-organizers" *ngIf="event.Organizers && event.Organizers.length">
+          <span class="organizers-label">Organized by</span>
+          <ul>
+            <li *ngFor="let org of event.Organizers">{{ org }}</li>
+          </ul>
+        </div>
+
+        <p class="event-registration-note" *ngIf="event.RegistrationNote">
+          {{ event.RegistrationNote }}
+        </p>
+
+        <a class="event-cta" [href]="event.CtaUrl" *ngIf="event.CtaUrl">
+          <span>{{ event.CtaLabel || 'Register Now' }}</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+
+      </div>
+    </article>
+  </section>
+
+  <!-- DOT NAVIGATION WITH PERMANENT LABELS -->
+  <nav class="scroll-dots" aria-label="Page sections" *ngIf="events.length > 0">
+    <button
+      class="scroll-dot-item"
+      [class.active]="activeIndex === 0"
+      (click)="scrollToIndex(0)">
+      <span class="dot-label">Intro</span>
+      <span class="dot"></span>
+    </button>
+    <button
+      class="scroll-dot-item"
+      *ngFor="let event of events; let i = index"
+      [class.active]="activeIndex === i + 1"
+      (click)="scrollToIndex(i + 1)">
+      <span class="dot-label">{{ event.Title }}</span>
+      <span class="dot"></span>
+    </button>
+  </nav>
+
+</div>

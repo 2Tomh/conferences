@@ -1,0 +1,142 @@
+<div class="admin-page">
+
+  <div class="admin-header">
+    <div>
+      <p class="admin-eyebrow">Mind-IL · Registration Desk</p>
+      <h1 class="admin-title">Plenary Events</h1>
+    </div>
+    <button class="btn-primary" (click)="openAddForm()" *ngIf="!showForm">+ Add Event</button>
+  </div>
+
+  <p class="error-banner" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <div class="form-card" *ngIf="showForm">
+    <h2 class="form-title">{{ editingId ? 'Edit Event' : 'New Event' }}</h2>
+
+    <div class="field-grid">
+      <label class="field">
+        <span>Title</span>
+        <input type="text" [(ngModel)]="form.Title" placeholder="The Mind-IL Main Plenary Event">
+      </label>
+
+      <label class="field">
+        <span>Kicker (optional)</span>
+        <input type="text" [(ngModel)]="form.Kicker" placeholder="A Panel Discussion on Returning to Israel">
+      </label>
+    </div>
+
+    <label class="field">
+      <span>Description</span>
+      <textarea rows="4" [(ngModel)]="form.Description" placeholder="What is this event about?"></textarea>
+    </label>
+
+    <div class="field-grid">
+      <label class="field">
+        <span>Date (display text)</span>
+        <input type="text" [(ngModel)]="form.Date" placeholder="Monday, October 26, 2026">
+      </label>
+
+      <label class="field">
+        <span>Venue</span>
+        <input type="text" [(ngModel)]="form.Venue" placeholder="Smolarz Auditorium, Tel Aviv University">
+      </label>
+    </div>
+
+    <label class="field">
+      <span>Address (optional)</span>
+      <input type="text" [(ngModel)]="form.Address" placeholder="12 Klausner Street, Tel Aviv">
+    </label>
+
+    <div class="subsection">
+      <div class="subsection-header">
+        <span>Schedule</span>
+        <span class="subsection-hint">One row = shown as a single fact. Two or more = shown as a timeline.</span>
+      </div>
+      <div class="repeatable-row" *ngFor="let item of form.Schedule; let i = index">
+        <input type="text" [(ngModel)]="item.Time" placeholder="7:00 PM" class="w-time">
+        <input type="text" [(ngModel)]="item.Label" placeholder="Greetings and talks">
+        <button class="btn-remove" (click)="removeScheduleRow(i)" aria-label="Remove row">×</button>
+      </div>
+      <button class="btn-add" (click)="addScheduleRow()">+ Add time</button>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-header">
+        <span>Organizers (optional)</span>
+      </div>
+      <div class="repeatable-row" *ngFor="let org of form.Organizers; let i = index">
+        <input type="text" [(ngModel)]="form.Organizers![i]" placeholder="Mind-IL">
+        <button class="btn-remove" (click)="removeOrganizer(i)" aria-label="Remove organizer">×</button>
+      </div>
+      <button class="btn-add" (click)="addOrganizer()">+ Add organizer</button>
+    </div>
+
+    <label class="field">
+      <span>Registration note (optional)</span>
+      <input type="text" [(ngModel)]="form.RegistrationNote" placeholder="Due to high demand, attendance is subject to advance registration.">
+    </label>
+
+    <div class="field-grid">
+      <label class="field">
+        <span>Button label</span>
+        <input type="text" [(ngModel)]="form.CtaLabel" placeholder="Register for the Event">
+      </label>
+
+      <label class="field">
+        <span>Button link (URL)</span>
+        <input type="text" [(ngModel)]="form.CtaUrl" placeholder="https://...">
+      </label>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-header">
+        <span>Banner image</span>
+      </div>
+
+      <div class="image-upload-row">
+        <div class="image-preview" *ngIf="imagePreview">
+          <img [src]="imagePreview" alt="Preview">
+          <button class="btn-remove-image" (click)="removeImage()">Remove image</button>
+        </div>
+        <div class="image-placeholder" *ngIf="!imagePreview">No image selected</div>
+
+        <div class="image-upload-controls">
+          <input type="file" accept="image/*" #fileInput (change)="onImageSelected(fileInput)">
+          <label class="field" style="margin-top: 10px;">
+            <span>Image alt text</span>
+            <input type="text" [(ngModel)]="form.ImageAlt" placeholder="Describe the image for accessibility">
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-secondary" (click)="cancelForm()" [disabled]="saving">Cancel</button>
+      <button class="btn-primary" (click)="save()" [disabled]="saving">{{ saving ? 'Saving...' : 'Save Event' }}</button>
+    </div>
+  </div>
+
+  <div class="events-table" *ngIf="!showForm">
+    <p class="loading-text" *ngIf="loading">Loading events...</p>
+
+    <div class="empty-state" *ngIf="!loading && events.length === 0">
+      No plenary events yet. Click "Add Event" to create one.
+    </div>
+
+    <div class="event-row" *ngFor="let event of events">
+      <div class="event-row-thumb">
+        <img *ngIf="event.ImageData" [src]="event.ImageData" [alt]="event.ImageAlt || event.Title">
+        <span *ngIf="!event.ImageData" class="no-thumb">No image</span>
+      </div>
+      <div class="event-row-info">
+        <p class="event-row-title">{{ event.Title }}</p>
+        <p class="event-row-meta">{{ event.Date }} · {{ event.Venue }}</p>
+      </div>
+      <div class="event-row-actions">
+        <button class="btn-edit" (click)="openEditForm(event)">Edit</button>
+        <button class="btn-delete" (click)="deleteEvent(event)">Delete</button>
+      </div>
+    </div>
+  </div>
+
+</div>

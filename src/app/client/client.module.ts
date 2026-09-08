@@ -22,6 +22,7 @@ import { PaymentFailedComponent } from './components/payment-failed/payment-fail
 import { CountdownPopupComponent } from './components/countdown-popup/countdown-popup.component';
 import { ChatWidgetComponent } from './components/chat-widget/chat-widget.component';
 import { ContactUsComponent } from './components/contact-us/contact-us.component';
+import { PlenaryEventsComponent } from './components/plenary-events/plenary-events.component';
 @NgModule({
   declarations: [
     ClientRootComponent,
@@ -40,6 +41,7 @@ import { ContactUsComponent } from './components/contact-us/contact-us.component
     CountdownPopupComponent,
     ChatWidgetComponent,
     ContactUsComponent,
+    PlenaryEventsComponent,
   ],
   imports: [
     CommonModule,

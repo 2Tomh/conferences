@@ -13,6 +13,8 @@ import { AboutConferenceComponent } from '../client/components/about-conference/
 import { RegistrationFormComponent } from './components/registration-form/registration-form.component';
 // ⭐ חדש: קומפוננטת צרו קשר
 import { ContactUsComponent } from './components/contact-us/contact-us.component';
+// ⭐ חדש: קומפוננטת Plenary Events
+import { PlenaryEventsComponent } from './components/plenary-events/plenary-events.component';
 // קומפוננטות תשלום
 import { TranzilaPaymentComponent } from '../client/components/tranzila-payment/tranzila-payment.component';
 import { PaymentSuccessComponent } from './components/payment-success/payment-success.component';
@@ -31,6 +33,8 @@ const routes: Routes = [
       { path: 'conference/:id', component: ConferenceDetailsComponent },
       // ⭐ חדש: עמוד צרו קשר
       { path: 'contact-us', component: ContactUsComponent },
+      // ⭐ חדש: עמוד Plenary Events
+      { path: 'plenary-events', component: PlenaryEventsComponent },
       // נתיבי תשלום - ממוקמים בבטחה לפני ה-Wildcard
       // { path: 'payment', component: TranzilaPaymentComponent },
       { path: 'payment/success', component: PaymentSuccessComponent },

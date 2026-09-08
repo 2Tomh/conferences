@@ -24,6 +24,7 @@ import { TransactionsComponent } from './components/transactions/transactions.co
 import { PartnersManagementComponent } from './components/partners-management/partners-management.component';
 import { AnnouncementEmailComponent } from './components/announcement-email/announcement-email.component';
 import { AnnouncementTrackingComponent } from './components/announcement-tracking/announcement-tracking.component';
+import { AdminPlenaryEventsComponent } from './components/admin-plenary-events/admin-plenary-events.component';
 @NgModule({
   declarations: [
     AdminRootComponent,
@@ -40,6 +41,7 @@ import { AnnouncementTrackingComponent } from './components/announcement-trackin
     PartnersManagementComponent,
     AnnouncementEmailComponent,
     AnnouncementTrackingComponent,
+    AdminPlenaryEventsComponent,
   ],
   imports: [
     CommonModule,
