@@ -27,11 +27,10 @@ export class PlenaryEventsComponent implements OnInit, AfterViewInit, OnDestroy 
 
   private observer: IntersectionObserver | null = null;
 
-  // חדש - תמיכה בקישור ישיר לאירוע ספציפי (deep link): קוראים את
-  // ה-fragment מה-URL (למשל /plenary-events#eventId123) ומחכים גם
-  // לו וגם לרינדור בפועל של ה-sections לפני שמנסים לגלול, כי שני
-  // המקורות האלה (route fragment ו-ViewChildren) מגיעים באופן
-  // אסינכרוני ובסדר לא ידוע מראש.
+  // תמיכה בקישור ישיר לאירוע ספציפי (deep link): קוראים את
+  // ה-fragment מה-URL ומחכים גם לו וגם לרינדור בפועל של ה-sections
+  // לפני שמנסים לגלול, כי שני המקורות האלה (route fragment
+  // ו-ViewChildren) מגיעים באופן אסינכרוני ובסדר לא ידוע מראש.
   private pendingFragment: string | null = null;
   private hasScrolledToFragment = false;
   private fragmentSubscription?: Subscription;
@@ -43,7 +42,7 @@ export class PlenaryEventsComponent implements OnInit, AfterViewInit, OnDestroy 
 
   ngOnInit(): void {
     this.fragmentSubscription = this.route.fragment.subscribe(fragment => {
-      this.pendingFragment = fragment;
+      this.pendingFragment = this.extractEventId(fragment);
       this.tryScrollToFragment();
     });
 
@@ -92,11 +91,21 @@ export class PlenaryEventsComponent implements OnInit, AfterViewInit, OnDestroy 
     this.sectionRefs.forEach(ref => this.observer!.observe(ref.nativeElement));
   }
 
-  // חדש - מנסה לגלול ל-section שה-id שלו תואם לפרגמנט שב-URL.
-  // מוגן ע"י hasScrolledToFragment כדי שזה יקרה פעם אחת בלבד (לא
-  // בכל שינוי ברשימת ה-sections לאורך חיי הקומפוננטה), ומחכה בשקט
-  // אם עדיין אין התאמה (fragment עוד לא הגיע, או ה-section המתאים
-  // עדיין לא נטען/נמצא).
+  // תוקן - הפרגמנט בפועל מגיע בפורמט "id=<eventId>" (למשל
+  // "id=6aa15d9f54530c3035a1d671"), לא כ-ID גולמי. בלי הפירוק הזה,
+  // ההשוואה ל-section.id (שהוא ה-ID הגולמי בלבד) נכשלת בשקט ולעולם
+  // לא נמצאת התאמה - בדיוק מה שגרם לגלילה לא לקרות בכלל ולהישאר
+  // בראש העמוד. תומך גם בפורמט "id=xxx" וגם ב-ID גולמי ("#xxx"),
+  // למקרה שמקור אחר ייצור קישורים בפורמט שונה בעתיד.
+  private extractEventId(fragment: string | null): string | null {
+    if (!fragment) return null;
+    const match = fragment.match(/^id=(.+)$/);
+    return match ? match[1] : fragment;
+  }
+
+  // מנסה לגלול ל-section שה-id שלו תואם לפרגמנט שב-URL (אחרי
+  // הפירוק). מוגן ע"י hasScrolledToFragment כדי שזה יקרה פעם אחת
+  // בלבד, ומחכה בשקט אם עדיין אין התאמה.
   private tryScrollToFragment(): void {
     if (!this.pendingFragment || this.hasScrolledToFragment) return;
     if (!this.sectionRefs || this.sectionRefs.length === 0) return;
@@ -106,9 +115,6 @@ export class PlenaryEventsComponent implements OnInit, AfterViewInit, OnDestroy 
 
     if (target) {
       this.hasScrolledToFragment = true;
-      // setTimeout קצר נותן לדפדפן "פריים" נוסף לסיים layout (למשל
-      // תמונות שעדיין נטענות בתוך event-media), כדי שהגלילה תנחת
-      // במקום המדויק ולא תזוז אחרי שתמונה נטענת ומשנה גובה.
       setTimeout(() => {
         target.nativeElement.scrollIntoView({ behavior: 'auto', block: 'start' });
       }, 0);
