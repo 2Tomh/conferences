@@ -1,7 +1,7 @@
 <div class="plenary-wrapper">
 
-  <!-- INTRO SECTION -->
-  <section class="snap-section intro-section" #snapSection>
+  <!-- INTRO SECTION - id קבוע, כדי שגם אליה אפשר יהיה לקשר ישירות (#intro) -->
+  <section class="snap-section intro-section" #snapSection id="intro">
     <div class="plenary-intro">
       <span class="plenary-badge">Mind-IL Community</span>
       <h1 class="plenary-title">Plenary Events</h1>
@@ -13,7 +13,8 @@
     </div>
   </section>
 
-  <!-- EVENT SECTIONS -->
+  <!-- EVENT SECTIONS - כל אירוע מקבל id ייחודי משלו (event.Id), כך
+       שקישור כמו /plenary-events#<event.Id> יקפוץ ישר אליו -->
   <section
     class="snap-section event-section"
     #snapSection
