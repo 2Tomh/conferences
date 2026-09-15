@@ -3,6 +3,7 @@ import {
   OnInit,
   AfterViewInit,
   OnDestroy,
+  ViewChild,
   ViewChildren,
   QueryList,
   ElementRef
@@ -24,6 +25,11 @@ export class PlenaryEventsComponent implements OnInit, AfterViewInit, OnDestroy 
   // כל snap-section בעמוד (המבוא + section לכל אירוע) - רשימה חיה שמתעדכנת
   // אוטומטית ברגע שהאירועים מגיעים מה-API ו-ngFor מרנדר את ה-DOM
   @ViewChildren('snapSection') sectionRefs!: QueryList<ElementRef<HTMLElement>>;
+
+  // חדש - handle לקונטיינר הגלילה עצמו (.plenary-wrapper), כדי
+  // שנוכל לנטרל זמנית את ה-scroll-snap שלו בזמן קפיצה ישירה
+  // (ראו הסבר מפורט ב-waitForStableLayoutThenScroll למטה).
+  @ViewChild('plenaryWrapper') wrapperRef!: ElementRef<HTMLElement>;
 
   private observer: IntersectionObserver | null = null;
 
@@ -91,21 +97,17 @@ export class PlenaryEventsComponent implements OnInit, AfterViewInit, OnDestroy 
     this.sectionRefs.forEach(ref => this.observer!.observe(ref.nativeElement));
   }
 
-  // תוקן - הפרגמנט בפועל מגיע בפורמט "id=<eventId>" (למשל
-  // "id=6aa15d9f54530c3035a1d671"), לא כ-ID גולמי. בלי הפירוק הזה,
-  // ההשוואה ל-section.id (שהוא ה-ID הגולמי בלבד) נכשלת בשקט ולעולם
-  // לא נמצאת התאמה - בדיוק מה שגרם לגלילה לא לקרות בכלל ולהישאר
-  // בראש העמוד. תומך גם בפורמט "id=xxx" וגם ב-ID גולמי ("#xxx"),
-  // למקרה שמקור אחר ייצור קישורים בפורמט שונה בעתיד.
+  // הפרגמנט בפועל מגיע בפורמט "id=<eventId>" (למשל
+  // "id=6aa15d9f54530c3035a1d671"), לא כ-ID גולמי. תומך גם בפורמט
+  // "id=xxx" וגם ב-ID גולמי ("#xxx").
   private extractEventId(fragment: string | null): string | null {
     if (!fragment) return null;
     const match = fragment.match(/^id=(.+)$/);
     return match ? match[1] : fragment;
   }
 
-  // מנסה לגלול ל-section שה-id שלו תואם לפרגמנט שב-URL (אחרי
-  // הפירוק). מוגן ע"י hasScrolledToFragment כדי שזה יקרה פעם אחת
-  // בלבד, ומחכה בשקט אם עדיין אין התאמה.
+  // מנסה לגלול ל-section שה-id שלו תואם לפרגמנט שב-URL. מוגן ע"י
+  // hasScrolledToFragment כדי שזה יקרה פעם אחת בלבד.
   private tryScrollToFragment(): void {
     if (!this.pendingFragment || this.hasScrolledToFragment) return;
     if (!this.sectionRefs || this.sectionRefs.length === 0) return;
@@ -115,9 +117,53 @@ export class PlenaryEventsComponent implements OnInit, AfterViewInit, OnDestroy 
 
     if (target) {
       this.hasScrolledToFragment = true;
-      setTimeout(() => {
-        target.nativeElement.scrollIntoView({ behavior: 'auto', block: 'start' });
-      }, 0);
+      this.waitForStableLayoutThenScroll(target.nativeElement);
+    }
+  }
+
+  // תוקן - הבאג: קפיצה מיידית (setTimeout(0)) הייתה מתבצעת לפני
+  // שהדף התייצב (תמונות ב-loading="lazy" עדיין בטעינה, גבהים
+  // משתנים). בגלל scroll-snap-type: y mandatory על .plenary-wrapper,
+  // הדפדפן "מתקן" את מיקום הגלילה לפי snap point הקרוב ביותר תוך
+  // כדי שהתמונות ממשיכות לטעון ולשנות את הגבהים - מה שגרם לגלילה
+  // "לגלוש" עד ה-section האחרון בעמוד במקום להישאר על האירוע
+  // המבוקש. התיקון: (1) ממתינים לטעינה מלאה של הדף (כולל תמונות,
+  // לא רק DOM) לפני שמנסים לגלול בכלל, ו-(2) מנטרלים זמנית את
+  // ה-scroll-snap על הקונטיינר תוך כדי הקפיצה עצמה, כדי שהדפדפן לא
+  // "יתקן" את המיקום שלנו בעצמו תוך כדי טעינה נוספת.
+  private waitForStableLayoutThenScroll(el: HTMLElement): void {
+    let hasScrolled = false;
+
+    const performScroll = () => {
+      if (hasScrolled) return;
+      hasScrolled = true;
+
+      const wrapper = this.wrapperRef?.nativeElement;
+      wrapper?.classList.add('scroll-jump-active');
+
+      // שני requestAnimationFrame נותנים לדפדפן שני "פריימים" מלאים
+      // לסיים layout/paint אחרי שהתמונות נטענו, לפני שמבצעים את
+      // הקפיצה בפועל.
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          el.scrollIntoView({ behavior: 'auto', block: 'start' });
+
+          // מחזירים את ה-snap בחזרה אחרי שהקפיצה "נחתה" והתייצבה,
+          // לא מיד - כדי שלא יתפוס אותנו באמצע התנועה.
+          setTimeout(() => {
+            wrapper?.classList.remove('scroll-jump-active');
+          }, 400);
+        });
+      });
+    };
+
+    if (document.readyState === 'complete') {
+      performScroll();
+    } else {
+      window.addEventListener('load', performScroll, { once: true });
+      // רשת/תמונות איטיות - לא מחכים לנצח ל-load, אחרי 1.5 שניות
+      // קופצים בכל מקרה גם אם עדיין לא הכל נטען.
+      setTimeout(performScroll, 1500);
     }
   }
 

@@ -1,4 +1,4 @@
-<div class="plenary-wrapper">
+<div class="plenary-wrapper" #plenaryWrapper>
 
   <!-- INTRO SECTION - id קבוע, כדי שגם אליה אפשר יהיה לקשר ישירות (#intro) -->
   <section class="snap-section intro-section" #snapSection id="intro">
@@ -14,7 +14,7 @@
   </section>
 
   <!-- EVENT SECTIONS - כל אירוע מקבל id ייחודי משלו (event.Id), כך
-       שקישור כמו /plenary-events#<event.Id> יקפוץ ישר אליו -->
+       שקישור כמו /plenary-events#id=<event.Id> יקפוץ ישר אליו -->
   <section
     class="snap-section event-section"
     #snapSection
