@@ -22,24 +22,25 @@ export class PlenaryEventsComponent implements OnInit, AfterViewInit, OnDestroy 
   events: PlenaryEvent[] = [];
   activeIndex = 0;
 
-  // כל snap-section בעמוד (המבוא + section לכל אירוע) - רשימה חיה שמתעדכנת
-  // אוטומטית ברגע שהאירועים מגיעים מה-API ו-ngFor מרנדר את ה-DOM
   @ViewChildren('snapSection') sectionRefs!: QueryList<ElementRef<HTMLElement>>;
-
-  // חדש - handle לקונטיינר הגלילה עצמו (.plenary-wrapper), כדי
-  // שנוכל לנטרל זמנית את ה-scroll-snap שלו בזמן קפיצה ישירה
-  // (ראו הסבר מפורט ב-waitForStableLayoutThenScroll למטה).
   @ViewChild('plenaryWrapper') wrapperRef!: ElementRef<HTMLElement>;
 
   private observer: IntersectionObserver | null = null;
 
-  // תמיכה בקישור ישיר לאירוע ספציפי (deep link): קוראים את
-  // ה-fragment מה-URL ומחכים גם לו וגם לרינדור בפועל של ה-sections
-  // לפני שמנסים לגלול, כי שני המקורות האלה (route fragment
-  // ו-ViewChildren) מגיעים באופן אסינכרוני ובסדר לא ידוע מראש.
   private pendingFragment: string | null = null;
-  private hasScrolledToFragment = false;
+  private hasFoundTarget = false;
   private fragmentSubscription?: Subscription;
+
+  // חדש - "אכיפת" מיקום: אחרי שמצאנו את ה-section הנכון, אנחנו לא
+  // מסתפקים בקפיצה חד-פעמית. במקום זאת, במשך חלון זמן קצר (3
+  // שניות) אנחנו מאזינים לאירועי scroll על הקונטיינר, ואם מישהו/
+  // משהו אחר (למשל סקריפט חיצוני של הפלטפורמה שמפרש #id=xxx בדרך
+  // משלו ומריץ קפיצה מתחרה) מזיז אותנו הרחק מהיעד - קופצים בחזרה
+  // אליו שוב. זה עוקף את הבעיה בלי צורך לדעת בדיוק מי/מה מתחרה בנו
+  // על מיקום הגלילה.
+  private enforcementTarget: HTMLElement | null = null;
+  private enforcementDeadline = 0;
+  private enforcementScrollListener: (() => void) | null = null;
 
   constructor(
     private plenaryEventsService: PlenaryEventsService,
@@ -59,10 +60,6 @@ export class PlenaryEventsComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngAfterViewInit(): void {
-    // מרכיבים מחדש את ה-observer בכל פעם שרשימת ה-sections משתנה
-    // (כלומר גם ברגע שהאירועים מגיעים מה-API אחרי הטעינה הראשונית),
-    // ומנסים לגלול לפרגמנט בכל שינוי כזה - כי רק אחרי שהאירועים
-    // נטענו ה-section הרלוונטי בכלל קיים ב-DOM.
     this.sectionRefs.changes.subscribe(() => {
       this.setupObserver();
       this.tryScrollToFragment();
@@ -74,6 +71,7 @@ export class PlenaryEventsComponent implements OnInit, AfterViewInit, OnDestroy 
   ngOnDestroy(): void {
     this.observer?.disconnect();
     this.fragmentSubscription?.unsubscribe();
+    this.stopEnforcement();
   }
 
   private setupObserver(): void {
@@ -97,40 +95,25 @@ export class PlenaryEventsComponent implements OnInit, AfterViewInit, OnDestroy 
     this.sectionRefs.forEach(ref => this.observer!.observe(ref.nativeElement));
   }
 
-  // הפרגמנט בפועל מגיע בפורמט "id=<eventId>" (למשל
-  // "id=6aa15d9f54530c3035a1d671"), לא כ-ID גולמי. תומך גם בפורמט
-  // "id=xxx" וגם ב-ID גולמי ("#xxx").
   private extractEventId(fragment: string | null): string | null {
     if (!fragment) return null;
     const match = fragment.match(/^id=(.+)$/);
     return match ? match[1] : fragment;
   }
 
-  // מנסה לגלול ל-section שה-id שלו תואם לפרגמנט שב-URL. מוגן ע"י
-  // hasScrolledToFragment כדי שזה יקרה פעם אחת בלבד.
   private tryScrollToFragment(): void {
-    if (!this.pendingFragment || this.hasScrolledToFragment) return;
+    if (!this.pendingFragment || this.hasFoundTarget) return;
     if (!this.sectionRefs || this.sectionRefs.length === 0) return;
 
     const target = this.sectionRefs.toArray()
       .find(ref => ref.nativeElement.id === this.pendingFragment);
 
     if (target) {
-      this.hasScrolledToFragment = true;
+      this.hasFoundTarget = true;
       this.waitForStableLayoutThenScroll(target.nativeElement);
     }
   }
 
-  // תוקן - הבאג: קפיצה מיידית (setTimeout(0)) הייתה מתבצעת לפני
-  // שהדף התייצב (תמונות ב-loading="lazy" עדיין בטעינה, גבהים
-  // משתנים). בגלל scroll-snap-type: y mandatory על .plenary-wrapper,
-  // הדפדפן "מתקן" את מיקום הגלילה לפי snap point הקרוב ביותר תוך
-  // כדי שהתמונות ממשיכות לטעון ולשנות את הגבהים - מה שגרם לגלילה
-  // "לגלוש" עד ה-section האחרון בעמוד במקום להישאר על האירוע
-  // המבוקש. התיקון: (1) ממתינים לטעינה מלאה של הדף (כולל תמונות,
-  // לא רק DOM) לפני שמנסים לגלול בכלל, ו-(2) מנטרלים זמנית את
-  // ה-scroll-snap על הקונטיינר תוך כדי הקפיצה עצמה, כדי שהדפדפן לא
-  // "יתקן" את המיקום שלנו בעצמו תוך כדי טעינה נוספת.
   private waitForStableLayoutThenScroll(el: HTMLElement): void {
     let hasScrolled = false;
 
@@ -141,15 +124,13 @@ export class PlenaryEventsComponent implements OnInit, AfterViewInit, OnDestroy 
       const wrapper = this.wrapperRef?.nativeElement;
       wrapper?.classList.add('scroll-jump-active');
 
-      // שני requestAnimationFrame נותנים לדפדפן שני "פריימים" מלאים
-      // לסיים layout/paint אחרי שהתמונות נטענו, לפני שמבצעים את
-      // הקפיצה בפועל.
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           el.scrollIntoView({ behavior: 'auto', block: 'start' });
+          // חדש - מפעילים את חלון האכיפה מיד אחרי הקפיצה הראשונה,
+          // כדי לתפוס ולתקן כל קפיצה מתחרה שתגיע אחרינו.
+          this.startEnforcement(el);
 
-          // מחזירים את ה-snap בחזרה אחרי שהקפיצה "נחתה" והתייצבה,
-          // לא מיד - כדי שלא יתפוס אותנו באמצע התנועה.
           setTimeout(() => {
             wrapper?.classList.remove('scroll-jump-active');
           }, 400);
@@ -161,10 +142,57 @@ export class PlenaryEventsComponent implements OnInit, AfterViewInit, OnDestroy 
       performScroll();
     } else {
       window.addEventListener('load', performScroll, { once: true });
-      // רשת/תמונות איטיות - לא מחכים לנצח ל-load, אחרי 1.5 שניות
-      // קופצים בכל מקרה גם אם עדיין לא הכל נטען.
       setTimeout(performScroll, 1500);
     }
+  }
+
+  // חדש - מתחיל "לשמור" על מיקום הגלילה סביב היעד למשך 3 שניות.
+  // כל פעם שמתרחש אירוע scroll על הקונטיינר ואנחנו מוצאים את עצמנו
+  // רחוק מהיעד (יותר מ-100px), מניחים שמשהו חיצוני "גנב" את הגלילה
+  // וקופצים בחזרה אליו. אחרי 3 שניות מפסיקים לאכוף (כדי לא להפריע
+  // אם המשתמש עצמו מנסה לגלול ידנית אחרי שהדף כבר התייצב).
+  private startEnforcement(target: HTMLElement): void {
+    this.enforcementTarget = target;
+    this.enforcementDeadline = Date.now() + 3000;
+
+    const wrapper = this.wrapperRef?.nativeElement;
+    if (!wrapper) return;
+
+    this.stopEnforcement();
+
+    this.enforcementScrollListener = () => {
+      if (Date.now() > this.enforcementDeadline) {
+        this.stopEnforcement();
+        return;
+      }
+      if (!this.enforcementTarget) return;
+
+      const targetTop = this.enforcementTarget.offsetTop;
+      const currentTop = wrapper.scrollTop;
+
+      if (Math.abs(currentTop - targetTop) > 100) {
+        wrapper.scrollTo({ top: targetTop, behavior: 'auto' });
+      }
+    };
+
+    wrapper.addEventListener('scroll', this.enforcementScrollListener, { passive: true });
+
+    // בדיקה מיידית נוספת גם בלי אירוע scroll, למקרה שהקפיצה
+    // המתחרה קורית לפני שה-listener בכלל נרשם.
+    setTimeout(() => this.enforcementScrollListener?.(), 100);
+    setTimeout(() => this.enforcementScrollListener?.(), 500);
+    setTimeout(() => this.enforcementScrollListener?.(), 1000);
+    setTimeout(() => this.enforcementScrollListener?.(), 2000);
+    setTimeout(() => this.stopEnforcement(), 3100);
+  }
+
+  private stopEnforcement(): void {
+    const wrapper = this.wrapperRef?.nativeElement;
+    if (wrapper && this.enforcementScrollListener) {
+      wrapper.removeEventListener('scroll', this.enforcementScrollListener);
+    }
+    this.enforcementScrollListener = null;
+    this.enforcementTarget = null;
   }
 
   scrollToIndex(index: number): void {
