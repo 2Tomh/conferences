@@ -184,10 +184,6 @@
   margin: 0;
 }
 
-.plenary-wrapper.scroll-jump-active {
-  scroll-snap-type: none !important;
-}
-
 /* ══ SCHEDULE TIMELINE ══ */
 .event-schedule {
   list-style: none;
@@ -415,7 +411,6 @@
   .snap-section {
     padding: 30px 20px;
   }
-
   .plenary-intro {
     padding: 35px 24px;
   }

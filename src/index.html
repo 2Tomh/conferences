@@ -6,6 +6,19 @@
   <title>Mind-IL</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script>
+    // תופס את ה-hash הגולמי מה-URL הכי מוקדם שאפשר - עוד לפני
+    // שAngular בכלל התחיל לטעון. יש באג ידוע ב-Angular Router:
+    // כשמשתמשים ב-loadChildren מקונן על path ריק (AppRoutingModule
+    // -> ClientModule -> path ריק -> plenary-events), ה-Router עצמו
+    // מוחק את ה-fragment מה-URL תוך כדי עיבוד הניווט הראשוני - גם
+    // window.location.hash בתוך ngOnInit של קומפוננטה כבר ריק בשלב
+    // הזה. השורה הזו רצה כאן, הרבה לפני שAngular בכלל קיים, אז שום
+    // דבר עוד לא הספיק "לגנוב" את ה-hash.
+    window.__initialUrlHash = window.location.hash;
+  </script>
+
   <!-- <link rel="preconnect" href="https://fonts.googleapis.com"> -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
