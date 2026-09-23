@@ -17,12 +17,14 @@
 .page-header h2 {
   font-size: 1.8rem;
   margin: 6px 0;
+  text-align: center;
 }
 
 .page-subtitle {
   color: #8b8ca8;
   font-size: 0.9rem;
   margin-bottom: 24px;
+  text-align: center;
 }
 
 .form-card {
