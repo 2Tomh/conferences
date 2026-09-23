@@ -94,12 +94,20 @@ export class ApiService {
     return this.http.get<any>(`${this.apiUrl}/Admin/faculties`);
   }
 
-  getAllAttendees(filters?: { conferenceId?: string; paymentStatus?: string; search?: string }) {
+  // ⭐ שינוי: includeAbstracts=false מחזיר רשימה בלי טקסטי האבסטרקט (הרבה יותר קלה).
+  // ברירת המחדל נשארת כמו קודם (עם הטקסטים), כדי לא לשבור עמודים אחרים שמשתמשים בזה.
+  getAllAttendees(filters?: { conferenceId?: string; paymentStatus?: string; search?: string; includeAbstracts?: boolean }) {
     let params = new HttpParams();
     if (filters?.conferenceId) params = params.set('conferenceId', filters.conferenceId);
     if (filters?.paymentStatus) params = params.set('paymentStatus', filters.paymentStatus);
     if (filters?.search) params = params.set('search', filters.search);
+    if (filters?.includeAbstracts === false) params = params.set('includeAbstracts', 'false');
     return this.http.get<any[]>(`${this.apiUrl}/registration/all`, { params });
+  }
+
+  // ⭐ חדש: טקסט האבסטרקט המלא של נרשם אחד
+  getAttendeeAbstract(attendeeId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/registration/abstract/${attendeeId}`);
   }
 
   registerAttendee(attendee: any): Observable<any> {

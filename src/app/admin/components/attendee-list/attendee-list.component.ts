@@ -29,6 +29,9 @@ export class AttendeeListComponent implements OnInit {
   addAbstractError = '';
   isSavingAbstract = false;
 
+  // ⭐ חדש: מצב ייצוא אבסטרקטים (הטקסטים נטענים מהשרת רק בזמן הייצוא)
+  isExportingAbstracts = false;
+
   constructor(private apiService: ApiService) { }
   ngOnInit(): void {
     this.loadAttendees();
@@ -101,6 +104,9 @@ export class AttendeeListComponent implements OnInit {
     link.click();
     document.body.removeChild(link);
   }
+
+  // ⭐ שינוי: הרשימה כבר לא כוללת את טקסטי האבסטרקט, ולכן בזמן הייצוא
+  // טוענים אותם מהשרת (רק כאן), ומייצאים את מי שמופיע כרגע ברשימה המסוננת.
   exportAbstractsToCSV() {
     const withAbstracts = this.filteredAttendees.filter(
       a => a.HasAbstract === true || a.hasAbstract === true
@@ -110,36 +116,59 @@ export class AttendeeListComponent implements OnInit {
       alert("No abstracts to export");
       return;
     }
+    if (this.isExportingAbstracts) return;
 
-    const header = "Full Name,Affiliation,Conference,Abstract Title,Abstract Body,Additional Notes\n";
-    const rows = withAbstracts.map(a => {
-      return [
-        a.FullName,
-        a.Affiliation || a.affiliation || '—',
-        a.ConferenceName || '—',
-        a.AbstractTitle || a.abstractTitle || '',
-        a.AbstractBody || a.abstractBody || '',
-        a.AbstractNotes || a.abstractNotes || ''
-      ].map(value => `"${String(value).replace(/"/g, '""')}"`).join(",");
-    }).join("\n");
+    this.isExportingAbstracts = true;
+    const wantedIds = new Set(withAbstracts.map(a => a.Id));
 
-    const csvContent = "\uFEFF" + header + rows;
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement("a");
-    const url = URL.createObjectURL(blob);
-    link.setAttribute("href", url);
-    link.setAttribute("download", "abstracts.csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    this.apiService.getAllAttendees({
+      conferenceId: this.selectedConferenceId,
+      paymentStatus: this.selectedPaymentStatus,
+      includeAbstracts: true
+    }).subscribe({
+      next: (full: any[]) => {
+        this.isExportingAbstracts = false;
+        const fullById = new Map((full || []).map(f => [f.Id, f]));
+        const rowsSource = withAbstracts.map(a => fullById.get(a.Id) || a).filter(a => wantedIds.has(a.Id));
+
+        const header = "Full Name,Affiliation,Conference,Abstract Title,Abstract Body,Additional Notes\n";
+        const rows = rowsSource.map(a => {
+          return [
+            a.FullName,
+            a.Affiliation || a.affiliation || '—',
+            a.ConferenceName || '—',
+            a.AbstractTitle || a.abstractTitle || '',
+            a.AbstractBody || a.abstractBody || '',
+            a.AbstractNotes || a.abstractNotes || ''
+          ].map(value => `"${String(value).replace(/"/g, '""')}"`).join(",");
+        }).join("\n");
+
+        const csvContent = "\uFEFF" + header + rows;
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", "abstracts.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      },
+      error: (err) => {
+        this.isExportingAbstracts = false;
+        console.error('Error exporting abstracts:', err);
+        alert('Failed to export abstracts');
+      }
+    });
   }
+
   loadAttendees() {
     this.isLoading = true;
     this.error = '';
     this.apiService.getAllAttendees({
       conferenceId: this.selectedConferenceId,
       paymentStatus: this.selectedPaymentStatus,
-      search: this.searchTerm
+      search: this.searchTerm,
+      includeAbstracts: false // ⭐ שינוי: רשימה קלה, בלי טקסטי האבסטרקט
     }).subscribe({
       next: (data) => {
         this.attendees = data;
@@ -196,8 +225,30 @@ export class AttendeeListComponent implements OnInit {
   }
   openDetails(attendee: any) { this.selectedAttendee = attendee; }
   closeDetails() { this.selectedAttendee = null; }
+
+  // ⭐ חדש: טוען את טקסט האבסטרקט של נרשם אחד מהשרת (פעם אחת), ושומר אותו על האובייקט
+  private loadAbstract(attendee: any, onLoaded?: () => void): void {
+    if (!attendee?.Id || attendee._abstractLoaded) {
+      onLoaded?.();
+      return;
+    }
+    this.apiService.getAttendeeAbstract(attendee.Id).subscribe({
+      next: (res: any) => {
+        attendee.AbstractTitle = res?.AbstractTitle ?? attendee.AbstractTitle;
+        attendee.AbstractBody = res?.AbstractBody ?? null;
+        attendee.AbstractNotes = res?.AbstractNotes ?? null;
+        attendee._abstractLoaded = true;
+        onLoaded?.();
+      },
+      error: (err) => {
+        console.error('Error loading abstract:', err);
+      }
+    });
+  }
+
   openAbstractDetails(attendee: any) {
     this.selectedAbstractAttendee = attendee;
+    this.loadAbstract(attendee);
   }
   closeAbstractDetails() { this.selectedAbstractAttendee = null; }
 
@@ -207,6 +258,16 @@ export class AttendeeListComponent implements OnInit {
     this.addAbstractBody = attendee.AbstractBody || attendee.abstractBody || '';
     this.addAbstractNotes = attendee.AbstractNotes || attendee.abstractNotes || '';
     this.addAbstractError = '';
+
+    // בעריכה של אבסטרקט קיים - משלימים את הטקסט המלא מהשרת אם עוד לא נטען
+    if ((attendee.HasAbstract || attendee.hasAbstract) && !attendee._abstractLoaded) {
+      this.loadAbstract(attendee, () => {
+        if (this.addAbstractTarget !== attendee) return;
+        this.addAbstractTitle = attendee.AbstractTitle || '';
+        this.addAbstractBody = attendee.AbstractBody || '';
+        this.addAbstractNotes = attendee.AbstractNotes || '';
+      });
+    }
   }
 
   get isEditingAbstract(): boolean {
@@ -241,6 +302,7 @@ export class AttendeeListComponent implements OnInit {
         this.addAbstractTarget.AbstractTitle = this.addAbstractTitle.trim();
         this.addAbstractTarget.AbstractBody = this.addAbstractBody.trim();
         this.addAbstractTarget.AbstractNotes = this.addAbstractNotes.trim() || null;
+        this.addAbstractTarget._abstractLoaded = true;
         this.addAbstractTarget = null;
       },
       error: (err) => {
@@ -275,6 +337,7 @@ export class AttendeeListComponent implements OnInit {
         target.AbstractTitle = null;
         target.AbstractBody = null;
         target.AbstractNotes = null;
+        target._abstractLoaded = true;
         this.deletingAbstractTarget = null;
         if (this.selectedAbstractAttendee?.Id === target.Id) {
           this.selectedAbstractAttendee = null;
@@ -331,7 +394,7 @@ export class AttendeeListComponent implements OnInit {
     });
   }
 
-  // ⭐⭐ חדש: state ולוגיקת עריכת נרשם - Admin בלבד
+  // state ולוגיקת עריכת נרשם - Admin בלבד
   editingAttendeeTarget: any = null;
   editFullName = '';
   editEmail = '';
