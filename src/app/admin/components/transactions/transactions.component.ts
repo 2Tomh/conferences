@@ -33,7 +33,7 @@ export class TransactionsComponent implements OnInit {
   resendingOrderIds = new Set<string>();
   resendFeedback: { [orderId: string]: string } = {};
 
-  // ⭐⭐ חדש: לעריכת transaction (רשימת כנסים לבחירה + role check)
+  // לעריכת transaction (רשימת כנסים לבחירה + role check)
   allConferences: any[] = [];
   isAdmin = false;
 
@@ -55,7 +55,7 @@ export class TransactionsComponent implements OnInit {
     });
   }
 
-  // ⭐⭐ אותה לוגיקת בדיקת role כמו ב-attendee-list.component.ts
+  // אותה לוגיקת בדיקת role כמו ב-attendee-list.component.ts
   private checkIsAdmin(): boolean {
     const directRole = localStorage.getItem('role');
     if (directRole) {
@@ -191,8 +191,24 @@ export class TransactionsComponent implements OnInit {
     this.applyFilters();
   }
 
+  // ⭐ שינוי: הרשימה כבר לא כוללת את טקסט האבסטרקט (AbstractBody / AbstractNotes).
+  // פותחים את החלון מיד עם מה שיש, וטוענים את הפרטים המלאים ברקע.
+  // אחרי טעינה ראשונה הם נשמרים על האובייקט, כך שפתיחה חוזרת לא שולחת בקשה נוספת.
   openDetails(tx: any): void {
     this.selectedTransaction = tx;
+
+    const alreadyLoaded = tx.AbstractBody !== undefined || tx.AbstractNotes !== undefined;
+    if (!tx.HasAbstract || alreadyLoaded || !tx.OrderId) return;
+
+    this.apiService.getTransactionByOrderId(tx.OrderId).subscribe({
+      next: (full: any) => {
+        tx.AbstractBody = full?.AbstractBody ?? null;
+        tx.AbstractNotes = full?.AbstractNotes ?? null;
+      },
+      error: (err: any) => {
+        console.error('Error loading transaction details:', err);
+      }
+    });
   }
 
   closeDetails(): void {
@@ -234,7 +250,7 @@ export class TransactionsComponent implements OnInit {
     return this.resendingOrderIds.has(orderId);
   }
 
-  // ⭐⭐ חדש: state ולוגיקת עריכת transaction - Admin בלבד
+  // state ולוגיקת עריכת transaction - Admin בלבד
   editingTransactionTarget: any = null;
   editTxFullName = '';
   editTxEmail = '';
