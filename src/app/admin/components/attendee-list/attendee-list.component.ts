@@ -32,12 +32,85 @@ export class AttendeeListComponent implements OnInit {
   // ⭐ חדש: מצב ייצוא אבסטרקטים (הטקסטים נטענים מהשרת רק בזמן הייצוא)
   isExportingAbstracts = false;
 
+  // ⭐ חדש: מקומות שמורים לאירוע הערב
+  seatQuota: number | null = null;   // null = אדמין (ללא הגבלה)
+  seatsUsed = 0;
+  currentUserId = '';
+  togglingSeatIds = new Set<string>();
+  seatError = '';
+  showReservedOnly = false;
+
   constructor(private apiService: ApiService) { }
   ngOnInit(): void {
     this.loadAttendees();
     this.loadConferences();
     this.isAdmin = this.checkIsAdmin();
+    this.loadSeatSummary();
   }
+
+  // =====================================================================
+  // ⭐ חדש: מקומות שמורים לאירוע הערב
+  // =====================================================================
+  loadSeatSummary(): void {
+    this.apiService.getReservedSeatSummary().subscribe({
+      next: (res) => {
+        this.seatQuota = res?.Quota ?? null;
+        this.seatsUsed = res?.Used ?? 0;
+        this.currentUserId = res?.UserId || '';
+      },
+      error: (err) => console.error('Error loading reserved seat summary:', err)
+    });
+  }
+
+  get seatsRemaining(): number | null {
+    return this.seatQuota == null ? null : Math.max(0, this.seatQuota - this.seatsUsed);
+  }
+
+  get reservedCount(): number {
+    return this.filteredAttendees.filter(a => a.HasReservedSeat === true).length;
+  }
+
+  canToggleSeat(a: any): boolean {
+    if (!a?.Id || this.togglingSeatIds.has(a.Id)) return false;
+    if (this.isAdmin) return true;
+    if (a.HasReservedSeat) {
+      // מארגן יכול לבטל רק מקום שהוא עצמו שמר
+      return !a.ReservedByUserId || a.ReservedByUserId === this.currentUserId;
+    }
+    return this.seatQuota != null && this.seatsUsed < this.seatQuota;
+  }
+
+  seatButtonTitle(a: any): string {
+    if (a.HasReservedSeat && !this.isAdmin && a.ReservedByUserId && a.ReservedByUserId !== this.currentUserId)
+      return 'Reserved by another organizer';
+    if (!a.HasReservedSeat && !this.isAdmin && (this.seatQuota == null || this.seatsUsed >= this.seatQuota))
+      return 'No reserved seats left in your quota';
+    return a.HasReservedSeat ? 'Click to release this seat' : 'Click to reserve a seat';
+  }
+
+  toggleSeat(a: any): void {
+    if (!this.canToggleSeat(a)) return;
+    const newValue = !a.HasReservedSeat;
+    this.togglingSeatIds.add(a.Id);
+    this.seatError = '';
+
+    this.apiService.setReservedSeat(a.Id, newValue).subscribe({
+      next: (res) => {
+        this.togglingSeatIds.delete(a.Id);
+        a.HasReservedSeat = res?.HasReservedSeat ?? newValue;
+        a.ReservedByUserId = res?.ReservedByUserId ?? null;
+        this.loadSeatSummary();
+        if (this.showReservedOnly) this.applyFilters();
+      },
+      error: (err) => {
+        this.togglingSeatIds.delete(a.Id);
+        this.seatError = err?.error?.message || 'Failed to update reserved seat';
+        this.loadSeatSummary();
+      }
+    });
+  }
+
+  onReservedOnlyChange(): void { this.applyFilters(); }
 
   private checkIsAdmin(): boolean {
     const directRole = localStorage.getItem('role');
@@ -78,7 +151,7 @@ export class AttendeeListComponent implements OnInit {
       alert("No data to export");
       return;
     }
-    const header = "Full Name,Email,Affiliation,Address,Role,Conference,Abstract Submitted,Payment Status,Amount Paid,Registration Date\n";
+    const header = "Full Name,Email,Affiliation,Address,Role,Conference,Abstract Submitted,Payment Status,Amount Paid,Registration Date,Reserved Seat\n";
     const rows = this.filteredAttendees.map(a => {
       const hasAbstract = (a.HasAbstract === true || a.hasAbstract === true) ? 'Yes' : 'No';
       return [
@@ -91,7 +164,8 @@ export class AttendeeListComponent implements OnInit {
         hasAbstract,
         a.DisplayStatus || a.PaymentStatus,
         (a.Amount || a.amount || 0) + ' ' + this.getCurrencySymbol(a),
-        a.RegisteredAt ? new Date(a.RegisteredAt).toLocaleString('en-US') : ''
+        a.RegisteredAt ? new Date(a.RegisteredAt).toLocaleString('en-US') : '',
+        a.HasReservedSeat ? 'Yes' : 'No' // ⭐ חדש
       ].map(value => `"${String(value).replace(/"/g, '""')}"`).join(",");
     }).join("\n");
     const csvContent = "\uFEFF" + header + rows;
@@ -202,6 +276,8 @@ export class AttendeeListComponent implements OnInit {
       list = list.filter(a => a.ConferenceId === this.selectedConferenceId);
     if (this.selectedPaymentStatus)
       list = list.filter(a => a.PaymentStatus === this.selectedPaymentStatus);
+    if (this.showReservedOnly)
+      list = list.filter(a => a.HasReservedSeat === true);
     list.sort((a, b) => {
       const av = a[this.sortField] ?? '';
       const bv = b[this.sortField] ?? '';

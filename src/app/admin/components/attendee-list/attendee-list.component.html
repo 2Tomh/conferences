@@ -7,7 +7,9 @@
         <div class="header-actions">
             <div class="export-buttons">
                 <button class="btn-export" (click)="exportToCSV()">Export to CSV</button>
-                <button class="btn-export" (click)="exportAbstractsToCSV()">Export Abstracts Only</button>
+                <button class="btn-export" [disabled]="isExportingAbstracts" (click)="exportAbstractsToCSV()">
+                    {{ isExportingAbstracts ? 'Exporting...' : 'Export Abstracts Only' }}
+                </button>
             </div>
             <div class="stats-row">
                 <div class="stat-chip">
@@ -30,13 +32,36 @@
                     <span class="stat-count">{{ withAbstractCount }}</span>
                     <span class="stat-label">Abstracts</span>
                 </div>
+                <!-- ⭐ חדש: מקומות שמורים לאירוע הערב -->
+                <div class="stat-chip paid" [title]="isAdmin ? 'Total reserved seats (all organizers)' : 'Your reserved seats / your quota'">
+                    <span class="stat-count">
+                        {{ seatsUsed }}<ng-container *ngIf="seatQuota !== null"> / {{ seatQuota }}</ng-container>
+                    </span>
+                    <span class="stat-label">Evening Seats</span>
+                </div>
             </div>
         </div>
     </div>
     <div class="filters-bar">
         <input class="search-input" type="text" placeholder="Search by name, email, affiliation..."
             [(ngModel)]="searchTerm" (input)="onSearch()" />
+        <!-- ⭐ חדש: הצגת משתתפים עם מקום שמור בלבד -->
+        <label style="display:inline-flex;align-items:center;gap:6px;margin-left:12px;white-space:nowrap;cursor:pointer;">
+            <input type="checkbox" [(ngModel)]="showReservedOnly" (change)="onReservedOnlyChange()" />
+            Reserved seats only
+        </label>
     </div>
+    <!-- ⭐ חדש: הודעה על הקצאה / שגיאה -->
+    <div *ngIf="!isAdmin && seatQuota !== null && seatQuota > 0 && seatsRemaining === 0"
+        style="margin:8px 0;padding:10px 14px;border-radius:8px;background:#FFF4E5;color:#8A5300;font-size:14px;">
+        You have used all {{ seatQuota }} of your evening event seats. Release a seat to reserve another.
+    </div>
+    <div *ngIf="!isAdmin && (seatQuota === null || seatQuota === 0)"
+        style="margin:8px 0;padding:10px 14px;border-radius:8px;background:#F2F2F5;color:#555;font-size:14px;">
+        No evening event seats have been allocated to you yet.
+    </div>
+    <div class="error-msg" *ngIf="seatError">{{ seatError }}</div>
+
     <div class="loading" *ngIf="isLoading">Loading attendees...</div>
     <div class="error-msg" *ngIf="error">{{ error }}</div>
     <div class="table-wrap" *ngIf="!isLoading && !error">
@@ -52,6 +77,8 @@
                     <th (click)="sortBy('PaymentStatus')" class="sortable">Payment</th>
                     <th (click)="sortBy('Amount')" class="sortable">Amount Paid</th>
                     <th (click)="sortBy('RegisteredAt')" class="sortable">Registration Date</th>
+                    <!-- ⭐ חדש -->
+                    <th (click)="sortBy('HasReservedSeat')" class="sortable">Evening Seat</th>
                     <th>Details</th>
                 </tr>
             </thead>
@@ -76,15 +103,28 @@
                     </td>
                     <td>{{ (a.Amount || a.amount) | number }} {{ getCurrencySymbol(a) }}</td>
                     <td>{{ a.RegisteredAt | date:'dd/MM/yy HH:mm' }}</td>
+                    <!-- ⭐ חדש: סימון מקום שמור -->
+                    <td>
+                        <button class="btn-details"
+                            [disabled]="!canToggleSeat(a)"
+                            [title]="seatButtonTitle(a)"
+                            (click)="toggleSeat(a)"
+                            [style.background]="a.HasReservedSeat ? '#1E8E5A' : null"
+                            [style.color]="a.HasReservedSeat ? '#fff' : null"
+                            [style.border-color]="a.HasReservedSeat ? '#1E8E5A' : null"
+                            [style.opacity]="canToggleSeat(a) ? 1 : 0.5"
+                            [style.cursor]="canToggleSeat(a) ? 'pointer' : 'not-allowed'">
+                            {{ togglingSeatIds.has(a.Id) ? '...' : (a.HasReservedSeat ? '✓ Reserved' : 'Reserve') }}
+                        </button>
+                    </td>
                     <td class="actions-cell">
                         <button class="btn-details" (click)="openDetails(a)">View</button>
-                        <!-- ⭐⭐ חדש: כפתור עריכה - Admin בלבד -->
                         <button class="btn-details" *ngIf="isAdmin" (click)="openEditAttendee(a)">Edit</button>
                         <button class="btn-details btn-delete-row" *ngIf="isAdmin" (click)="confirmDeleteAttendee(a)">Delete</button>
                     </td>
                 </tr>
                 <tr *ngIf="filteredAttendees.length === 0">
-                    <td colspan="10" class="no-data">No attendees found</td>
+                    <td colspan="11" class="no-data">No attendees found</td>
                 </tr>
             </tbody>
         </table>
@@ -149,8 +189,12 @@
                 <span class="label">Registration Date</span>
                 <span>{{ selectedAttendee.RegisteredAt | date:'dd/MM/yyyy HH:mm' }}</span>
             </div>
+            <!-- ⭐ חדש -->
+            <div class="detail-row">
+                <span class="label">Evening Event Seat</span>
+                <span>{{ selectedAttendee.HasReservedSeat ? 'Reserved' : 'Not reserved' }}</span>
+            </div>
         </div>
-        <!-- ⭐⭐ הוסף כפתור Edit ליד Delete - שניהם Admin בלבד -->
         <div class="abstract-view-footer" style="padding: 20px 0 0;" *ngIf="isAdmin">
             <button class="btn-close-wide btn-edit-abstract" (click)="openEditAttendee(selectedAttendee)">Edit Attendee</button>
             <button class="btn-close-wide btn-delete-abstract" (click)="confirmDeleteAttendee(selectedAttendee)">Delete Attendee</button>
@@ -172,7 +216,7 @@
         </div>
         <div class="abstract-view-block">
             <span class="abstract-view-label">Abstract Content</span>
-            <div class="abstract-body abstract-view-body">{{ selectedAbstractAttendee.AbstractBody || selectedAbstractAttendee.abstractBody }}</div>
+            <div class="abstract-body abstract-view-body">{{ selectedAbstractAttendee._abstractLoaded ? (selectedAbstractAttendee.AbstractBody || selectedAbstractAttendee.abstractBody) : 'Loading...' }}</div>
         </div>
         <div class="abstract-view-block" *ngIf="selectedAbstractAttendee.AbstractNotes || selectedAbstractAttendee.abstractNotes">
             <span class="abstract-view-label">Additional Notes</span>
@@ -255,7 +299,6 @@
     </div>
 </div>
 
-<!-- ⭐⭐ חדש: פופ-אפ עריכת נרשם - Admin בלבד -->
 <div class="popup-overlay" *ngIf="editingAttendeeTarget" (click)="closeEditAttendee()">
     <div class="popup-box abstract-view-popup" (click)="$event.stopPropagation()" dir="ltr">
         <div class="popup-header abstract-view-header">

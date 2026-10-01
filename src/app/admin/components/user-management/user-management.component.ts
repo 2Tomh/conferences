@@ -18,8 +18,8 @@ export class UserManagementComponent implements OnInit {
   pageSize = 10;
   currentPage = 1;
 
-  // ⭐⭐ תוקן: אותה תבנית בדיוק כמו create-user.component.ts, שכבר
-  // מוכחת שעובדת - departments + כל הכנסים, מסוננים בצד הלקוח לפי Category
+  // אותה תבנית בדיוק כמו create-user.component.ts - departments + כל הכנסים,
+  // מסוננים בצד הלקוח לפי Category
   departments: string[] = [];
   allConferences: any[] = [];
   filteredConferences: any[] = [];
@@ -84,8 +84,6 @@ export class UserManagementComponent implements OnInit {
     this.currentPage = page;
   }
 
-  // ⭐⭐ עודכן: managedConferenceId נוסף, ומאזין לשינוי facultyName כדי
-  // לסנן מחדש את רשימת הכנסים - אותה לוגיקה כמו filterConferences ב-create-user
   startEdit(user: any): void {
     this.editingUser = user;
     this.editForm = this.fb.group({
@@ -94,6 +92,8 @@ export class UserManagementComponent implements OnInit {
       role: [user.Role, Validators.required],
       facultyName: [user.FacultyName || ''],
       managedConferenceId: [user.ManagedConferenceId || ''],
+      // ⭐ חדש: הקצאת מקומות לאירוע הערב
+      eveningEventQuota: [user.EveningEventQuota ?? 0, [Validators.min(0)]],
       password: ['']
     });
 
@@ -104,7 +104,7 @@ export class UserManagementComponent implements OnInit {
     });
   }
 
-  // ⭐⭐ זהה ל-filterConferences ב-create-user.component.ts
+  // זהה ל-filterConferences ב-create-user.component.ts
   private filterConferences(deptName: string): void {
     if (!deptName) {
       this.filteredConferences = this.allConferences;
@@ -133,7 +133,16 @@ export class UserManagementComponent implements OnInit {
       alert('The form is invalid');
       return;
     }
-    this.authService.updateUser(userId, this.editForm.value).subscribe({
+
+    // ⭐ חדש: מוודאים שההקצאה נשלחת כמספר שלם (שדה ריק = 0)
+    const value = this.editForm.value;
+    const rawQuota = value.eveningEventQuota;
+    const quota = rawQuota === '' || rawQuota === null || rawQuota === undefined
+      ? 0
+      : Math.max(0, Math.floor(Number(rawQuota)) || 0);
+    const payload = { ...value, eveningEventQuota: quota };
+
+    this.authService.updateUser(userId, payload).subscribe({
       next: () => {
         alert('User updated successfully');
         this.editingUser = null;

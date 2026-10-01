@@ -25,6 +25,8 @@
                     <th>E-mail</th>
                     <th>Role</th>
                     <th>Faculty</th>
+                    <!-- ⭐ חדש -->
+                    <th>Evening Seats</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -36,13 +38,15 @@
                         <span class="badge" [ngClass]="user.Role">{{ 'ROLES.' + user.Role.toUpperCase() | translate }}</span>
                     </td>
                     <td>{{ user.FacultyName || '—' }}</td>
+                    <!-- ⭐ חדש: הקצאת מקומות (רלוונטי למארגנים בלבד) -->
+                    <td>{{ user.Role === 'FacultyManager' ? (user.EveningEventQuota || 0) : '—' }}</td>
                     <td class="actions">
                         <button class="btn-edit" (click)="startEdit(user)">Edit</button>
                         <button class="btn-delete" (click)="deleteUser(user.Id)">Delete</button>
                     </td>
                 </tr>
                 <tr *ngIf="pagedUsers.length === 0">
-                    <td colspan="5" class="no-data">No users found</td>
+                    <td colspan="6" class="no-data">No users found</td>
                 </tr>
             </tbody>
         </table>
@@ -80,8 +84,6 @@
                 </select>
             </div>
 
-            <!-- ⭐⭐ תוקן: משתמש ב-departments (מ-getDepartmentsLookup, אותו
-                 endpoint שכבר עובד ב-create-user.component.ts) -->
             <div>
                 <label>Faculty</label>
                 <select formControlName="facultyName">
@@ -90,14 +92,18 @@
                 </select>
             </div>
 
-            <!-- ⭐⭐ תוקן: משתמש ב-filteredConferences, המסונן בצד הלקוח
-                 לפי facultyName - אותה לוגיקה שכבר מוכחת שעובדת ב-create-user -->
             <div>
                 <label>Managed Conference</label>
                 <select formControlName="managedConferenceId">
                     <option value="">-- No specific conference --</option>
                     <option *ngFor="let c of filteredConferences" [value]="c.Id || c.id">{{ c.Name || c.name }}</option>
                 </select>
+            </div>
+
+            <!-- ⭐ חדש: הקצאת מקומות לאירוע הערב - מוצג רק למארגנים -->
+            <div *ngIf="editForm.get('role')?.value === 'FacultyManager'">
+                <label>Evening Event Seats (quota)</label>
+                <input formControlName="eveningEventQuota" type="number" min="0" step="1">
             </div>
 
             <div class="form-actions">

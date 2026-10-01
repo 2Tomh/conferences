@@ -110,6 +110,15 @@ export class ApiService {
     return this.http.get<any>(`${this.apiUrl}/registration/abstract/${attendeeId}`);
   }
 
+  // ⭐ חדש: מקומות שמורים לאירוע הערב
+  getReservedSeatSummary(): Observable<{ IsAdmin: boolean; Quota: number | null; Used: number; UserId: string }> {
+    return this.http.get<any>(`${this.apiUrl}/registration/reserved-seats/summary`);
+  }
+
+  setReservedSeat(attendeeId: string, reserved: boolean): Observable<{ HasReservedSeat: boolean; ReservedByUserId: string | null }> {
+    return this.http.patch<any>(`${this.apiUrl}/registration/reserved-seat/${attendeeId}`, { reserved });
+  }
+
   registerAttendee(attendee: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/registration/register`, attendee);
   }
