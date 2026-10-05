@@ -14,6 +14,22 @@
       <div *ngIf="currentStep === 1" class="step-content">
         <h3>{{ (isEditMode ? 'MANAGE.EDIT_TITLE' : 'MANAGE.CREATE_TITLE') | translate }}</h3>
 
+        <!-- ⭐ חדש: סגירת הרשמה לכנס - אדמין ראשי בלבד -->
+        <div *ngIf="isAdmin" class="sub-section"
+          [style.border]="conferenceForm.get('IsRegistrationClosed')?.value ? '2px solid #C0392B' : '2px solid #1E8E5A'"
+          style="border-radius:10px;padding:14px 16px;margin-bottom:18px;">
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;margin:0;">
+            <input type="checkbox" formControlName="IsRegistrationClosed">
+            <strong>סגור את ההרשמה לכנס זה</strong>
+          </label>
+          <p style="margin:8px 0 0;font-size:14px;"
+            [style.color]="conferenceForm.get('IsRegistrationClosed')?.value ? '#C0392B' : '#1E8E5A'">
+            {{ conferenceForm.get('IsRegistrationClosed')?.value
+              ? '🔒 ההרשמה סגורה – לא ניתן להירשם או לשלם עבור הכנס. עמוד הכנס ימשיך להיות מוצג באתר.'
+              : '✅ ההרשמה פתוחה' }}
+          </p>
+        </div>
+
         <div class="form-group">
           <label>שם הכנס (באנגלית):</label>
           <input type="text" formControlName="Conference" class="form-control" placeholder="הזן שם כנס באנגלית">

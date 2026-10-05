@@ -53,12 +53,19 @@
       </ul>
 
       <div class="hero-actions">
-        <button class="btn-primary" *ngIf="!isRegistrationBlocked" (click)="register()">
+        <!-- ⭐ שינוי: מוצג רק כשאפשר להירשם (לא חסום ולא סגור) -->
+        <button class="btn-primary" *ngIf="canRegister" (click)="register()">
           Register Through Mind-IL
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M5 12h14M13 6l6 6-6 6" />
           </svg>
         </button>
+
+        <!-- ⭐ חדש: תווית "ההרשמה סגורה" -->
+        <span class="btn-pill" *ngIf="isRegistrationClosed"
+          style="background:#FDECEA;color:#C0392B;border:1px solid #C0392B;">
+          🔒 Registration Closed
+        </span>
 
         <!-- כפתור לאתר החיצוני של הכנס, מוצג רק אם יש קישור שמור -->
         <a class="btn-outline" *ngIf="conference.websiteUrl" [href]="conference.websiteUrl" target="_blank">
@@ -69,15 +76,15 @@
           </svg>
         </a>
 
-        <span class="btn-pill" *ngIf="conference.hasAbstractSubmission">
+        <!-- ⭐ שינוי: לא מציגים "Abstract Submission Open" כשההרשמה סגורה -->
+        <span class="btn-pill" *ngIf="conference.hasAbstractSubmission && !isRegistrationClosed">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
           </svg>
           Abstract Submission Open
         </span>
 
-        <!-- ⭐ חדש: כפתור נוסף שפותח את אותו פופאפ, בנוסף לכרטיס הייעודי למטה בעמוד.
-             מוצג רק אם יש קובץ מצורף בפועל לכנס. -->
+        <!-- כפתור שפותח את פופאפ הקובץ המצורף, מוצג רק אם יש קובץ מצורף -->
         <button class="btn-outline" type="button" *ngIf="conference.attachmentUrl" (click)="openAttachmentModal()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
@@ -157,7 +164,8 @@
       </span>
       <div>
         <strong>Participation</strong>
-        <p>By Registration</p>
+        <!-- ⭐ שינוי: מציג "Registration Closed" כשההרשמה סגורה -->
+        <p>{{ isRegistrationClosed ? 'Registration Closed' : 'By Registration' }}</p>
       </div>
     </div>
   </section>
@@ -189,9 +197,7 @@
     </div>
 
     <div class="side-stack">
-      <!-- ⭐ חדש: כרטיס ייעודי ובולט לקובץ המצורף (PDF) + התיאור המילולי שלו.
-           ממוקם ראשון ב-side-stack כדי שיתפוס תשומת לב מיד. פותח את הפופאפ
-           עם התצוגה המקדימה + כפתור ההורדה. מוצג רק אם יש קובץ מצורף בפועל לכנס. -->
+      <!-- כרטיס ייעודי לקובץ המצורף (PDF) + התיאור המילולי שלו -->
       <div class="card card-tint" *ngIf="conference.attachmentUrl">
         <h2 class="section-title">
           <span class="title-icon">
@@ -211,7 +217,8 @@
         </button>
       </div>
 
-      <div class="card card-tint" *ngIf="conference.hasAbstractSubmission">
+      <!-- ⭐ שינוי: כרטיס הגשת התקצירים לא מוצג כשההרשמה סגורה -->
+      <div class="card card-tint" *ngIf="conference.hasAbstractSubmission && !isRegistrationClosed">
         <h2 class="section-title">
           <span class="title-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -240,7 +247,7 @@
         <ul class="key-dates-list">
           <li *ngIf="conference.registrationDeadline">
             <span>Registration Deadline</span>
-            <strong>{{ formatDeadline(conference.registrationDeadline) }}</strong>
+            <strong>{{ isRegistrationClosed ? 'Closed' : formatDeadline(conference.registrationDeadline) }}</strong>
           </li>
           <li *ngIf="conference.date">
             <span>Conference Date</span>
@@ -289,8 +296,8 @@
   </section>
 
   <!-- ══ CTA BANNER ══ -->
-  <!-- כל הבלוק הזה (טקסט + כפתור) מוסתר לגמרי לכנסים חסומים -->
-  <section class="cta-banner" *ngIf="!isRegistrationBlocked">
+  <!-- ⭐ שינוי: מוצג רק כשאפשר להירשם -->
+  <section class="cta-banner" *ngIf="canRegister">
     <div>
       <h2>Ready to Participate?</h2>
       <p>Registration, payment, and abstract submission are managed through the Mind-IL portal.</p>
@@ -302,17 +309,29 @@
       </svg>
     </button>
   </section>
+
+  <!-- ⭐ חדש: באנר "ההרשמה סגורה" -->
+  <section class="cta-banner" *ngIf="isRegistrationClosed">
+    <div>
+      <h2>Registration Closed</h2>
+      <p>
+        Registration for this conference is now closed.
+        <ng-container *ngIf="conference.contactEmail">
+          For inquiries, please contact
+          <a [href]="'mailto:' + conference.contactEmail" style="color:inherit;text-decoration:underline;">{{ conference.contactEmail }}</a>.
+        </ng-container>
+      </p>
+    </div>
+  </section>
 </article>
 
-<!-- ⭐ חדש: פופאפ המציג את התיאור המילולי של הקובץ המצורף + קישור להורדה.
-     נסגר בלחיצה על הרקע, על ה-X, או שוב על מקש ה-Escape (דרך ה-CSS/host listener אם ירצו להוסיף). -->
+<!-- פופאפ המציג את התיאור המילולי של הקובץ המצורף + תצוגה מקדימה וקישור להורדה -->
 <div class="attachment-modal-overlay" *ngIf="showAttachmentModal" (click)="closeAttachmentModal()">
   <div class="attachment-modal-box attachment-modal-box--preview" (click)="$event.stopPropagation()">
     <button type="button" class="attachment-modal-close" (click)="closeAttachmentModal()" aria-label="Close">✕</button>
     <h3>Conference Document</h3>
     <p class="body-text" *ngIf="conference.attachmentDescription">{{ conference.attachmentDescription }}</p>
 
-    <!-- ⭐ חדש: תצוגה מקדימה של ה-PDF בתוך הפופאפ עצמו, לפני ההורדה -->
     <div class="attachment-preview-wrap">
       <iframe *ngIf="attachmentSafeUrl" [src]="attachmentSafeUrl" class="attachment-preview-frame"
         title="Conference document preview"></iframe>

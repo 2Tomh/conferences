@@ -26,6 +26,15 @@
     </div>
     <div [formGroup]="regForm" class="registration-form">
       <div class="step-panel" *ngIf="currentStep === 1">
+
+        <!-- ⭐ חדש: הודעה למי שהגיע מקישור ישיר לכנס שההרשמה אליו נסגרה -->
+        <div *ngIf="closedConferenceNotice"
+          style="margin-bottom:18px;padding:14px 16px;border-radius:10px;background:#FDECEA;border-left:4px solid #C0392B;color:#7B241C;font-size:14px;line-height:1.6;">
+          <strong>Registration is closed.</strong><br>
+          Registration for <strong>{{ closedConferenceNotice }}</strong> is no longer available.
+          You may select a different conference below.
+        </div>
+
         <div class="form-row">
           <label>Conference</label>
           <div class="selected-conf-box"
@@ -173,7 +182,7 @@
           </div>
         </div>
       </div>
-      <!-- ⭐ תוקן: שלב 3 עצמאי - רק בחירת מטבע, בלי הטמעת התשלום כאן -->
+      <!-- שלב 3 - בחירת מטבע -->
       <div class="step-panel" *ngIf="currentStep === 3">
         <div class="currency-step">
           <h3>Choose payment currency</h3>
@@ -198,7 +207,7 @@
         </div>
       </div>
 
-      <!-- ⭐ תוקן: שלב 4 עצמאי - רק התשלום עצמו (Tranzila), אחרי שהמטבע כבר נבחר -->
+      <!-- שלב 4 - התשלום עצמו (Tranzila) -->
       <div class="step-panel" *ngIf="currentStep === 4">
         <div class="payment-inline-wrapper">
           <div *ngIf="!paymentInputData" class="payment-loading">

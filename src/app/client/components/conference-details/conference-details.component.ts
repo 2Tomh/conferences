@@ -12,12 +12,10 @@ export class ConferenceDetailsComponent implements OnInit {
   loading = true;
   notFound = false;
 
-  // ⭐ חדש: שולט על תצוגת הפופאפ של הקובץ המצורף
+  // שולט על תצוגת הפופאפ של הקובץ המצורף
   showAttachmentModal = false;
 
-  // ⭐ חדש: גרסה "מאושרת" (sanitized) של קישור ה-PDF, לשימוש כ-src של ה-iframe.
-  // Angular חוסם URL חיצוני ב-iframe src כברירת מחדל (הגנת XSS) - bypassSecurityTrustResourceUrl
-  // אומר לו במפורש שהקישור הזה בטוח (הוא הרי מגיע מהשרת שלנו, לא מקלט/הזנת משתמש).
+  // גרסה "מאושרת" (sanitized) של קישור ה-PDF, לשימוש כ-src של ה-iframe
   attachmentSafeUrl: SafeResourceUrl | null = null;
 
   // שמות הכנסים שאסור לאפשר להם הרשמה בכלל —
@@ -52,7 +50,6 @@ export class ConferenceDetailsComponent implements OnInit {
     this.apiService.getSurveyById(id).subscribe({
       next: (data) => {
         if (data) {
-          // ⭐ חדש: מזהה הקובץ המצורף (אם קיים) - קובע אם נבנה קישור הורדה
           const attachmentFileId = data.AttachmentFileId || data.attachmentFileId || '';
 
           this.conference = {
@@ -78,10 +75,10 @@ export class ConferenceDetailsComponent implements OnInit {
             organizerName: data.OrganizerName || data.organizerName || '',
             language: data.Language || data.language || 'English',
             programPdfUrl: data.ProgramPdfUrl || data.programPdfUrl || '',
-            // ⭐ חדש: התיאור המילולי והקישור להורדה של קובץ ה-PDF המצורף לכנס.
-            // attachmentUrl נשאר ריק אם אין קובץ מצורף - כך שהכפתור/פופאפ לא יוצג בכלל.
             attachmentDescription: data.AttachmentDescription || data.attachmentDescription || '',
             attachmentUrl: attachmentFileId ? this.apiService.getAttachmentUrl(id) : '',
+            // ⭐ חדש: האם האדמין סגר את ההרשמה לכנס
+            isRegistrationClosed: data.IsRegistrationClosed === true || data.isRegistrationClosed === true,
             organizersDetails: (data.Organizers || data.organizers || []).map((org: any) => {
               if (typeof org === 'string') {
                 const match = org.match(/^(.*) \((.*)\)$/);
@@ -105,8 +102,7 @@ export class ConferenceDetailsComponent implements OnInit {
     });
   }
 
-  // true אם הכנס הנוכחי נמצא ברשימת החסימה —
-  // ה-HTML משתמש בזה כדי להסתיר את כפתורי ה-Register וה-CTA banner בעמוד
+  // true אם הכנס הנוכחי נמצא ברשימת החסימה הקשיחה
   get isRegistrationBlocked(): boolean {
     const name = (this.conference?.name || '').toLowerCase();
     return this.EXCLUDED_CONFERENCE_NAMES.some(
@@ -114,11 +110,18 @@ export class ConferenceDetailsComponent implements OnInit {
     );
   }
 
-  // ⭐ חדש: פתיחה/סגירה של פופאפ הקובץ המצורף
+  // ⭐ חדש: ההרשמה סגורה ע"י האדמין (ולא כנס חסום מראש)
+  get isRegistrationClosed(): boolean {
+    return !this.isRegistrationBlocked && this.conference?.isRegistrationClosed === true;
+  }
+
+  // ⭐ חדש: האם להציג את כפתורי ההרשמה
+  get canRegister(): boolean {
+    return !this.isRegistrationBlocked && !this.isRegistrationClosed;
+  }
+
   openAttachmentModal(): void {
     if (this.conference?.attachmentUrl) {
-      // מוסיפים #toolbar=0&navpanes=0 כדי להסתיר את סרגל הכלים המובנה של הדפדפן
-      // (כפתורי הדפסה, כלי ציור/הערות וכו') - משאירים תצוגה נקייה לקריאה בלבד.
       const previewUrl = `${this.conference.attachmentUrl}#toolbar=0&navpanes=0`;
       this.attachmentSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(previewUrl);
     }
@@ -140,10 +143,10 @@ export class ConferenceDetailsComponent implements OnInit {
     return `${formatted} (Israel Time)`;
   }
 
-  // פונקציה לניווט לטופס ההרשמה עם ה-ID של הכנס
+  // ניווט לטופס ההרשמה עם ה-ID של הכנס
   register(): void {
-    if (this.isRegistrationBlocked) {
-      console.warn('Registration is blocked for this conference');
+    if (!this.canRegister) {
+      console.warn('Registration is not available for this conference');
       return;
     }
     const id = this.conference?.Id || this.conference?._id || this.conference?.id;

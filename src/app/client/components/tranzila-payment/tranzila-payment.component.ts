@@ -1,434 +1,3 @@
-// // // import { Component, OnInit, OnChanges, ViewChild, ElementRef, OnDestroy, Input, SimpleChanges } from '@angular/core';
-// // // import { Router } from '@angular/router';
-// // // import { PaymentService, PaymentPreparationResponse } from '../../../services/payment.service';
-
-// // // @Component({
-// // //   selector: 'app-tranzila-payment',
-// // //   templateUrl: './tranzila-payment.component.html',
-// // //   styleUrls: ['./tranzila-payment.component.css']
-// // // })
-// // // export class TranzilaPaymentComponent implements OnInit, OnChanges, OnDestroy {
-// // //   @Input() paymentInputData: any = null;
-// // //   @ViewChild('paymentForm') paymentForm!: ElementRef<HTMLFormElement>;
-
-// // //   loading: boolean = true;
-// // //   error: string | null = null;
-// // //   alreadyRegistered: boolean = false; // Shows a dedicated popup when the user already has a paid registration for this conference
-
-// // //   paymentData: PaymentPreparationResponse = {
-// // //     terminal: '',
-// // //     orderId: '',
-// // //     amount: 0,
-// // //     notifyUrl: '',
-// // //     successUrl: '',
-// // //     failureUrl: '',
-// // //     email: '',
-// // //     fullName: ''
-// // //   };
-
-// // //   private statusCheckInterval: any;
-// // //   private isCheckingStatus: boolean = false;
-// // //   private pollingStartTime: number = 0;
-// // //   private readonly POLLING_TIMEOUT_MS = 10 * 60 * 1000; // 10 minutes
-
-// // //   constructor(private paymentService: PaymentService, private router: Router) { }
-
-// // //   ngOnInit() {
-// // //     if (!this.paymentInputData) {
-// // //       this.paymentInputData = history.state?.data;
-// // //     }
-// // //     this.startPaymentFlow();
-// // //   }
-
-// // //   ngOnChanges(changes: SimpleChanges) {
-// // //     if (changes['paymentInputData'] && this.paymentInputData && !changes['paymentInputData'].firstChange) {
-// // //       this.startPaymentFlow();
-// // //     }
-// // //   }
-
-// // //   startPaymentFlow() {
-// // //     const data = this.paymentInputData;
-// // //     if (!data) {
-// // //       this.error = 'No payment data found.';
-// // //       this.loading = false;
-// // //       return;
-// // //     }
-
-// // //     this.loading = true;
-// // //     this.error = null;
-// // //     this.alreadyRegistered = false;
-
-// // //     const payload = {
-// // //       orderId: data.orderId,
-// // //       amount: data.amount || 1,
-// // //       fullName: data.FullName || data.fullName || '',
-// // //       email: data.Email || data.email || '',
-// // //       phone: data.Phone || data.phone || '',
-// // //       conferenceId: data.ConferenceId || data.conferenceId || null,
-// // //       isLifetimeMember: data.IsLifetimeMember || false,
-// // //       // Personal fields - required so the final Attendee record is built correctly
-// // //       affiliation: data.Affiliation || data.affiliation || '',
-// // //       address: data.Address || data.address || '',
-// // //       role: data.Role || data.role || '',
-// // //       roleCategory: data.RoleCategory || data.roleCategory || '',
-// // //       hasAbstract: data.HasAbstract || false,
-// // //       abstractTitle: data.AbstractTitle || null,
-// // //       abstractAuthors: data.FullName || data.fullName || null,
-// // //       abstractBody: data.AbstractBody || null,
-// // //       abstractNotes: data.AbstractNotes || null
-// // //     };
-
-// // //     this.paymentService.preparePayment(payload).subscribe({
-// // //       next: (res) => {
-// // //         res.amount = res.amount || 1;
-// // //         this.paymentData = res;
-// // //         this.loading = false;
-// // //         setTimeout(() => {
-// // //           this.paymentForm?.nativeElement.submit();
-// // //           this.startPollingTransactionStatus();
-// // //         }, 500);
-// // //       },
-// // //       error: (err) => {
-// // //         console.error("Payment error:", err);
-// // //         this.loading = false;
-
-// // //         // Reliable check against a structured error code from the backend,
-// // //         // instead of matching free text (which is fragile across encodings/wrapping)
-// // //         if (err?.error?.code === 'ALREADY_REGISTERED') {
-// // //           this.alreadyRegistered = true;
-// // //         } else {
-// // //           this.error = "An error occurred while loading the payment page.";
-// // //         }
-// // //       }
-// // //     });
-// // //   }
-
-// // // closeAlreadyRegisteredPopup() {
-// // //   this.alreadyRegistered = false;
-// // //   this.router.navigate(['/ConferenceEvents']); // Redirect back to the conferences list
-// // // }
-
-// // //   startPollingTransactionStatus() {
-// // //     this.pollingStartTime = Date.now();
-// // //     this.statusCheckInterval = setInterval(() => {
-// // //       if (Date.now() - this.pollingStartTime > this.POLLING_TIMEOUT_MS) {
-// // //         this.stopPolling();
-// // //         this.router.navigate(['/payment/failed'], {
-// // //           queryParams: { orderId: this.paymentData.orderId }
-// // //         });
-// // //         return;
-// // //       }
-
-// // //       if (this.isCheckingStatus) return;
-// // //       this.isCheckingStatus = true;
-
-// // //       this.paymentService.verifyPayment('', this.paymentData.orderId).subscribe({
-// // //         next: (res) => {
-// // //           this.isCheckingStatus = false;
-// // //           if (res) {
-// // //             if (res.status === 'success') {
-// // //               this.stopPolling();
-// // //               this.router.navigate(['/payment/success'], {
-// // //                 queryParams: { orderId: this.paymentData.orderId }
-// // //               });
-// // //             } else if (res.status === 'failed') {
-// // //               this.stopPolling();
-// // //               this.router.navigate(['/payment/failed'], {
-// // //                 queryParams: { orderId: this.paymentData.orderId }
-// // //               });
-// // //             }
-// // //           }
-// // //         },
-// // //         error: (err) => {
-// // //           this.isCheckingStatus = false;
-// // //           console.error('Polling error:', err);
-// // //           this.stopPolling();
-// // //           this.router.navigate(['/payment/failed'], {
-// // //             queryParams: { orderId: this.paymentData.orderId }
-// // //           });
-// // //         }
-// // //       });
-// // //     }, 1500);
-// // //   }
-
-// // //   stopPolling() {
-// // //     if (this.statusCheckInterval) {
-// // //       clearInterval(this.statusCheckInterval);
-// // //     }
-// // //   }
-
-// // //   ngOnDestroy() {
-// // //     this.stopPolling();
-// // //   }
-// // // }
-// // import { Component, OnInit, OnChanges, ViewChild, ElementRef, OnDestroy, Input, SimpleChanges } from '@angular/core';
-// // import { Router } from '@angular/router';
-// // import { PaymentService, PaymentPreparationResponse } from '../../../services/payment.service';
-
-// // @Component({
-// //   selector: 'app-tranzila-payment',
-// //   templateUrl: './tranzila-payment.component.html',
-// //   styleUrls: ['./tranzila-payment.component.css']
-// // })
-// // export class TranzilaPaymentComponent implements OnInit, OnChanges, OnDestroy {
-// //   @Input() paymentInputData: any = null;
-// //   @ViewChild('paymentForm') paymentForm!: ElementRef<HTMLFormElement>;
-
-// //   loading: boolean = true;
-// //   error: string | null = null;
-// //   alreadyRegistered: boolean = false; // Shows a dedicated popup when the user already has a paid registration for this conference
-
-// //   paymentData: PaymentPreparationResponse = {
-// //     terminal: '',
-// //     orderId: '',
-// //     amount: 0,
-// //     notifyUrl: '',
-// //     successUrl: '',
-// //     failureUrl: '',
-// //     email: '',
-// //     fullName: '',
-// //     affiliation: '' // ⭐ חדש
-// //   };
-
-// //   private statusCheckInterval: any;
-// //   private isCheckingStatus: boolean = false;
-// //   private pollingStartTime: number = 0;
-// //   private readonly POLLING_TIMEOUT_MS = 10 * 60 * 1000; // 10 minutes
-
-// //   constructor(private paymentService: PaymentService, private router: Router) { }
-
-// //   ngOnInit() {
-// //     if (!this.paymentInputData) {
-// //       this.paymentInputData = history.state?.data;
-// //     }
-// //     this.startPaymentFlow();
-// //   }
-
-// //   ngOnChanges(changes: SimpleChanges) {
-// //     if (changes['paymentInputData'] && this.paymentInputData && !changes['paymentInputData'].firstChange) {
-// //       this.startPaymentFlow();
-// //     }
-// //   }
-
-// //   startPaymentFlow() {
-// //     const data = this.paymentInputData;
-// //     if (!data) {
-// //       this.error = 'No payment data found.';
-// //       this.loading = false;
-// //       return;
-// //     }
-
-// //     this.loading = true;
-// //     this.error = null;
-// //     this.alreadyRegistered = false;
-
-// //     const payload = {
-// //       orderId: data.orderId,
-// //       amount: data.amount || 1,
-// //       fullName: data.FullName || data.fullName || '',
-// //       email: data.Email || data.email || '',
-// //       phone: data.Phone || data.phone || '',
-// //       conferenceId: data.ConferenceId || data.conferenceId || null,
-// //       isLifetimeMember: data.IsLifetimeMember || false,
-// //       // Personal fields - required so the final Attendee record is built correctly
-// //       affiliation: data.Affiliation || data.affiliation || '',
-// //       address: data.Address || data.address || '',
-// //       role: data.Role || data.role || '',
-// //       roleCategory: data.RoleCategory || data.roleCategory || '',
-// //       hasAbstract: data.HasAbstract || false,
-// //       abstractTitle: data.AbstractTitle || null,
-// //       abstractAuthors: data.FullName || data.fullName || null,
-// //       abstractBody: data.AbstractBody || null,
-// //       abstractNotes: data.AbstractNotes || null
-// //     };
-
-// //     this.paymentService.preparePayment(payload).subscribe({
-// //       next: (res) => {
-// //         res.amount = res.amount || 1;
-// //         this.paymentData = res;
-// //         this.loading = false;
-// //         setTimeout(() => {
-// //           this.paymentForm?.nativeElement.submit();
-// //           this.startPollingTransactionStatus();
-// //         }, 500);
-// //       },
-// //       error: (err) => {
-// //         console.error("Payment error:", err);
-// //         this.loading = false;
-
-// //         // Reliable check against a structured error code from the backend,
-// //         // instead of matching free text (which is fragile across encodings/wrapping)
-// //         if (err?.error?.code === 'ALREADY_REGISTERED') {
-// //           this.alreadyRegistered = true;
-// //         } else {
-// //           this.error = "An error occurred while loading the payment page.";
-// //         }
-// //       }
-// //     });
-// //   }
-
-// //   closeAlreadyRegisteredPopup() {
-// //     this.alreadyRegistered = false;
-// //     this.router.navigate(['/ConferenceEvents']); // Redirect back to the conferences list
-// //   }
-
-// //   startPollingTransactionStatus() {
-// //     this.pollingStartTime = Date.now();
-// //     this.statusCheckInterval = setInterval(() => {
-// //       if (Date.now() - this.pollingStartTime > this.POLLING_TIMEOUT_MS) {
-// //         this.stopPolling();
-// //         this.router.navigate(['/payment/failed'], {
-// //           queryParams: { orderId: this.paymentData.orderId }
-// //         });
-// //         return;
-// //       }
-
-// //       if (this.isCheckingStatus) return;
-// //       this.isCheckingStatus = true;
-
-// //       this.paymentService.verifyPayment('', this.paymentData.orderId).subscribe({
-// //         next: (res) => {
-// //           this.isCheckingStatus = false;
-// //           if (res) {
-// //             if (res.status === 'success') {
-// //               this.stopPolling();
-// //               this.router.navigate(['/payment/success'], {
-// //                 queryParams: { orderId: this.paymentData.orderId }
-// //               });
-// //             } else if (res.status === 'failed') {
-// //               this.stopPolling();
-// //               this.router.navigate(['/payment/failed'], {
-// //                 queryParams: { orderId: this.paymentData.orderId }
-// //               });
-// //             }
-// //           }
-// //         },
-// //         error: (err) => {
-// //           this.isCheckingStatus = false;
-// //           console.error('Polling error:', err);
-// //           this.stopPolling();
-// //           this.router.navigate(['/payment/failed'], {
-// //             queryParams: { orderId: this.paymentData.orderId }
-// //           });
-// //         }
-// //       });
-// //     }, 1500);
-// //   }
-
-// //   stopPolling() {
-// //     if (this.statusCheckInterval) {
-// //       clearInterval(this.statusCheckInterval);
-// //     }
-// //   }
-
-// //   ngOnDestroy() {
-// //     this.stopPolling();
-// //   }
-// // }
-// import { Component, OnInit, OnChanges, ViewChild, ElementRef, Input, SimpleChanges } from '@angular/core';
-// import { Router } from '@angular/router';
-// import { PaymentService, PaymentPreparationResponse } from '../../../services/payment.service';
-
-// @Component({
-//   selector: 'app-tranzila-payment',
-//   templateUrl: './tranzila-payment.component.html',
-//   styleUrls: ['./tranzila-payment.component.css']
-// })
-// export class TranzilaPaymentComponent implements OnInit, OnChanges {
-//   @Input() paymentInputData: any = null;
-//   @ViewChild('paymentForm') paymentForm!: ElementRef<HTMLFormElement>;
-
-//   loading: boolean = true;
-//   error: string | null = null;
-//   alreadyRegistered: boolean = false;
-
-//   paymentData: PaymentPreparationResponse = {
-//     terminal: '',
-//     orderId: '',
-//     amount: 0,
-//     notifyUrl: '',
-//     successUrl: '',
-//     failureUrl: '',
-//     email: '',
-//     fullName: '',
-//     affiliation: ''
-//   };
-
-//   constructor(private paymentService: PaymentService, private router: Router) { }
-
-//   ngOnInit() {
-//     if (!this.paymentInputData) {
-//       this.paymentInputData = history.state?.data;
-//     }
-//     this.startPaymentFlow();
-//   }
-
-//   ngOnChanges(changes: SimpleChanges) {
-//     if (changes['paymentInputData'] && this.paymentInputData && !changes['paymentInputData'].firstChange) {
-//       this.startPaymentFlow();
-//     }
-//   }
-
-//   startPaymentFlow() {
-//     const data = this.paymentInputData;
-//     if (!data) {
-//       this.error = 'No payment data found.';
-//       this.loading = false;
-//       return;
-//     }
-
-//     this.loading = true;
-//     this.error = null;
-//     this.alreadyRegistered = false;
-
-//     const payload = {
-//       orderId: data.orderId,
-//       amount: data.amount || 1,
-//       fullName: data.FullName || data.fullName || '',
-//       email: data.Email || data.email || '',
-//       phone: data.Phone || data.phone || '',
-//       conferenceId: data.ConferenceId || data.conferenceId || null,
-//       isLifetimeMember: data.IsLifetimeMember || false,
-//       affiliation: data.Affiliation || data.affiliation || '',
-//       address: data.Address || data.address || '',
-//       role: data.Role || data.role || '',
-//       roleCategory: data.RoleCategory || data.roleCategory || '',
-//       hasAbstract: data.HasAbstract || false,
-//       abstractTitle: data.AbstractTitle || null,
-//       abstractAuthors: data.FullName || data.fullName || null,
-//       abstractBody: data.AbstractBody || null,
-//       abstractNotes: data.AbstractNotes || null
-//     };
-
-//     this.paymentService.preparePayment(payload).subscribe({
-//       next: (res) => {
-//         res.amount = res.amount || 1;
-//         this.paymentData = res;
-//         this.loading = false;
-        
-//         // שליחת הטופס באופן אוטומטי לדף הסליקה של טרנזילה (במסך מלא)
-//         setTimeout(() => {
-//           this.paymentForm?.nativeElement.submit();
-//         }, 300);
-//       },
-//       error: (err) => {
-//         console.error("Payment error:", err);
-//         this.loading = false;
-
-//         if (err?.error?.code === 'ALREADY_REGISTERED') {
-//           this.alreadyRegistered = true;
-//         } else {
-//           this.error = "An error occurred while loading the payment page.";
-//         }
-//       }
-//     });
-//   }
-
-//   closeAlreadyRegisteredPopup() {
-//     this.alreadyRegistered = false;
-//     this.router.navigate(['/ConferenceEvents']);
-//   }
-// }
 import { Component, OnInit, OnChanges, ViewChild, ElementRef, Input, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { PaymentService, PaymentPreparationResponse } from '../../../services/payment.service';
@@ -446,8 +15,7 @@ export class TranzilaPaymentComponent implements OnInit, OnChanges {
   error: string | null = null;
   alreadyRegistered: boolean = false;
 
-  // ⭐ חדש: שלב בחירת המטבע - מוצג לפני שהטופס נשלח אוטומטית לטרנזילה,
-  // כי הסכום עצמו משתנה לפי המטבע (לא רק קוד המטבע שנשלח לשרת הסליקה)
+  // שלב בחירת המטבע - מוצג לפני שהטופס נשלח אוטומטית לטרנזילה
   showCurrencyStep: boolean = true;
   selectedCurrency: 'ILS' | 'USD' = 'ILS';
 
@@ -461,8 +29,7 @@ export class TranzilaPaymentComponent implements OnInit, OnChanges {
     email: '',
     fullName: '',
     affiliation: '',
-    // ⭐ חדש: קוד המטבע המספרי שטרנזילה מצפה לו (1 = ILS, 2 = USD).
-    // חשוב לוודא את הקודים המדויקים מול חברת הסליקה עצמה.
+    // קוד המטבע המספרי שטרנזילה מצפה לו (1 = ILS, 2 = USD)
     currencyCode: '1'
   };
 
@@ -472,15 +39,13 @@ export class TranzilaPaymentComponent implements OnInit, OnChanges {
     if (!this.paymentInputData) {
       this.paymentInputData = history.state?.data;
     }
-    // ⭐ תוקן: אם המטבע כבר נבחר קודם (למשל ב-registration-form), אין טעם
-    // לשאול שוב כאן - זה מה שגרם לזרימה הכפולה/לתקיעה. מדלגים ישר לתשלום.
+    // אם המטבע כבר נבחר קודם (ב-registration-form), מדלגים ישר לתשלום
     const incomingCurrency = this.paymentInputData?.currency;
     if (incomingCurrency === 'ILS' || incomingCurrency === 'USD') {
       this.selectedCurrency = incomingCurrency;
       this.showCurrencyStep = false;
       this.startPaymentFlow();
     }
-    // אחרת (למשל קריאה ישירה לרכיב בלי מטבע מוגדר) - נשאר במסך הבחירה המקומי כגיבוי
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -489,12 +54,10 @@ export class TranzilaPaymentComponent implements OnInit, OnChanges {
     }
   }
 
-  // ⭐ חדש: הלקוח בוחר מטבע (רק משנה את הבחירה המקומית, עדיין לא שולח כלום)
   chooseCurrency(currency: 'ILS' | 'USD'): void {
     this.selectedCurrency = currency;
   }
 
-  // ⭐ חדש: אישור הבחירה - כאן מתחילה בפועל זרימת התשלום מול השרת וטרנזילה
   confirmCurrencyAndProceed(): void {
     this.showCurrencyStep = false;
     this.startPaymentFlow();
@@ -529,22 +92,17 @@ export class TranzilaPaymentComponent implements OnInit, OnChanges {
       abstractAuthors: data.FullName || data.fullName || null,
       abstractBody: data.AbstractBody || null,
       abstractNotes: data.AbstractNotes || null,
-      // ⭐ חדש: המטבע שהלקוח בחר. השרת צריך להשתמש בזה כדי לחשב את הסכום
-      // הנכון (למשל לפי שער חליפין) ולהחזיר אותו ב-amount, יחד עם הקוד
-      // המספרי המתאים לטרנזילה ב-currencyCode.
       currency: this.selectedCurrency
     };
 
     this.paymentService.preparePayment(payload).subscribe({
       next: (res) => {
         res.amount = res.amount || 1;
-        // ⭐ חדש: נופלים חזרה לקוד ברירת מחדל אם השרת (עדיין) לא מחזיר currencyCode,
-        // כדי לא לשבור את הזרימה לפני שהבקנד מעודכן
         res.currencyCode = res.currencyCode || (this.selectedCurrency === 'USD' ? '2' : '1');
         this.paymentData = res;
         this.loading = false;
 
-        // שליחת הטופס באופן אוטומטי לדף הסליקה של טרנזילה (במסך מלא)
+        // שליחת הטופס באופן אוטומטי לדף הסליקה של טרנזילה
         setTimeout(() => {
           this.paymentForm?.nativeElement.submit();
         }, 300);
@@ -553,8 +111,12 @@ export class TranzilaPaymentComponent implements OnInit, OnChanges {
         console.error("Payment error:", err);
         this.loading = false;
 
-        if (err?.error?.code === 'ALREADY_REGISTERED') {
+        const code = err?.error?.code;
+        if (code === 'ALREADY_REGISTERED') {
           this.alreadyRegistered = true;
+        } else if (code === 'REGISTRATION_CLOSED') {
+          // ⭐ חדש: האדמין סגר את ההרשמה לכנס (גם אם הטופס היה פתוח בדפדפן)
+          this.error = 'Registration for this conference is closed. No payment was made.';
         } else {
           this.error = "An error occurred while loading the payment page.";
         }

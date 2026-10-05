@@ -42,21 +42,27 @@
 
         <strong class="conf-card-name">{{ conf.Name }}</strong>
 
+        <!-- ⭐ חדש: תווית "ההרשמה סגורה" -->
+        <span *ngIf="conf.IsRegistrationClosed && !isExternalOnlyConference(conf)"
+          style="display:inline-block;align-self:flex-start;margin:6px 0;padding:3px 10px;border-radius:999px;background:#FDECEA;color:#C0392B;border:1px solid #C0392B;font-size:12px;font-weight:600;">
+          🔒 Registration Closed
+        </span>
+
         <!-- מיקום הכנס, אם קיים -->
         <div class="conf-card-location" *ngIf="conf.Location">
           <span class="location-icon">📍</span>
           <span>{{ conf.Location }}</span>
         </div>
 
-        <!-- ⭐ חדש: תאריך האירוע עצמו - מופיע גם לכנסים חיצוניים -->
+        <!-- תאריך האירוע עצמו - מופיע גם לכנסים חיצוניים -->
         <div class="conf-card-event-date" *ngIf="conf.EventDate || conf.Date || conf.StartDate">
           <span class="date-icon">📅</span>
           <span>{{ formatDate(conf.EventDate || conf.Date || conf.StartDate) }}</span>
         </div>
 
-        <!-- תאריכי דדליין - רק לכנסים פנימיים -->
+        <!-- תאריכי דדליין - רק לכנסים פנימיים שההרשמה אליהם פתוחה -->
         <div class="conf-card-deadlines"
-          *ngIf="!isExternalOnlyConference(conf) && (conf.RegistrationDeadline || conf.AbstractDeadline)">
+          *ngIf="!isExternalOnlyConference(conf) && !conf.IsRegistrationClosed && (conf.RegistrationDeadline || conf.AbstractDeadline)">
           <div class="deadline-row" *ngIf="conf.RegistrationDeadline">
             <span class="deadline-label">Registration Deadline</span>
             <span class="deadline-value">{{ formatDate(conf.RegistrationDeadline) }}</span>

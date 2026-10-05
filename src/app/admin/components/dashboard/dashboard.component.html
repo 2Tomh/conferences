@@ -54,6 +54,8 @@
           <th>Survey Status</th>
           <th>Abstract Submission</th>
           <th>External</th>
+          <!-- ⭐ חדש -->
+          <th>Registration</th>
           <th>{{ 'TABLE.ACTIONS' | translate }}</th>
         </tr>
       </thead>
@@ -90,6 +92,21 @@
             <button class="btn-toggle-external" [class.is-external]="conf.IsExternalOnly"
               [disabled]="updatingExternalId === (conf.Id || conf._id)" (click)="toggleExternalOnly(conf)">
               {{ conf.IsExternalOnly ? '🌐 חיצוני' : 'פנימי' }}
+            </button>
+          </td>
+
+          <!-- ⭐ חדש: פתיחה/סגירה של ההרשמה. אדמין יכול ללחוץ, מנהל פקולטה רק רואה את הסטטוס -->
+          <td>
+            <button type="button"
+              [disabled]="userRole !== 'Admin' || updatingRegistrationId === (conf.Id || conf._id)"
+              (click)="toggleRegistrationClosed(conf)"
+              [title]="userRole === 'Admin' ? (conf.IsRegistrationClosed ? 'לחץ לפתיחת ההרשמה' : 'לחץ לסגירת ההרשמה') : ''"
+              [style.background]="conf.IsRegistrationClosed ? 'rgba(231, 76, 60, 0.15)' : 'rgba(46, 204, 113, 0.12)'"
+              [style.color]="conf.IsRegistrationClosed ? '#FF6B6B' : '#2ECC71'"
+              [style.border]="conf.IsRegistrationClosed ? '1px solid #FF6B6B' : '1px solid #2ECC71'"
+              [style.cursor]="userRole === 'Admin' ? 'pointer' : 'default'"
+              style="padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap;">
+              {{ updatingRegistrationId === (conf.Id || conf._id) ? '...' : (conf.IsRegistrationClosed ? '🔒 סגורה' : '✅ פתוחה') }}
             </button>
           </td>
 
