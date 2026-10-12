@@ -97,7 +97,7 @@
         <div class="image-preview" *ngIf="imagePreview">
           <img [src]="imagePreview" alt="Preview">
           <!-- ⭐ חדש: גודל התמונה אחרי הכיווץ -->
-          <small style="display:block;margin:6px 0;color:#666;">Image size: {{ imageSizeKb(imagePreview) }} KB</small>
+          <small *ngIf="imagePreview.startsWith('data:')" style="display:block;margin:6px 0;color:#666;">Image size: {{ imageSizeKb(imagePreview) }} KB</small>
           <button class="btn-remove-image" (click)="removeImage()">Remove image</button>
         </div>
         <div class="image-placeholder" *ngIf="!imagePreview">No image selected</div>

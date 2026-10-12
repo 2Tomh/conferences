@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 // חשוב: שמות השדות כאן הם PascalCase בכוונה - הם חייבים להתאים בדיוק
-// לשמות ה-properties במודל PlenaryEvent.cs בשרת, כי הפרויקט הזה לא ממיר
-// אוטומטית בין camelCase ל-PascalCase (כמו שרואים גם ב-Survey.IsExternalOnly
-// בקומפוננטת conference-events).
+// לשמות ה-properties במודל PlenaryEvent.cs בשרת.
 
 export interface ScheduleItem {
   Time: string;
@@ -25,6 +24,7 @@ export interface PlenaryEvent {
   RegistrationNote?: string;
   CtaLabel: string;
   CtaUrl: string;
+  // ברשימה (getAll) זה קישור לתמונה; בשמירה זה Base64 של תמונה חדשה
   ImageData?: string;
   ImageAlt?: string;
   SortOrder?: number;
@@ -35,25 +35,34 @@ export interface PlenaryEvent {
 })
 export class PlenaryEventsService {
 
-  // ⭐ התאם לכתובת ה-API האמיתית של הפרויקט (כמו ששאר השירותים משתמשים בה)
-  private readonly baseUrl = 'https://conference-backend-8339.onrender.com/api/plenaryevents';
+  private readonly backendOrigin = 'https://conference-backend-8339.onrender.com';
+  private readonly baseUrl = `${this.backendOrigin}/api/plenaryevents`;
 
   constructor(private http: HttpClient) { }
 
+  // ⭐ שינוי: השרת מחזיר קישור יחסי לתמונה (/api/plenaryevents/{id}/image?v=...),
+  // וכאן משלימים אותו לכתובת מלאה של השרת כדי שה-<img> יטען אותה
   getAll(): Observable<PlenaryEvent[]> {
-    return this.http.get<PlenaryEvent[]>(this.baseUrl);
+    return this.http.get<PlenaryEvent[]>(this.baseUrl).pipe(
+      map(events => (events || []).map(e => ({
+        ...e,
+        ImageData: e.ImageData && e.ImageData.startsWith('/')
+          ? this.backendOrigin + e.ImageData
+          : e.ImageData
+      })))
+    );
   }
 
   getById(id: string): Observable<PlenaryEvent> {
     return this.http.get<PlenaryEvent>(`${this.baseUrl}/${id}`);
   }
 
-  create(event: PlenaryEvent): Observable<PlenaryEvent> {
-    return this.http.post<PlenaryEvent>(this.baseUrl, event);
+  create(event: PlenaryEvent): Observable<any> {
+    return this.http.post<any>(this.baseUrl, event);
   }
 
-  update(id: string, event: PlenaryEvent): Observable<PlenaryEvent> {
-    return this.http.put<PlenaryEvent>(`${this.baseUrl}/${id}`, event);
+  update(id: string, event: PlenaryEvent): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/${id}`, event);
   }
 
   delete(id: string): Observable<any> {
