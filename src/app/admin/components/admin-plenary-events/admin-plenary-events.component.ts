@@ -19,6 +19,12 @@ export class AdminPlenaryEventsComponent implements OnInit {
   form: PlenaryEvent = this.emptyForm();
   imagePreview: string | null = null;
 
+  // ⭐ חדש: הגדרות כיווץ התמונה לפני השמירה.
+  // תמונת באנר לא צריכה להיות רחבה יותר מ-1600px, ו-JPEG באיכות 0.82
+  // נראה כמעט זהה למקור - אבל שוקל פי 10-20 פחות.
+  private readonly MAX_IMAGE_WIDTH = 1600;
+  private readonly JPEG_QUALITY = 0.82;
+
   constructor(private plenaryEventsService: PlenaryEventsService) { }
 
   ngOnInit(): void {
@@ -105,6 +111,8 @@ export class AdminPlenaryEventsComponent implements OnInit {
     this.form.Organizers?.splice(index, 1);
   }
 
+  // ⭐ שינוי: התמונה מכווצת בדפדפן לפני השמירה (רוחב מקסימלי 1600px, JPEG),
+  // במקום לשמור את הקובץ המקורי כמו שהוא (שיכול לשקול כמה MB)
   async onImageSelected(fileInput: HTMLInputElement): Promise<void> {
     const file = fileInput.files?.[0];
     if (!file) return;
@@ -113,19 +121,69 @@ export class AdminPlenaryEventsComponent implements OnInit {
       this.errorMessage = 'Please select an image file.';
       return;
     }
-    if (file.size > 4 * 1024 * 1024) {
-      this.errorMessage = 'Image is too large. Please use a file under 4MB.';
+    if (file.size > 20 * 1024 * 1024) {
+      this.errorMessage = 'Image is too large. Please use a file under 20MB.';
       return;
     }
 
     try {
-      const base64 = await this.plenaryEventsService.fileToBase64(file);
-      this.form.ImageData = base64;
-      this.imagePreview = base64;
+      const compressed = await this.compressImage(file);
+      this.form.ImageData = compressed;
+      this.imagePreview = compressed;
       this.errorMessage = '';
     } catch {
-      this.errorMessage = 'Failed to read the image file.';
+      // גיבוי: אם הכיווץ נכשל משום מה, משתמשים בשיטה הקודמת
+      try {
+        const base64 = await this.plenaryEventsService.fileToBase64(file);
+        this.form.ImageData = base64;
+        this.imagePreview = base64;
+        this.errorMessage = '';
+      } catch {
+        this.errorMessage = 'Failed to read the image file.';
+      }
     }
+  }
+
+  // ⭐ חדש: מקטין את התמונה ושומר אותה כ-JPEG
+  private compressImage(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const scale = Math.min(1, this.MAX_IMAGE_WIDTH / img.width);
+          const width = Math.round(img.width * scale);
+          const height = Math.round(img.height * scale);
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) { URL.revokeObjectURL(url); reject(); return; }
+
+          // רקע לבן - כדי שאזורים שקופים ב-PNG לא יהפכו לשחורים ב-JPEG
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, width, height);
+          ctx.drawImage(img, 0, 0, width, height);
+
+          const dataUrl = canvas.toDataURL('image/jpeg', this.JPEG_QUALITY);
+          URL.revokeObjectURL(url);
+          resolve(dataUrl);
+        } catch (e) {
+          URL.revokeObjectURL(url);
+          reject(e);
+        }
+      };
+      img.onerror = (e) => { URL.revokeObjectURL(url); reject(e); };
+      img.src = url;
+    });
+  }
+
+  // ⭐ חדש: גודל משוער של התמונה השמורה (להצגה למנהל)
+  imageSizeKb(dataUrl: string | null | undefined): number {
+    if (!dataUrl) return 0;
+    const base64 = dataUrl.split(',')[1] || '';
+    return Math.round((base64.length * 3 / 4) / 1024);
   }
 
   removeImage(): void {
