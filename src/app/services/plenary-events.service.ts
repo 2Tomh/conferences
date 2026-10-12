@@ -40,17 +40,29 @@ export class PlenaryEventsService {
 
   constructor(private http: HttpClient) { }
 
-  // ⭐ שינוי: השרת מחזיר קישור יחסי לתמונה (/api/plenaryevents/{id}/image?v=...),
-  // וכאן משלימים אותו לכתובת מלאה של השרת כדי שה-<img> יטען אותה
+  // ⭐ שינוי: השרת מחזיר קישור יחסי לתמונה (/api/plenaryevents/{id}/image?v=...).
+  // הרשימה חוזרת מיד בלי התמונות, וכל התמונות מתחילות לרדת במקביל ברקע.
+  // ImageData מתמלא רק כשהתמונה כבר ירדה במלואה - כך היא מופיעה בבת אחת,
+  // ובזמן הטעינה לא רואים את טקסט ה-alt על רקע ריק.
   getAll(): Observable<PlenaryEvent[]> {
     return this.http.get<PlenaryEvent[]>(this.baseUrl).pipe(
-      map(events => (events || []).map(e => ({
-        ...e,
-        ImageData: e.ImageData && e.ImageData.startsWith('/')
+      map(events => (events || []).map(e => {
+        const url = e.ImageData && e.ImageData.startsWith('/')
           ? this.backendOrigin + e.ImageData
-          : e.ImageData
-      })))
+          : e.ImageData;
+
+        const ev: PlenaryEvent = { ...e, ImageData: undefined };
+        if (url) this.preloadImage(url, ev);
+        return ev;
+      }))
     );
+  }
+
+  private preloadImage(url: string, ev: PlenaryEvent): void {
+    const img = new Image();
+    img.onload = () => { ev.ImageData = url; };
+    img.onerror = () => { ev.ImageData = undefined; };
+    img.src = url;
   }
 
   getById(id: string): Observable<PlenaryEvent> {
