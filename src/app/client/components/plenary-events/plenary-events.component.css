@@ -120,19 +120,15 @@
 .event-media img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s ease;
+  object-fit: contain;      /* ⭐ שינוי: התמונה מוצגת במלואה, בלי חיתוך */
+  object-position: center;
+  display: block;
 }
 
-.event:hover .event-media img {
-  transform: scale(1.03);
-}
+/* ⭐ שינוי: הוסרה ההגדלה במעבר עכבר (היא חתכה את הקצוות) */
 
 .media-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 60%, rgba(11, 19, 56, 0.6));
-  pointer-events: none;
+  display: none;            /* ⭐ שינוי: ההצללה כיסתה את תחתית התמונה */
 }
 
 .event-media-placeholder {
@@ -450,7 +446,12 @@
   }
 
   .event-media {
-    min-height: 240px;
+    min-height: 0;
+  }
+
+  /* ⭐ במובייל התמונה בגובה הטבעי שלה - מוצגת שלמה בלי פסים */
+  .event-media img {
+    height: auto;
   }
 
   .event-body {
