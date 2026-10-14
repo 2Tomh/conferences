@@ -111,12 +111,36 @@ export class ApiService {
   }
 
   // ⭐ חדש: מקומות שמורים לאירוע הערב
-  getReservedSeatSummary(): Observable<{ IsAdmin: boolean; Quota: number | null; Used: number; UserId: string }> {
+  getReservedSeatSummary(): Observable<{ IsAdmin: boolean; Quota: number | null; Used: number; Confirmed: number; UserId: string }> {
     return this.http.get<any>(`${this.apiUrl}/registration/reserved-seats/summary`);
   }
 
   setReservedSeat(attendeeId: string, reserved: boolean): Observable<{ HasReservedSeat: boolean; ReservedByUserId: string | null }> {
     return this.http.patch<any>(`${this.apiUrl}/registration/reserved-seat/${attendeeId}`, { reserved });
+  }
+
+  // ⭐ חדש: הזמנות לאירוע הערב
+  getEveningInvitations(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/evening/invitations`);
+  }
+
+  sendEveningInvitations(data: { attendeeIds: string[]; deadline: string; message?: string }): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/evening/invitations/send`, data);
+  }
+
+  // העמוד הציבורי (קישור אישי מהמייל)
+  getEveningRsvp(id: string, token: string): Observable<any> {
+    const params = new HttpParams().set('id', id).set('token', token);
+    return this.http.get<any>(`${this.apiUrl}/evening/rsvp`, { params });
+  }
+
+  submitEveningRsvp(data: { id: string; token: string; attending: boolean }): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/evening/rsvp`, data);
+  }
+
+  // ⭐ חדש: שינוי ידני של תשובה - אדמין ראשי בלבד
+  overrideEveningResponse(attendeeId: string, status: 'attending' | 'declined'): Observable<any> {
+    return this.http.patch<any>(`${this.apiUrl}/evening/override/${attendeeId}`, { status });
   }
 
   registerAttendee(attendee: any): Observable<any> {

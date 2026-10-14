@@ -23,6 +23,8 @@ import { CountdownPopupComponent } from './components/countdown-popup/countdown-
 import { ChatWidgetComponent } from './components/chat-widget/chat-widget.component';
 import { ContactUsComponent } from './components/contact-us/contact-us.component';
 import { PlenaryEventsComponent } from './components/plenary-events/plenary-events.component';
+// ⭐ חדש: עמוד אישור הגעה לאירוע הערב (קישור אישי מהמייל)
+import { RsvpComponent } from './components/rsvp/rsvp.component';
 @NgModule({
   declarations: [
     ClientRootComponent,
@@ -42,6 +44,7 @@ import { PlenaryEventsComponent } from './components/plenary-events/plenary-even
     ChatWidgetComponent,
     ContactUsComponent,
     PlenaryEventsComponent,
+    RsvpComponent,
   ],
   imports: [
     CommonModule,
@@ -55,4 +58,3 @@ import { PlenaryEventsComponent } from './components/plenary-events/plenary-even
   schemas: [CUSTOM_ELEMENTS_SCHEMA] // זה יעלים את השגיאה של app-under-construction אם יש בעיית תזמון
 })
 export class ClientModule { }
-

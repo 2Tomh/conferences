@@ -25,6 +25,8 @@ import { PartnersManagementComponent } from './components/partners-management/pa
 import { AnnouncementEmailComponent } from './components/announcement-email/announcement-email.component';
 import { AnnouncementTrackingComponent } from './components/announcement-tracking/announcement-tracking.component';
 import { AdminPlenaryEventsComponent } from './components/admin-plenary-events/admin-plenary-events.component';
+// ⭐ חדש: הזמנות לאירוע הערב
+import { EveningInvitationsComponent } from './components/evening-invitations/evening-invitations.component';
 @NgModule({
   declarations: [
     AdminRootComponent,
@@ -42,6 +44,7 @@ import { AdminPlenaryEventsComponent } from './components/admin-plenary-events/a
     AnnouncementEmailComponent,
     AnnouncementTrackingComponent,
     AdminPlenaryEventsComponent,
+    EveningInvitationsComponent,
   ],
   imports: [
     CommonModule,

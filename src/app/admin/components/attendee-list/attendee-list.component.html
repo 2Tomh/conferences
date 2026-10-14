@@ -39,6 +39,11 @@
                     </span>
                     <span class="stat-label">Evening Seats</span>
                 </div>
+                <!-- ⭐ חדש: אישרו הגעה לאירוע הערב -->
+                <div class="stat-chip paid" [title]="isAdmin ? 'Confirmed attendance to the evening event (all organizers)' : 'Your invitees who confirmed'">
+                    <span class="stat-count">{{ eveningConfirmed }}<ng-container *ngIf="seatsUsed"> / {{ seatsUsed }}</ng-container></span>
+                    <span class="stat-label">Evening Confirmed</span>
+                </div>
             </div>
         </div>
     </div>
@@ -50,6 +55,16 @@
             <input type="checkbox" [(ngModel)]="showReservedOnly" (change)="onReservedOnlyChange()" />
             Reserved seats only
         </label>
+        <!-- ⭐ חדש: סינון לפי סטטוס ההזמנה לאירוע הערב -->
+        <select [(ngModel)]="selectedEveningStatus" (change)="onEveningFilterChange()"
+            style="margin-left:12px;padding:6px 10px;border-radius:8px;">
+            <option value="">Evening: all</option>
+            <option value="attending">Evening: attending</option>
+            <option value="invited">Evening: awaiting reply</option>
+            <option value="declined">Evening: declined</option>
+            <option value="expired">Evening: no reply</option>
+            <option value="none">Evening: not invited</option>
+        </select>
     </div>
     <!-- ⭐ חדש: הודעה על הקצאה / שגיאה -->
     <div *ngIf="!isAdmin && seatQuota !== null && seatQuota > 0 && seatsRemaining === 0"
@@ -79,6 +94,7 @@
                     <th (click)="sortBy('RegisteredAt')" class="sortable">Registration Date</th>
                     <!-- ⭐ חדש -->
                     <th (click)="sortBy('HasReservedSeat')" class="sortable">Evening Seat</th>
+                    <th (click)="sortBy('EveningInviteStatus')" class="sortable">Evening Attends</th>
                     <th>Details</th>
                 </tr>
             </thead>
@@ -117,6 +133,11 @@
                             {{ togglingSeatIds.has(a.Id) ? '...' : (a.HasReservedSeat ? '✓ Reserved' : 'Reserve') }}
                         </button>
                     </td>
+                    <!-- ⭐ חדש: סטטוס ההזמנה לאירוע הערב -->
+                    <td [style.color]="eveningColor(a)" [title]="eveningTitle(a)"
+                        style="white-space:nowrap;font-weight:600;">
+                        {{ eveningLabel(a) }}
+                    </td>
                     <td class="actions-cell">
                         <button class="btn-details" (click)="openDetails(a)">View</button>
                         <button class="btn-details" *ngIf="isAdmin" (click)="openEditAttendee(a)">Edit</button>
@@ -124,7 +145,7 @@
                     </td>
                 </tr>
                 <tr *ngIf="filteredAttendees.length === 0">
-                    <td colspan="11" class="no-data">No attendees found</td>
+                    <td colspan="12" class="no-data">No attendees found</td>
                 </tr>
             </tbody>
         </table>
@@ -193,6 +214,19 @@
             <div class="detail-row">
                 <span class="label">Evening Event Seat</span>
                 <span>{{ selectedAttendee.HasReservedSeat ? 'Reserved' : 'Not reserved' }}</span>
+            </div>
+            <!-- ⭐ חדש: הזמנה לאירוע הערב -->
+            <div class="detail-row">
+                <span class="label">Evening Invitation</span>
+                <span>{{ eveningLabel(selectedAttendee) }}</span>
+            </div>
+            <div class="detail-row" *ngIf="selectedAttendee.EveningInviteDeadline">
+                <span class="label">Respond By</span>
+                <span>{{ selectedAttendee.EveningInviteDeadline | date:'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+            <div class="detail-row" *ngIf="selectedAttendee.EveningRespondedAt">
+                <span class="label">Answered</span>
+                <span>{{ selectedAttendee.EveningRespondedAt | date:'dd/MM/yyyy HH:mm' }}</span>
             </div>
         </div>
         <div class="abstract-view-footer" style="padding: 20px 0 0;" *ngIf="isAdmin">

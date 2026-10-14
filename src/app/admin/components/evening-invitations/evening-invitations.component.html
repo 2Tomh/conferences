@@ -1,0 +1,192 @@
+<div class="ev-page">
+
+  <div class="ev-header">
+    <div>
+      <p class="ev-eyebrow">Mind-IL · Registration Desk</p>
+      <h1 class="ev-title">Evening Invitations</h1>
+      <p class="ev-sub">The Mind-IL Evening Plenary Event · Monday, October 26, 2026 · Smolarz Auditorium</p>
+    </div>
+
+    <div class="ev-stats">
+      <div class="ev-stat" *ngIf="!isAdmin">
+        <span class="lbl">Your quota</span><span class="val">{{ quota || 0 }}</span>
+      </div>
+      <div class="ev-stat">
+        <span class="lbl">Reserved seats</span><span class="val gold">{{ reservedSeats }}</span>
+      </div>
+      <div class="ev-stat">
+        <span class="lbl">Confirmed</span><span class="val green">{{ confirmed }}</span>
+      </div>
+      <div class="ev-stat">
+        <span class="lbl">Awaiting reply</span><span class="val blue">{{ awaiting }}</span>
+      </div>
+      <div class="ev-stat">
+        <span class="lbl">Declined</span><span class="val red">{{ declined }}</span>
+      </div>
+      <div class="ev-stat">
+        <span class="lbl">Expired</span><span class="val muted">{{ expired }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ev-error" *ngIf="error">{{ error }}</div>
+  <div class="ev-success" *ngIf="resultMessage">
+    {{ resultMessage }}
+    <ul *ngIf="resultDetails.length"><li *ngFor="let d of resultDetails">{{ d }}</li></ul>
+  </div>
+
+  <div class="ev-loading" *ngIf="isLoading">Loading…</div>
+
+  <ng-container *ngIf="!isLoading">
+
+    <!-- ===== שליחת באצ' חדש - אדמין ראשי בלבד ===== -->
+    <section class="ev-card" *ngIf="isAdmin">
+      <div class="ev-card-head">
+        <h2>Send a new batch</h2>
+        <span class="ev-hint">Only people with a reserved seat who were never invited appear here.</span>
+      </div>
+
+      <div class="ev-empty" *ngIf="readyToInvite.length === 0">
+        No reserved seats are waiting for an invitation.<br />
+        Reserve seats in the <strong>Attendees</strong> page, then come back here to invite them.
+      </div>
+
+      <ng-container *ngIf="readyToInvite.length > 0">
+        <!-- ⭐ חדש: חיפוש + בחירה של כל התוצאות -->
+        <div class="ev-toolbar">
+          <input class="ev-search" type="text" placeholder="Search by name, email or conference…"
+            [(ngModel)]="readySearch" (input)="onReadySearch()" />
+          <div class="ev-select-actions">
+            <button class="ev-link-btn" (click)="selectAllFiltered()">Select all {{ filteredReady.length }}</button>
+            <button class="ev-link-btn" *ngIf="selectedIds.size > 0" (click)="clearSelection()">Clear selection</button>
+          </div>
+        </div>
+
+        <table class="ev-table">
+          <thead>
+            <tr>
+              <th class="chk"><input type="checkbox" title="Select this page" [checked]="pageAllSelected" (change)="togglePage()" /></th>
+              <th>Full name</th>
+              <th>Email</th>
+              <th>Conference</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let a of pagedReady" (click)="toggle(a)" [class.selected]="isSelected(a)">
+              <td class="chk"><input type="checkbox" [checked]="isSelected(a)" (click)="$event.stopPropagation(); toggle(a)" /></td>
+              <td>{{ a.FullName }}</td>
+              <td>{{ a.Email || '— no email —' }}</td>
+              <td>{{ a.ConferenceName }}</td>
+            </tr>
+            <tr *ngIf="filteredReady.length === 0">
+              <td colspan="4" class="ev-no-results">No matches for "{{ readySearch }}"</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="ev-pagination" *ngIf="filteredReady.length > pageSize">
+          <span class="ev-page-info">Showing {{ rangeStart(readyPage, filteredReady.length) }}–{{ rangeEnd(readyPage, filteredReady.length) }} of {{ filteredReady.length }}</span>
+          <div class="ev-page-controls">
+            <button class="ev-page-btn" [disabled]="readyPage === 1" (click)="readyPage = readyPage - 1">‹ Prev</button>
+            <button class="ev-page-btn" *ngIf="pageNumbers(readyPage, readyTotalPages)[0] > 1" (click)="readyPage = 1">1</button>
+            <span class="ev-page-dots" *ngIf="pageNumbers(readyPage, readyTotalPages)[0] > 2">…</span>
+            <button class="ev-page-btn" *ngFor="let p of pageNumbers(readyPage, readyTotalPages)" [class.active]="p === readyPage" (click)="readyPage = p">{{ p }}</button>
+            <span class="ev-page-dots" *ngIf="pageNumbers(readyPage, readyTotalPages)[pageNumbers(readyPage, readyTotalPages).length - 1] < readyTotalPages - 1">…</span>
+            <button class="ev-page-btn" *ngIf="pageNumbers(readyPage, readyTotalPages)[pageNumbers(readyPage, readyTotalPages).length - 1] < readyTotalPages" (click)="readyPage = readyTotalPages">{{ readyTotalPages }}</button>
+            <button class="ev-page-btn" [disabled]="readyPage === readyTotalPages" (click)="readyPage = readyPage + 1">Next ›</button>
+          </div>
+        </div>
+
+        <div class="ev-form">
+          <label class="ev-field">
+            <span>Respond by</span>
+            <input type="datetime-local" [(ngModel)]="deadline" />
+            <small *ngIf="!deadlineIsValid" class="warn">Choose a time in the future.</small>
+            <small *ngIf="deadlineIsValid">People who don't answer by then lose their seat and can't be invited again.</small>
+          </label>
+
+          <label class="ev-field grow">
+            <span>Personal note (optional)</span>
+            <textarea rows="3" [(ngModel)]="message" placeholder="Added to the invitation email, above the event details"></textarea>
+          </label>
+        </div>
+
+        <div class="ev-actions">
+          <span class="ev-count">{{ selectedIds.size }} selected</span>
+          <button class="ev-btn" [disabled]="!canSend" (click)="send()">
+            {{ isSending ? 'Sending… (this may take a minute)' : 'Send invitations' }}
+          </button>
+        </div>
+      </ng-container>
+    </section>
+
+    <!-- ===== ההזמנות שנשלחו ===== -->
+    <section class="ev-card">
+      <div class="ev-card-head">
+        <h2>Sent invitations</h2>
+        <div class="ev-tabs">
+          <button [class.active]="statusFilter === ''" (click)="setFilter('')">All ({{ invited.length }})</button>
+          <button [class.active]="statusFilter === 'invited'" (click)="setFilter('invited')">Awaiting ({{ awaiting }})</button>
+          <button [class.active]="statusFilter === 'attending'" (click)="setFilter('attending')">Confirmed ({{ confirmed }})</button>
+          <button [class.active]="statusFilter === 'declined'" (click)="setFilter('declined')">Declined ({{ declined }})</button>
+          <button [class.active]="statusFilter === 'expired'" (click)="setFilter('expired')">Expired ({{ expired }})</button>
+        </div>
+      </div>
+
+      <!-- ⭐ חדש: חיפוש -->
+      <div class="ev-toolbar" *ngIf="invited.length > 0">
+        <input class="ev-search" type="text" placeholder="Search by name, email or conference…"
+          [(ngModel)]="invitedSearch" (input)="onInvitedSearch()" />
+      </div>
+
+      <div class="ev-empty" *ngIf="filteredInvited.length === 0">No invitations here yet.</div>
+
+      <table class="ev-table" *ngIf="filteredInvited.length > 0">
+        <thead>
+          <tr>
+            <th>Full name</th>
+            <th>Email</th>
+            <th>Conference</th>
+            <th>Status</th>
+            <th>Invited</th>
+            <th>Respond by</th>
+            <th>Answered</th>
+            <th *ngIf="isAdmin">Change</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let a of pagedInvited">
+            <td>{{ a.FullName }}</td>
+            <td>{{ a.Email }}</td>
+            <td>{{ a.ConferenceName }}</td>
+            <td><span class="badge" [ngClass]="a.EveningInviteStatus">{{ statusLabel(a.EveningInviteStatus) }}</span></td>
+            <td>{{ a.EveningInvitedAt | date:'dd/MM/yy HH:mm' }}</td>
+            <td>{{ a.EveningInviteDeadline | date:'dd/MM/yy HH:mm' }}</td>
+            <td>{{ a.EveningRespondedAt ? (a.EveningRespondedAt | date:'dd/MM/yy HH:mm') : '—' }}</td>
+            <!-- ⭐ חדש: שינוי ידני - אדמין ראשי בלבד -->
+            <td *ngIf="isAdmin" class="ev-override">
+              <button class="ev-mini yes" *ngIf="a.EveningInviteStatus !== 'attending'"
+                [disabled]="overridingIds.has(a.Id)" (click)="overrideResponse(a, 'attending')">✓ Attending</button>
+              <button class="ev-mini no" *ngIf="a.EveningInviteStatus !== 'declined'"
+                [disabled]="overridingIds.has(a.Id)" (click)="overrideResponse(a, 'declined')">✕ Not attending</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+        <div class="ev-pagination" *ngIf="filteredInvited.length > pageSize">
+          <span class="ev-page-info">Showing {{ rangeStart(invitedPage, filteredInvited.length) }}–{{ rangeEnd(invitedPage, filteredInvited.length) }} of {{ filteredInvited.length }}</span>
+          <div class="ev-page-controls">
+            <button class="ev-page-btn" [disabled]="invitedPage === 1" (click)="invitedPage = invitedPage - 1">‹ Prev</button>
+            <button class="ev-page-btn" *ngIf="pageNumbers(invitedPage, invitedTotalPages)[0] > 1" (click)="invitedPage = 1">1</button>
+            <span class="ev-page-dots" *ngIf="pageNumbers(invitedPage, invitedTotalPages)[0] > 2">…</span>
+            <button class="ev-page-btn" *ngFor="let p of pageNumbers(invitedPage, invitedTotalPages)" [class.active]="p === invitedPage" (click)="invitedPage = p">{{ p }}</button>
+            <span class="ev-page-dots" *ngIf="pageNumbers(invitedPage, invitedTotalPages)[pageNumbers(invitedPage, invitedTotalPages).length - 1] < invitedTotalPages - 1">…</span>
+            <button class="ev-page-btn" *ngIf="pageNumbers(invitedPage, invitedTotalPages)[pageNumbers(invitedPage, invitedTotalPages).length - 1] < invitedTotalPages" (click)="invitedPage = invitedTotalPages">{{ invitedTotalPages }}</button>
+            <button class="ev-page-btn" [disabled]="invitedPage === invitedTotalPages" (click)="invitedPage = invitedPage + 1">Next ›</button>
+          </div>
+        </div>
+    </section>
+
+  </ng-container>
+</div>

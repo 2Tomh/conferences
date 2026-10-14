@@ -18,6 +18,8 @@ import { AnnouncementEmailComponent } from './components/announcement-email/anno
 import { AnnouncementTrackingComponent } from './components/announcement-tracking/announcement-tracking.component';
 // ⭐ חדש: קומפוננטת ניהול Plenary Events
 import { AdminPlenaryEventsComponent } from './components/admin-plenary-events/admin-plenary-events.component';
+// ⭐ חדש: הזמנות לאירוע הערב
+import { EveningInvitationsComponent } from './components/evening-invitations/evening-invitations.component';
 
 const routes: Routes = [
   {
@@ -43,6 +45,8 @@ const routes: Routes = [
       { path: 'announcement-tracking', component: AnnouncementTrackingComponent, canActivate: [AuthGuard] },
       // ⭐ חדש: route לניהול Plenary Events
       { path: 'plenary-events', component: AdminPlenaryEventsComponent, canActivate: [AuthGuard] },
+      // ⭐ חדש: הזמנות לאירוע הערב (אדמין + מארגנים)
+      { path: 'evening-invitations', component: EveningInvitationsComponent, canActivate: [AuthGuard] },
       { path: '', redirectTo: 'login', pathMatch: 'full' }
     ]
   }

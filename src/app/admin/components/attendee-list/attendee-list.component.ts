@@ -40,6 +40,10 @@ export class AttendeeListComponent implements OnInit {
   seatError = '';
   showReservedOnly = false;
 
+  // ⭐ חדש: אירוע הערב - סינון לפי סטטוס ההזמנה ('' = הכל, invited / attending / declined / expired / none)
+  selectedEveningStatus = '';
+  eveningConfirmed = 0;
+
   constructor(private apiService: ApiService) { }
   ngOnInit(): void {
     this.loadAttendees();
@@ -56,6 +60,7 @@ export class AttendeeListComponent implements OnInit {
       next: (res) => {
         this.seatQuota = res?.Quota ?? null;
         this.seatsUsed = res?.Used ?? 0;
+        this.eveningConfirmed = res?.Confirmed ?? 0;
         this.currentUserId = res?.UserId || '';
       },
       error: (err) => console.error('Error loading reserved seat summary:', err)
@@ -72,15 +77,21 @@ export class AttendeeListComponent implements OnInit {
 
   canToggleSeat(a: any): boolean {
     if (!a?.Id || this.togglingSeatIds.has(a.Id)) return false;
+    // ⭐ שינוי: אחרי שנשלחה הזמנה (בכל סטטוס) הכפתור נעול
+    if (a.EveningInviteStatus) return false;
     if (this.isAdmin) return true;
     if (a.HasReservedSeat) {
-      // מארגן יכול לבטל רק מקום שהוא עצמו שמר
+      // מארגן יכול לבטל רק מקום שהוא עצמו שמר (כל עוד לא נשלחה הזמנה)
       return !a.ReservedByUserId || a.ReservedByUserId === this.currentUserId;
     }
     return this.seatQuota != null && this.seatsUsed < this.seatQuota;
   }
 
   seatButtonTitle(a: any): string {
+    if (a.EveningInviteStatus === 'invited' || a.EveningInviteStatus === 'attending')
+      return 'Invitation already sent - the seat can no longer be changed';
+    if (this.isEveningBlocked(a))
+      return 'Declined or did not respond in time - cannot be invited again';
     if (a.HasReservedSeat && !this.isAdmin && a.ReservedByUserId && a.ReservedByUserId !== this.currentUserId)
       return 'Reserved by another organizer';
     if (!a.HasReservedSeat && !this.isAdmin && (this.seatQuota == null || this.seatsUsed >= this.seatQuota))
@@ -91,6 +102,7 @@ export class AttendeeListComponent implements OnInit {
   toggleSeat(a: any): void {
     if (!this.canToggleSeat(a)) return;
     const newValue = !a.HasReservedSeat;
+
     this.togglingSeatIds.add(a.Id);
     this.seatError = '';
 
@@ -99,6 +111,13 @@ export class AttendeeListComponent implements OnInit {
         this.togglingSeatIds.delete(a.Id);
         a.HasReservedSeat = res?.HasReservedSeat ?? newValue;
         a.ReservedByUserId = res?.ReservedByUserId ?? null;
+        // ביטול מקום מבטל גם את ההזמנה לאירוע הערב
+        if (!a.HasReservedSeat) {
+          a.EveningInviteStatus = null;
+          a.EveningInvitedAt = null;
+          a.EveningInviteDeadline = null;
+          a.EveningRespondedAt = null;
+        }
         this.loadSeatSummary();
         if (this.showReservedOnly) this.applyFilters();
       },
@@ -111,6 +130,46 @@ export class AttendeeListComponent implements OnInit {
   }
 
   onReservedOnlyChange(): void { this.applyFilters(); }
+
+  // =====================================================================
+  // ⭐ חדש: אירוע הערב - סטטוס ההזמנה
+  // =====================================================================
+  onEveningFilterChange(): void { this.applyFilters(); }
+
+  eveningLabel(a: any): string {
+    switch (a?.EveningInviteStatus) {
+      case 'attending': return '✓ Attending';
+      case 'invited': return '⏳ Awaiting reply';
+      case 'declined': return '✗ Declined';
+      case 'expired': return '⌛ No reply';
+      default: return '—';
+    }
+  }
+
+  eveningColor(a: any): string | null {
+    switch (a?.EveningInviteStatus) {
+      case 'attending': return '#3DDC97';
+      case 'invited': return '#6EA8FF';
+      case 'declined': return '#FF6B6B';
+      case 'expired': return '#8A90AA';
+      default: return null;
+    }
+  }
+
+  eveningTitle(a: any): string {
+    if (a?.EveningInviteStatus === 'invited' && a.EveningInviteDeadline)
+      return 'Must respond by ' + new Date(a.EveningInviteDeadline).toLocaleString('en-GB');
+    if (a?.EveningRespondedAt)
+      return 'Answered ' + new Date(a.EveningRespondedAt).toLocaleString('en-GB');
+    if (a?.EveningInviteStatus === 'expired')
+      return 'Did not respond in time - cannot be invited again';
+    return 'Not invited';
+  }
+
+  // מי שסירב או לא ענה בזמן - לא ניתן לשמור לו מקום שוב
+  isEveningBlocked(a: any): boolean {
+    return a?.EveningInviteStatus === 'declined' || a?.EveningInviteStatus === 'expired';
+  }
 
   private checkIsAdmin(): boolean {
     const directRole = localStorage.getItem('role');
@@ -151,7 +210,7 @@ export class AttendeeListComponent implements OnInit {
       alert("No data to export");
       return;
     }
-    const header = "Full Name,Email,Affiliation,Address,Role,Conference,Abstract Submitted,Payment Status,Amount Paid,Registration Date,Reserved Seat\n";
+    const header = "Full Name,Email,Affiliation,Address,Role,Conference,Abstract Submitted,Payment Status,Amount Paid,Registration Date,Reserved Seat,Evening Invitation,Evening Response Date\n";
     const rows = this.filteredAttendees.map(a => {
       const hasAbstract = (a.HasAbstract === true || a.hasAbstract === true) ? 'Yes' : 'No';
       return [
@@ -165,7 +224,10 @@ export class AttendeeListComponent implements OnInit {
         a.DisplayStatus || a.PaymentStatus,
         (a.Amount || a.amount || 0) + ' ' + this.getCurrencySymbol(a),
         a.RegisteredAt ? new Date(a.RegisteredAt).toLocaleString('en-US') : '',
-        a.HasReservedSeat ? 'Yes' : 'No' // ⭐ חדש
+        a.HasReservedSeat ? 'Yes' : 'No',
+        // ⭐ חדש: אירוע הערב
+        ({ attending: 'Attending', invited: 'Awaiting reply', declined: 'Declined', expired: 'No reply (expired)' } as any)[a.EveningInviteStatus] || 'Not invited',
+        a.EveningRespondedAt ? new Date(a.EveningRespondedAt).toLocaleString('en-US') : ''
       ].map(value => `"${String(value).replace(/"/g, '""')}"`).join(",");
     }).join("\n");
     const csvContent = "\uFEFF" + header + rows;
@@ -278,6 +340,11 @@ export class AttendeeListComponent implements OnInit {
       list = list.filter(a => a.PaymentStatus === this.selectedPaymentStatus);
     if (this.showReservedOnly)
       list = list.filter(a => a.HasReservedSeat === true);
+    // ⭐ חדש: סינון לפי סטטוס ההזמנה לאירוע הערב
+    if (this.selectedEveningStatus === 'none')
+      list = list.filter(a => !a.EveningInviteStatus);
+    else if (this.selectedEveningStatus)
+      list = list.filter(a => a.EveningInviteStatus === this.selectedEveningStatus);
     list.sort((a, b) => {
       const av = a[this.sortField] ?? '';
       const bv = b[this.sortField] ?? '';

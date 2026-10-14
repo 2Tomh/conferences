@@ -1,0 +1,81 @@
+<div class="rsvp-page">
+  <div class="rsvp-card">
+
+    <p class="rsvp-eyebrow">Mind-IL · Israel's Science and Academia Week</p>
+    <h1 class="rsvp-title">The Mind-IL Evening Plenary Event</h1>
+
+    <div class="rsvp-event">
+      <div><span>Date</span><strong>Monday, October 26, 2026 · Doors open 18:15</strong></div>
+      <div><span>Venue</span><strong>Smolarz Auditorium, Tel Aviv University</strong></div>
+    </div>
+
+    <!-- טעינה -->
+    <div class="rsvp-state" *ngIf="isLoading">Loading your invitation…</div>
+
+    <!-- קישור לא תקין / לא נמצא -->
+    <div class="rsvp-error" *ngIf="!isLoading && !status && errorMessage">
+      {{ errorMessage }}
+      <p class="rsvp-help">Need help? Contact us at <a href="mailto:support@mind-il.org">support@mind-il.org</a></p>
+    </div>
+
+    <ng-container *ngIf="!isLoading && status">
+
+      <p class="rsvp-greeting">Dear <strong>{{ fullName }}</strong>,</p>
+
+      <!-- ממתין לתשובה -->
+      <ng-container *ngIf="status === 'invited' && canRespond">
+        <p class="rsvp-text">
+          A seat has been reserved for you. Please let us know whether you will attend.
+        </p>
+        <p class="rsvp-deadline">Please respond by <strong>{{ deadlineText }}</strong>. After that, unanswered seats are released.</p>
+      </ng-container>
+
+      <!-- אישר -->
+      <div class="rsvp-result ok" *ngIf="status === 'attending'">
+        <div class="rsvp-icon">✓</div>
+        <h2>You're confirmed!</h2>
+        <p>We look forward to seeing you at the event.</p>
+      </div>
+
+      <!-- סירב -->
+      <div class="rsvp-result no" *ngIf="status === 'declined'">
+        <div class="rsvp-icon">✕</div>
+        <h2>Thank you for letting us know</h2>
+        <p>Your seat has been released.</p>
+      </div>
+
+      <!-- פג תוקף -->
+      <div class="rsvp-result no" *ngIf="status === 'expired' || (status === 'invited' && !canRespond)">
+        <div class="rsvp-icon">⌛</div>
+        <h2>The response period has ended</h2>
+        <p>This invitation is no longer active and the seat has been released.</p>
+      </div>
+
+      <!-- כפתורים -->
+      <ng-container *ngIf="canRespond && status === 'invited'">
+
+        <div class="rsvp-choice" *ngIf="!confirmingDecline">
+          <button type="button" class="choice yes" [disabled]="isSaving" (click)="respond(true)">
+            {{ isSaving ? 'Saving…' : 'I will attend' }}
+          </button>
+          <button type="button" class="choice no" [disabled]="isSaving" (click)="respond(false)">
+            I can’t attend
+          </button>
+        </div>
+
+        <div class="rsvp-confirm" *ngIf="confirmingDecline">
+          <p>Are you sure? Your seat will be released and <strong>this invitation cannot be renewed.</strong></p>
+          <div class="rsvp-choice">
+            <button type="button" class="choice no selected" [disabled]="isSaving" (click)="respond(false)">
+              {{ isSaving ? 'Saving…' : 'Yes, release my seat' }}
+            </button>
+            <button type="button" class="choice" [disabled]="isSaving" (click)="cancelDecline()">Go back</button>
+          </div>
+        </div>
+      </ng-container>
+
+      <p class="rsvp-error inline" *ngIf="errorMessage">{{ errorMessage }}</p>
+    </ng-container>
+
+  </div>
+</div>
