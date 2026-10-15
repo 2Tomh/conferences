@@ -425,6 +425,28 @@
   cursor: wait;
 }
 
+/* ⭐ חדש: מיון לפי עמודה */
+.ev-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.ev-table th.sortable:hover {
+  color: #fff;
+}
+
+.sort-ind {
+  margin-left: 4px;
+  font-size: 0.7rem;
+  opacity: 0.35;
+}
+
+.sort-ind.on {
+  opacity: 1;
+  color: #E8C97A;
+}
+
 @media (max-width: 768px) {
   .ev-page {
     padding: 20px 14px;

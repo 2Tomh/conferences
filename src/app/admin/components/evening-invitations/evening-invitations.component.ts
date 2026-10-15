@@ -42,6 +42,12 @@ export class EveningInvitationsComponent implements OnInit {
   invitedSearch = '';
   invitedPage = 1;
 
+  // ⭐ חדש: מיון לפי עמודה (לחיצה על כותרת: עולה ← יורד)
+  readySortKey = '';
+  readySortDir: 1 | -1 = 1;
+  invitedSortKey = '';
+  invitedSortDir: 1 | -1 = 1;
+
   constructor(private api: ApiService) { }
 
   ngOnInit(): void {
@@ -101,7 +107,8 @@ export class EveningInvitationsComponent implements OnInit {
   }
 
   get filteredReady(): any[] {
-    return this.readyToInvite.filter(a => this.matches(a, this.readySearch));
+    const rows = this.readyToInvite.filter(a => this.matches(a, this.readySearch));
+    return this.sortRows(rows, this.readySortKey, this.readySortDir);
   }
 
   get readyTotalPages(): number {
@@ -210,9 +217,10 @@ export class EveningInvitationsComponent implements OnInit {
 
   // ---------- טבלת ההזמנות: סטטוס + חיפוש + עמודים ----------
   get filteredInvited(): any[] {
-    return this.invited.filter(a =>
+    const rows = this.invited.filter(a =>
       (!this.statusFilter || a.EveningInviteStatus === this.statusFilter)
       && this.matches(a, this.invitedSearch));
+    return this.sortRows(rows, this.invitedSortKey, this.invitedSortDir);
   }
 
   get invitedTotalPages(): number {
@@ -228,6 +236,48 @@ export class EveningInvitationsComponent implements OnInit {
   setFilter(s: string): void { this.statusFilter = s; this.invitedPage = 1; }
 
   onInvitedSearch(): void { this.invitedPage = 1; }
+
+  // ---------- ⭐ חדש: מיון ----------
+  private readonly dateKeys = ['EveningInvitedAt', 'EveningInviteDeadline', 'EveningRespondedAt'];
+  private readonly statusOrder: { [k: string]: number } = { attending: 1, invited: 2, declined: 3, expired: 4 };
+
+  private sortValue(a: any, key: string): any {
+    const v = a[key];
+    if (this.dateKeys.indexOf(key) >= 0) return v ? new Date(v).getTime() : null;
+    if (key === 'EveningInviteStatus') return this.statusOrder[v] || 99;
+    return v ? String(v).toLowerCase() : null;
+  }
+
+  private sortRows(rows: any[], key: string, dir: number): any[] {
+    if (!key) return rows;
+    return rows.slice().sort((x, y) => {
+      const a = this.sortValue(x, key);
+      const b = this.sortValue(y, key);
+      // ערכים ריקים תמיד בסוף
+      if (a === null && b === null) return 0;
+      if (a === null) return 1;
+      if (b === null) return -1;
+      if (typeof a === 'number' && typeof b === 'number') return (a - b) * dir;
+      return String(a).localeCompare(String(b)) * dir;
+    });
+  }
+
+  sortReady(key: string): void {
+    if (this.readySortKey === key) this.readySortDir = this.readySortDir === 1 ? -1 : 1;
+    else { this.readySortKey = key; this.readySortDir = 1; }
+    this.readyPage = 1;
+  }
+
+  sortInvited(key: string): void {
+    if (this.invitedSortKey === key) this.invitedSortDir = this.invitedSortDir === 1 ? -1 : 1;
+    else { this.invitedSortKey = key; this.invitedSortDir = 1; }
+    this.invitedPage = 1;
+  }
+
+  sortIcon(currentKey: string, dir: number, key: string): string {
+    if (currentKey !== key) return '↕';
+    return dir === 1 ? '▲' : '▼';
+  }
 
   // ---------- עזר ל-pagination ----------
   pageNumbers(current: number, total: number): number[] {
