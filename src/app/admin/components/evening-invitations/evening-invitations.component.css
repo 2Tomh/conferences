@@ -212,6 +212,27 @@
   cursor: pointer;
 }
 
+/* ⭐ חדש: כפתור אישור בלי מייל */
+.ev-btn-outline {
+  padding: 11px 20px;
+  border-radius: 10px;
+  border: 1px solid #3DDC97;
+  background: transparent;
+  color: #3DDC97;
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.ev-btn-outline:hover:not(:disabled) {
+  background: rgba(61, 220, 151, 0.1);
+}
+
+.ev-btn-outline:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .ev-btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;

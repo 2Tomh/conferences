@@ -152,7 +152,7 @@ export class EveningInvitationsComponent implements OnInit {
   }
 
   get canSend(): boolean {
-    return !this.isSending && this.selectedIds.size > 0 && this.deadlineIsValid;
+    return !this.isSending && !this.isPreapproving && this.selectedIds.size > 0 && this.deadlineIsValid;
   }
 
   send(): void {
@@ -186,6 +186,44 @@ export class EveningInvitationsComponent implements OnInit {
         (err?.error?.skipped || []).forEach((s: any) => this.resultDetails.push(`Skipped: ${s.FullName} – ${s.Reason}`));
       }
     });
+  }
+
+  // ---------- ⭐ חדש: אישור הגעה מראש בלי מייל (אדמין ראשי בלבד) ----------
+  isPreapproving = false;
+
+  get canPreapprove(): boolean {
+    return this.isAdmin && !this.isPreapproving && !this.isSending && this.selectedIds.size > 0;
+  }
+
+  preapprove(): void {
+    if (!this.canPreapprove) return;
+    const count = this.selectedIds.size;
+    if (!confirm(`Confirm ${count} attendee(s) for the evening event WITHOUT sending an email?\n\nThey will appear as Confirmed right away.`)) return;
+
+    this.isPreapproving = true;
+    this.resultMessage = '';
+    this.resultDetails = [];
+    this.error = '';
+
+    this.api.preapproveEvening(Array.from(this.selectedIds)).subscribe({
+      next: (res) => {
+        this.isPreapproving = false;
+        this.resultMessage = res?.message || 'Attendees confirmed.';
+        (res?.skipped || []).forEach((s: any) => this.resultDetails.push(`Skipped: ${s.FullName} – ${s.Reason}`));
+        this.selectedIds.clear();
+        this.load();
+      },
+      error: (err) => {
+        this.isPreapproving = false;
+        this.error = err?.error?.message || 'Failed to confirm attendees';
+      }
+    });
+  }
+
+  // מי שאושר מראש (בלי מייל) - אין לו מועד אחרון
+  rowStatusLabel(a: any): string {
+    if (a.EveningInviteStatus === 'attending' && !a.EveningInviteDeadline) return 'Confirmed (no email)';
+    return this.statusLabel(a.EveningInviteStatus);
   }
 
   // ---------- ⭐ חדש: שינוי ידני של תשובה (אדמין ראשי בלבד) ----------

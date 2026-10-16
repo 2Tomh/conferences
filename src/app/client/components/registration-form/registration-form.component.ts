@@ -54,7 +54,7 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
   abstractSaved = false;
   posterSaved = false;
   isLifetimeMember = false;
-  readonly REGULAR_PRICE = 50;
+  readonly REGULAR_PRICE = 100; // ⭐ שינוי: $50 -> $100
   readonly LIFETIME_PRICE = 250;
   readonly REGULAR_PRICE_ILS = 150;
   readonly LIFETIME_PRICE_ILS = 750;

@@ -14,7 +14,8 @@
       <div class="ev-stat">
         <span class="lbl">Reserved seats</span><span class="val gold">{{ reservedSeats }}</span>
       </div>
-      <div class="ev-stat">
+      <!-- ⭐ שינוי: מספר מאשרי ההגעה - רק לאדמין הראשי -->
+      <div class="ev-stat" *ngIf="isAdmin">
         <span class="lbl">Confirmed</span><span class="val green">{{ confirmed }}</span>
       </div>
       <div class="ev-stat">
@@ -66,9 +67,9 @@
           <thead>
             <tr>
               <th class="chk"><input type="checkbox" title="Select this page" [checked]="pageAllSelected" (change)="togglePage()" /></th>
-              <th>Full name</th>
-              <th>Email</th>
-              <th>Conference</th>
+              <th class="sortable" (click)="sortReady('FullName')">Full name <span class="sort-ind" [class.on]="readySortKey === 'FullName'">{{ sortIcon(readySortKey, readySortDir, 'FullName') }}</span></th>
+              <th class="sortable" (click)="sortReady('Email')">Email <span class="sort-ind" [class.on]="readySortKey === 'Email'">{{ sortIcon(readySortKey, readySortDir, 'Email') }}</span></th>
+              <th class="sortable" (click)="sortReady('ConferenceName')">Conference <span class="sort-ind" [class.on]="readySortKey === 'ConferenceName'">{{ sortIcon(readySortKey, readySortDir, 'ConferenceName') }}</span></th>
             </tr>
           </thead>
           <tbody>
@@ -113,6 +114,11 @@
 
         <div class="ev-actions">
           <span class="ev-count">{{ selectedIds.size }} selected</span>
+          <!-- ⭐ חדש: אישור הגעה מראש בלי לשלוח מייל -->
+          <button class="ev-btn-outline" [disabled]="!canPreapprove" (click)="preapprove()"
+            title="Mark the selected people as attending, without sending them an email">
+            {{ isPreapproving ? 'Confirming…' : '✓ Confirm without email' }}
+          </button>
           <button class="ev-btn" [disabled]="!canSend" (click)="send()">
             {{ isSending ? 'Sending… (this may take a minute)' : 'Send invitations' }}
           </button>
@@ -127,7 +133,7 @@
         <div class="ev-tabs">
           <button [class.active]="statusFilter === ''" (click)="setFilter('')">All ({{ invited.length }})</button>
           <button [class.active]="statusFilter === 'invited'" (click)="setFilter('invited')">Awaiting ({{ awaiting }})</button>
-          <button [class.active]="statusFilter === 'attending'" (click)="setFilter('attending')">Confirmed ({{ confirmed }})</button>
+          <button [class.active]="statusFilter === 'attending'" (click)="setFilter('attending')">Confirmed<ng-container *ngIf="isAdmin"> ({{ confirmed }})</ng-container></button>
           <button [class.active]="statusFilter === 'declined'" (click)="setFilter('declined')">Declined ({{ declined }})</button>
           <button [class.active]="statusFilter === 'expired'" (click)="setFilter('expired')">Expired ({{ expired }})</button>
         </div>
@@ -144,13 +150,13 @@
       <table class="ev-table" *ngIf="filteredInvited.length > 0">
         <thead>
           <tr>
-            <th>Full name</th>
-            <th>Email</th>
-            <th>Conference</th>
-            <th>Status</th>
-            <th>Invited</th>
-            <th>Respond by</th>
-            <th>Answered</th>
+            <th class="sortable" (click)="sortInvited('FullName')">Full name <span class="sort-ind" [class.on]="invitedSortKey === 'FullName'">{{ sortIcon(invitedSortKey, invitedSortDir, 'FullName') }}</span></th>
+            <th class="sortable" (click)="sortInvited('Email')">Email <span class="sort-ind" [class.on]="invitedSortKey === 'Email'">{{ sortIcon(invitedSortKey, invitedSortDir, 'Email') }}</span></th>
+            <th class="sortable" (click)="sortInvited('ConferenceName')">Conference <span class="sort-ind" [class.on]="invitedSortKey === 'ConferenceName'">{{ sortIcon(invitedSortKey, invitedSortDir, 'ConferenceName') }}</span></th>
+            <th class="sortable" (click)="sortInvited('EveningInviteStatus')">Status <span class="sort-ind" [class.on]="invitedSortKey === 'EveningInviteStatus'">{{ sortIcon(invitedSortKey, invitedSortDir, 'EveningInviteStatus') }}</span></th>
+            <th class="sortable" (click)="sortInvited('EveningInvitedAt')">Invited <span class="sort-ind" [class.on]="invitedSortKey === 'EveningInvitedAt'">{{ sortIcon(invitedSortKey, invitedSortDir, 'EveningInvitedAt') }}</span></th>
+            <th class="sortable" (click)="sortInvited('EveningInviteDeadline')">Respond by <span class="sort-ind" [class.on]="invitedSortKey === 'EveningInviteDeadline'">{{ sortIcon(invitedSortKey, invitedSortDir, 'EveningInviteDeadline') }}</span></th>
+            <th class="sortable" (click)="sortInvited('EveningRespondedAt')">Answered <span class="sort-ind" [class.on]="invitedSortKey === 'EveningRespondedAt'">{{ sortIcon(invitedSortKey, invitedSortDir, 'EveningRespondedAt') }}</span></th>
             <th *ngIf="isAdmin">Change</th>
           </tr>
         </thead>
@@ -159,9 +165,9 @@
             <td>{{ a.FullName }}</td>
             <td>{{ a.Email }}</td>
             <td>{{ a.ConferenceName }}</td>
-            <td><span class="badge" [ngClass]="a.EveningInviteStatus">{{ statusLabel(a.EveningInviteStatus) }}</span></td>
+            <td><span class="badge" [ngClass]="a.EveningInviteStatus">{{ rowStatusLabel(a) }}</span></td>
             <td>{{ a.EveningInvitedAt | date:'dd/MM/yy HH:mm' }}</td>
-            <td>{{ a.EveningInviteDeadline | date:'dd/MM/yy HH:mm' }}</td>
+            <td>{{ a.EveningInviteDeadline ? (a.EveningInviteDeadline | date:'dd/MM/yy HH:mm') : '—' }}</td>
             <td>{{ a.EveningRespondedAt ? (a.EveningRespondedAt | date:'dd/MM/yy HH:mm') : '—' }}</td>
             <!-- ⭐ חדש: שינוי ידני - אדמין ראשי בלבד -->
             <td *ngIf="isAdmin" class="ev-override">

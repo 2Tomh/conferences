@@ -139,6 +139,11 @@ export class ApiService {
   }
 
   // ⭐ חדש: שינוי ידני של תשובה - אדמין ראשי בלבד
+  // ⭐ חדש: אישור הגעה מראש בלי מייל (אדמין ראשי בלבד)
+  preapproveEvening(attendeeIds: string[]): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/evening/invitations/preapprove`, { attendeeIds });
+  }
+
   overrideEveningResponse(attendeeId: string, status: 'attending' | 'declined'): Observable<any> {
     return this.http.patch<any>(`${this.apiUrl}/evening/override/${attendeeId}`, { status });
   }

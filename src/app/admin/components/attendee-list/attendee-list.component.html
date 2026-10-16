@@ -39,8 +39,8 @@
                     </span>
                     <span class="stat-label">Evening Seats</span>
                 </div>
-                <!-- ⭐ חדש: אישרו הגעה לאירוע הערב -->
-                <div class="stat-chip paid" [title]="isAdmin ? 'Confirmed attendance to the evening event (all organizers)' : 'Your invitees who confirmed'">
+                <!-- ⭐ שינוי: מספר מאשרי ההגעה לאירוע הערב - רק לאדמין הראשי -->
+                <div class="stat-chip paid" *ngIf="isAdmin" title="Confirmed attendance to the evening event (all organizers)">
                     <span class="stat-count">{{ eveningConfirmed }}<ng-container *ngIf="seatsUsed"> / {{ seatsUsed }}</ng-container></span>
                     <span class="stat-label">Evening Confirmed</span>
                 </div>
