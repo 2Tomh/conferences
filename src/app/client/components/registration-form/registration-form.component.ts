@@ -56,7 +56,7 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
   isLifetimeMember = false;
   readonly REGULAR_PRICE = 100; // ⭐ שינוי: $50 -> $100
   readonly LIFETIME_PRICE = 250;
-  readonly REGULAR_PRICE_ILS = 150;
+  readonly REGULAR_PRICE_ILS = 300; // ⭐ שינוי: 150₪ -> 300₪
   readonly LIFETIME_PRICE_ILS = 750;
 
   selectedCurrency: 'ILS' | 'USD' = 'ILS';
