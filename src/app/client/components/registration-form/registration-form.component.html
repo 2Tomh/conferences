@@ -48,22 +48,7 @@
         </div>
         <ng-container *ngIf="selectedConference">
           <div class="plan-options">
-            <div class="plan-card" [class.selected]="!isLifetimeMember" (click)="selectPlan(false)">
-              <span class="plan-radio" [class.checked]="!isLifetimeMember">
-                <span class="plan-radio-dot"></span>
-              </span>
-              <div class="plan-body">
-                <div class="plan-header">
-                  <h3 class="plan-title">Standard Registration</h3>
-                  <span class="plan-price">$100</span>
-                </div>
-                <!-- ⭐ שינוי: הרשמה מאוחרת -->
-                <p class="plan-desc">
-                  Late registration (early registration is now closed)<br>
-                  Admission to one conference of your choice
-                </p>
-              </div>
-            </div>
+            <!-- ⭐ שינוי: כרטיס Standard Registration הוסר - ההרשמה הרגילה נסגרה -->
             <div class="plan-card plan-card-honored" [class.selected]="isLifetimeMember" (click)="selectPlan(true)">
               <span class="plan-radio" [class.checked]="isLifetimeMember">
                 <span class="plan-radio-dot"></span>

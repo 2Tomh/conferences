@@ -53,7 +53,8 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
   wantsPoster: boolean | null = null;
   abstractSaved = false;
   posterSaved = false;
-  isLifetimeMember = false;
+  // ⭐ שינוי: נשארה רק הרשמת High-Honors ($250 / 750₪) - ההרשמה הרגילה נסגרה
+  isLifetimeMember = true;
   readonly REGULAR_PRICE = 100; // ⭐ שינוי: $50 -> $100
   readonly LIFETIME_PRICE = 250;
   readonly REGULAR_PRICE_ILS = 300; // ⭐ שינוי: 150₪ -> 300₪
@@ -206,7 +207,8 @@ export class RegistrationFormComponent implements OnInit, OnChanges {
     this.abstractSaved = false; this.posterSaved = false;
     this.showConferencePopup = false;
   }
-  selectPlan(isLifetime: boolean): void { this.isLifetimeMember = isLifetime; }
+  // ⭐ שינוי: אין יותר בחירה - תמיד High-Honors
+  selectPlan(isLifetime: boolean): void { this.isLifetimeMember = true; }
   onAbstractChoice(wants: boolean) {
     this.wantsAbstract = wants;
     if (wants) { this.abstractForm.reset(); this.showAbstractPopup = true; }
